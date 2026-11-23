@@ -13,13 +13,13 @@
       "id": "S2-01",
       "step": 2,
       "name": "Apply 001_init.sql & seed.sql (9 tables, non-recursive RLS, CHECK constraints, indexes, ASSDI courses/venues/gear)",
-      "passes": false
+      "passes": true
     },
     {
       "id": "S2-02",
       "step": 2,
       "name": "Verify DB constraints block coordinator without course_id and block cross-course SELECT via RLS",
-      "passes": false
+      "passes": true
     },
     {
       "id": "S3-01",

@@ -1,0 +1,121 @@
+{
+  "project": "ASSDI Central Media Management Portal",
+  "version": "2.0-audited",
+  "rules": "Only flip passes to true after ALL 4 Verification Gates (Build, DB/RLS, Playwright Mobile+Desktop, Fresh Diff Audit) succeed.",
+  "features": [
+    {
+      "id": "S1-01",
+      "step": 1,
+      "name": "Next.js App Router + Tailwind + shadcn/ui + Responsive Shell (Desktop Sidebar + 390px Mobile Bottom Bar)",
+      "passes": true
+    },
+    {
+      "id": "S2-01",
+      "step": 2,
+      "name": "Apply 001_init.sql & seed.sql (9 tables, non-recursive RLS, CHECK constraints, indexes, ASSDI courses/venues/gear)",
+      "passes": false
+    },
+    {
+      "id": "S2-02",
+      "step": 2,
+      "name": "Verify DB constraints block coordinator without course_id and block cross-course SELECT via RLS",
+      "passes": false
+    },
+    {
+      "id": "S3-01",
+      "step": 3,
+      "name": "Supabase Auth (@supabase/ssr) Login + Role-Guard Middleware redirecting Admin/Coordinator/Staff/Intern",
+      "passes": false
+    },
+    {
+      "id": "S3-02",
+      "step": 3,
+      "name": "Admin User Management (/admin/users) using server-only service_role API; public self-signup disabled",
+      "passes": false
+    },
+    {
+      "id": "S4-01",
+      "step": 4,
+      "name": "Course Coordinator Requisition Form (/coordinator/new) with all 9+ courses, program types, framing, venue, call time, phone",
+      "passes": false
+    },
+    {
+      "id": "S4-02",
+      "step": 4,
+      "name": "3-day (routine) / 7-day (major event) Lead-Time Rule enforced in BOTH Zod & PostgreSQL Trigger (verified via direct supabase-js bypass test)",
+      "passes": false
+    },
+    {
+      "id": "S4-03",
+      "step": 4,
+      "name": "Admin-only Emergency Override (with mandatory reason) & Requisition Rejection with mandatory rejection_reason shown to Coordinator",
+      "passes": false
+    },
+    {
+      "id": "S5-01",
+      "step": 5,
+      "name": "Gear Master Inventory (/admin/gear) with serial numbers, Available/In Use/Maintenance status, Check-Out & Return Condition Check-In",
+      "passes": false
+    },
+    {
+      "id": "S5-02",
+      "step": 5,
+      "name": "PostgreSQL EXCLUDE USING gist Double-Booking Lock verified via concurrent Promise.all() booking test",
+      "passes": false
+    },
+    {
+      "id": "S6-01",
+      "step": 6,
+      "name": "Atomic Requisition Approval + 2-3 Member Team & Gear Assignment creating 6-stage Task Board card",
+      "passes": false
+    },
+    {
+      "id": "S6-02",
+      "step": 6,
+      "name": "Central Task Board (Pending -> Shoot Assigned -> Shoot Done -> Editing -> Review -> Completed) with deadline countdown & Google Drive URL",
+      "passes": false
+    },
+    {
+      "id": "S6-03",
+      "step": 6,
+      "name": "Coordinator 4-status mapping (Pending/Approved/Shoot Done/Delivered + Drive Link) & Staff Project Lead task stage update",
+      "passes": false
+    },
+    {
+      "id": "S6-04",
+      "step": 6,
+      "name": "Automated Shoot Assignment Slip (Team, Phones, Venue, Call Time, Gear List) with 1-click Print/PDF & wa.me WhatsApp share",
+      "passes": false
+    },
+    {
+      "id": "S7-01",
+      "step": 7,
+      "name": "Master Calendar (/admin/calendar) with Tomorrow, Next 3 Days & Next 7 Days chronological shoot schedule",
+      "passes": false
+    },
+    {
+      "id": "S8-01",
+      "step": 8,
+      "name": "Permanent Staff Daily Worklog (/staff/daily-log) with 5 categories, hours & summary",
+      "passes": false
+    },
+    {
+      "id": "S8-02",
+      "step": 8,
+      "name": "Intern Mobile-First Daily Worklog (/intern/daily-log) with hours, indoor/outdoor, raw footage auto-sync to task card & LocalStorage draft",
+      "passes": false
+    },
+    {
+      "id": "S8-03",
+      "step": 8,
+      "name": "Work History & Analytics Reports (/admin/reports) with Name/Role/Date filters, completed count, field/edit hours, deadline % & CSV export",
+      "passes": false
+    },
+    {
+      "id": "S9-01",
+      "step": 9,
+      "name": "Full 4-Role Playwright E2E Suite (390px mobile + 1280px desktop, 0 console errors), weekly pg_dump backup template & Vercel production build",
+      "passes": false
+    }
+  ]
+}

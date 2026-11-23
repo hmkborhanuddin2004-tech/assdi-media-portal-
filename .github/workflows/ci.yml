@@ -1,0 +1,30 @@
+name: ASSDI Portal CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Reject skipped or focused tests
+        run: |
+          if grep -rnE "test\.(skip|only)|describe\.(skip|only)" tests/ src/ 2>/dev/null; then
+            echo "ERROR: Found forbidden test.skip or .only!"
+            exit 1
+          fi
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm build

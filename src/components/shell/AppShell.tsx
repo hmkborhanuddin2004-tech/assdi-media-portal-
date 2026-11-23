@@ -120,7 +120,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Desktop Fixed Sidebar */}
       <aside
         id="desktop-sidebar"
-        className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-40 bg-white/90 backdrop-blur-md border-r border-slate-200 shadow-sm"
+        className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-40 bg-white/75 backdrop-blur-md border-r border-white/80 shadow-sm"
       >
         <div className="flex flex-col h-full">
           {/* Brand Header */}
@@ -200,7 +200,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Mobile Top Header (390px optimized) */}
       <header
         id="mobile-header"
-        className="md:hidden sticky top-0 z-30 h-14 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-4"
+        className="md:hidden sticky top-0 z-30 h-14 w-full bg-white/75 backdrop-blur-md border-b border-white/80 flex items-center justify-between px-4 shadow-xs"
       >
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-[#0F766E] text-white flex items-center justify-center shadow-sm">
@@ -267,7 +267,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <nav
         id="mobile-bottom-nav"
         aria-label="Mobile Navigation"
-        className="md:hidden fixed bottom-0 left-0 right-0 z-40 h-16 bg-white border-t border-slate-200/90 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] px-1 flex items-center justify-around"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-40 h-16 bg-white/75 backdrop-blur-md border-t border-white/80 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] px-1 flex items-center justify-around"
       >
         {mobileNavItems.map((item) => {
           const Icon = item.icon;

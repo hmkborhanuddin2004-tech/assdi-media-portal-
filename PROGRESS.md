@@ -3,7 +3,7 @@
 ## Current Status
 - **Active Step:** Step 1 Completed (Ready for Step 2)
 - **Completed Features:** 1 / 19 (S1-01)
-- **Last Verified Commit:** Pending initial commit for Step 1
+- **Last Verified Commit:** `9d117b4` (feat(shell): S1-01 Next.js 15, Tailwind, shadcn/ui and responsive application shell)
 
 ## Step 1 (S1-01) Verification Summary
 - **Gate 1 (Static):** `pnpm typecheck && pnpm lint && pnpm build` passed with exit code 0.

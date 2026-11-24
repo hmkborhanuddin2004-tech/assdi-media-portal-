@@ -1,7 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/session";
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { markGearReady, RlsForbiddenError } from "@/lib/gear/store";
 
 function isPlaceholderSupabaseConfig(): boolean {
@@ -31,21 +30,8 @@ export async function POST(request: NextRequest) {
 
     if (!isPlaceholderSupabaseConfig()) {
       try {
-        const cookieStore = await cookies();
-        const supabase = createServerClient(
-          process.env.NEXT_PUBLIC_SUPABASE_URL!,
-          process.env.SUPABASE_SERVICE_ROLE_KEY!,
-          {
-            cookies: {
-              getAll() {
-                return cookieStore.getAll();
-              },
-              setAll() {},
-            },
-          }
-        );
-
-        const { data: updatedGear } = await supabase
+        const adminSupabase = createAdminClient();
+        const { data: updatedGear } = await adminSupabase
           .from("gear_items")
           .update({
             status: "available",

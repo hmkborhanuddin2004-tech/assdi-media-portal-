@@ -267,6 +267,45 @@ test.describe("S5-01 & S5-02: Gear Master Inventory, Task Check-Out & Double-Boo
     await expect(inventoryScope.getByText("Sony FX3 Cinema Body")).toBeHidden();
     await searchInput.fill("");
 
+    // ------------------------------------------------------------------------
+    // STEP G: Edit Gear Item Modal (Admin Only) with Unique Serial Validation
+    // ------------------------------------------------------------------------
+    const editBtn = isMobile
+      ? page.locator(`[data-testid="btn-mobile-edit-${uniqueSerial}"]`)
+      : page.locator(`[data-testid="btn-edit-${uniqueSerial}"]`);
+    await expect(editBtn).toBeVisible();
+    await editBtn.click();
+
+    // Verify Edit Modal is visible prefilled
+    await expect(page.locator('[data-testid="edit-gear-modal"]')).toBeVisible();
+    await expect(page.locator('[data-testid="input-edit-gear-name"]')).toHaveValue("Blackmagic Pocket Cinema 6K");
+
+    // Try colliding serial number with SN-FX3-01
+    await page.locator('[data-testid="input-edit-gear-serial"]').fill("SN-FX3-01");
+    await page.locator('[data-testid="submit-edit-gear-btn"]').click();
+
+    // Verify duplicate serial error
+    const editError = page.locator('[data-testid="edit-gear-error"]');
+    await expect(editError).toBeVisible();
+    await expect(editError).toContainText("Serial number already exists");
+
+    // Update with valid name and unique serial
+    const editedSerial = isMobile ? "SN-BMPCC-M2" : "SN-BMPCC-D2";
+    await page.locator('[data-testid="input-edit-gear-name"]').fill("Blackmagic Pocket 6K Pro");
+    await page.locator('[data-testid="input-edit-gear-serial"]').fill(editedSerial);
+    await page.locator('[data-testid="submit-edit-gear-btn"]').click();
+
+    // Verify modal closes
+    await expect(page.locator('[data-testid="edit-gear-modal"]')).toBeHidden({ timeout: 5000 });
+
+    // Verify updated item is displayed in inventory
+    const editedItemElement = isMobile
+      ? page.locator(`[data-testid="gear-mobile-card-${editedSerial}"]`)
+      : page.locator(`[data-testid="gear-row-${editedSerial}"]`);
+    await expect(editedItemElement).toBeVisible();
+    await expect(editedItemElement.getByText("Blackmagic Pocket 6K Pro")).toBeVisible();
+    await expect(editedItemElement.getByText(editedSerial)).toBeVisible();
+
     // Final checks: 0 console errors, 0 failed requests
     expect(consoleErrors).toEqual([]);
     expect(failedRequests).toEqual([]);

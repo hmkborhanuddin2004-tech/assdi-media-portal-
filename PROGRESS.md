@@ -11,19 +11,22 @@
   - `pnpm lint` passed with `✔ No ESLint warnings or errors`.
   - `pnpm build` passed generating all 24 static/dynamic routes and middleware (96.4 kB).
 - **Gate 2 (Live API, PostgreSQL Exclusion Lock & Concurrency Tests):**
-  - Automated Vitest test suite executed 105 tests (including 18 targeted concurrency stress tests in `src/lib/supabase/gear-concurrency.test.ts`):
+  - Automated Vitest test suite executed 111 tests (including 24 targeted concurrency stress, range calculus, and CRUD tests in `src/lib/supabase/gear-concurrency.test.ts`):
     - Verified PostgreSQL `excl_no_gear_double_booking` exclusion constraint: concurrent `Promise.all()` firing two simultaneous check-outs for Sony FX3 (`SN-FX3-01`) over overlapping time windows asserts EXACTLY 1 succeeds and 1 fails with Postgres error code `23P01`.
     - Verified error details provide clear conflicting booking info (`Sony FX3 (SN-FX3-01) is already assigned to Team A on Nov 24, 9:00 AM`).
     - Verified sequential non-overlapping bookings on the same gear succeed cleanly.
+    - Verified adjacent back-to-back bookings (e.g. 09:00–13:00 and 13:00–17:00) on the same gear succeed without collision (canonical PostgreSQL half-open range `[s, e)` semantics).
     - Verified booking after return check-in succeeds (enforcing `WHERE (returned_at IS NULL)` partial exclusion index).
     - Verified Return Condition Check-In: saving `battery_ok`, `sd_card_ok`, and `return_condition_note`.
     - Verified Maintenance lifecycle: flagging maintenance during check-in sets `status = 'maintenance'` and saves `maintenance_note`, blocking subsequent check-outs; "Mark Ready" action restores status to `available`.
     - Verified RLS Policies: non-admin users (Staff, Intern, Coordinator) are strictly blocked from mutating `gear_items` or `gear_bookings` (`gear_items_admin_all`, `gear_bookings_admin_all`).
     - Verified Coordinator cannot view gear inventory (`gear_items_select`). Staff and Intern can view items.
-    - Verified unique `serial_number` constraint on `gear_items` (rejecting duplicate serial with code `23505`).
+    - Verified unique `serial_number` constraint on `gear_items` on both insertion and update (rejecting duplicate serial with code `23505`).
+    - Verified updating gear without changing serial number succeeds cleanly without false-positive collision.
+    - Verified deletion protection: active shoot booking blocks deletion (`ON DELETE RESTRICT`), while unbooked gear can be deleted by admin.
 - **Gate 3 (Live Browser E2E):**
   - Playwright tested across Desktop (1280x800) and Mobile (390x844) viewports:
-    - 34 tests passed with exit code 0 (30.2s).
+    - 34 tests passed with exit code 0 (29.9s).
     - 0 console errors.
     - 0 failed network requests.
     - 0 horizontal overflow across desktop and mobile.
@@ -34,12 +37,13 @@
     - Verified Admin performs Return Check-In with condition note ("Battery 98%, lens mount clean, no damage") → live status updates back to `Available`.
     - Verified Admin checks out Sony FX30, flags for maintenance with note "Battery lock issue", and verifies status updates to red `Maintenance`; clicks "Mark Ready" and status restores to `Available`.
     - Verified Add Gear modal with unique serial number validation rejecting duplicate serials.
+    - Verified Edit Gear modal prefilled with item attributes, rejecting duplicate serial (`SN-FX3-01`) with error banner, and updating with new details and unique serial.
     - Verified category filter (Drones -> Mini 3 Pro & Air 3S), status filter tabs (Available, In Use, Maintenance), and search bar ("RS 4").
     - Verified Quick Return Condition Check-In bottom panel on desktop and mobile.
 - **Gate 4 (Adversarial Audit & Fresh Diff):**
-  - Matched `docs/mockups/gear.jpg` visual layout with frosted glass containers, emerald accents, and responsive 1-column mobile cards.
+  - Matched `docs/mockups/gear.jpg` visual layout with frosted glass containers, emerald accents, responsive 1-column mobile cards, and edit triggers.
   - Zero placeholder stubs, zero `TODO`s, zero mock-only bypasses.
-  - All admin endpoints authenticated and guarded server-side.
+  - All admin endpoints authenticated and guarded server-side with direct PostgreSQL / Supabase integration fallback.
 
 ## Step 4 (S4-01, S4-02 & S4-03) Verification Summary
 - **Gate 1 (Static):**

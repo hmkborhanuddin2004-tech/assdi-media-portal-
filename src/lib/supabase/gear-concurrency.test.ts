@@ -222,6 +222,40 @@ describe("S5-01 & S5-02: Gear Master Inventory, Concurrency Stress Test & Postgr
       expect(day2.booking.id).toBeDefined();
     });
 
+    it("verifies consecutive adjacent back-to-back bookings on the same gear succeed without collision", async () => {
+      const allGear = getAllGearItems(adminUser);
+      const fx3 = allGear.find((g) => g.serial_number === "SN-FX3-01")!;
+
+      // Morning shoot: 09:00 AM to 01:00 PM
+      const morning = await checkOutGear(
+        {
+          gear_id: fx3.id,
+          task_id: "t1000000-0000-0000-0000-000000000001",
+          responsible_lead_id: staffUser.id,
+          start_time: "2026-11-25T09:00:00Z",
+          end_time: "2026-11-25T13:00:00Z",
+          team_label: "Morning Team",
+        },
+        adminUser
+      );
+      expect(morning.booking.id).toBeDefined();
+
+      // Afternoon shoot: 01:00 PM to 05:00 PM (adjacent boundary: 13:00 == 13:00)
+      // In PostgreSQL: [09:00, 13:00) && [13:00, 17:00) is FALSE (no points in common)
+      const afternoon = await checkOutGear(
+        {
+          gear_id: fx3.id,
+          task_id: "t1000000-0000-0000-0000-000000000001",
+          responsible_lead_id: staffUser.id,
+          start_time: "2026-11-25T13:00:00Z",
+          end_time: "2026-11-25T17:00:00Z",
+          team_label: "Afternoon Team",
+        },
+        adminUser
+      );
+      expect(afternoon.booking.id).toBeDefined();
+    });
+
     it("verifies booking after return check-in succeeds (WHERE returned_at IS NULL condition)", async () => {
       const allGear = getAllGearItems(adminUser);
       const fx3 = allGear.find((g) => g.serial_number === "SN-FX3-01")!;
@@ -475,6 +509,91 @@ describe("S5-01 & S5-02: Gear Master Inventory, Concurrency Stress Test & Postgr
         end_time: "2026-11-25T09:00:00Z", // End before start!
       });
       expect(invalidWindow.success).toBe(false);
+    });
+
+    it("rejects duplicate serial number during updateGearItem", () => {
+      const fx30 = getAllGearItems(adminUser).find((g) => g.serial_number === "SN-FX30-01")!;
+      expect(() =>
+        updateGearItem(
+          fx30.id,
+          {
+            serial_number: "SN-FX3-01", // Collides with FX3!
+          },
+          adminUser
+        )
+      ).toThrow(PostgresUniqueViolationError);
+    });
+
+    it("allows updating gear item without changing serial number", () => {
+      const fx3 = getAllGearItems(adminUser).find((g) => g.serial_number === "SN-FX3-01")!;
+      const updated = updateGearItem(
+        fx3.id,
+        {
+          name: "Sony FX3 Cinema Body (Rigged)",
+          serial_number: "SN-FX3-01", // Same serial
+        },
+        adminUser
+      );
+      expect(updated.name).toBe("Sony FX3 Cinema Body (Rigged)");
+      expect(updated.serial_number).toBe("SN-FX3-01");
+    });
+
+    it("updates gear status to maintenance with note and back to available", () => {
+      const a7c = getAllGearItems(adminUser).find((g) => g.serial_number === "SN-A7C-01")!;
+      const underMaintenance = updateGearItem(
+        a7c.id,
+        {
+          status: "maintenance",
+          maintenance_note: "Hot shoe pin bent",
+        },
+        adminUser
+      );
+      expect(underMaintenance.status).toBe("maintenance");
+      expect(underMaintenance.maintenance_note).toBe("Hot shoe pin bent");
+
+      const backAvailable = updateGearItem(
+        a7c.id,
+        {
+          status: "available",
+        },
+        adminUser
+      );
+      expect(backAvailable.status).toBe("available");
+      expect(backAvailable.maintenance_note).toBeNull();
+    });
+
+    it("blocks deleteGearItem when item has an active shoot booking (ON DELETE RESTRICT)", async () => {
+      const fx3 = getAllGearItems(adminUser).find((g) => g.serial_number === "SN-FX3-01")!;
+      await checkOutGear(
+        {
+          gear_id: fx3.id,
+          task_id: "t1000000-0000-0000-0000-000000000001",
+          responsible_lead_id: staffUser.id,
+          start_time: "2026-11-25T09:00:00Z",
+          end_time: "2026-11-25T17:00:00Z",
+        },
+        adminUser
+      );
+
+      expect(() => deleteGearItem(fx3.id, adminUser)).toThrow("active shoot booking");
+    });
+
+    it("deletes gear item when there is no active shoot booking", () => {
+      const newlyAdded = createGearItem(
+        {
+          name: "Temporary Test Mic",
+          category: "microphone",
+          serial_number: "SN-TMP-MIC-01",
+          status: "available",
+        },
+        adminUser
+      );
+
+      const deleted = deleteGearItem(newlyAdded.id, adminUser);
+      expect(deleted).toBe(true);
+
+      const lookup = getGearItemById(newlyAdded.id, adminUser);
+      expect(lookup).toBeNull();
     });
   });
 });

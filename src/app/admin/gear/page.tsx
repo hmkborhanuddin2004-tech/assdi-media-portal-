@@ -11,6 +11,7 @@ import {
   X,
   Battery,
   HardDrive,
+  Edit2,
 } from "lucide-react";
 import type { GearCategory, GearStatus } from "@/lib/types/database";
 import {
@@ -122,6 +123,17 @@ export default function AdminGearPage() {
   const [addMaintenanceNote, setAddMaintenanceNote] = useState("");
   const [addError, setAddError] = useState<string | null>(null);
   const [isAdding, startAdd] = useTransition();
+
+  // Edit Gear Modal State (Admin only)
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editGearItem, setEditGearItem] = useState<GearItemRow | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editCategory, setEditCategory] = useState<GearCategory>("camera_body");
+  const [editSerial, setEditSerial] = useState("");
+  const [editStatus, setEditStatus] = useState<GearStatus>("available");
+  const [editMaintenanceNote, setEditMaintenanceNote] = useState("");
+  const [editError, setEditError] = useState<string | null>(null);
+  const [isEditing, startEdit] = useTransition();
 
   // Quick Return Condition Check-In Panel State (Bottom of page)
   const [quickSelectedGearId, setQuickSelectedGearId] = useState("");
@@ -414,6 +426,58 @@ export default function AdminGearPage() {
         await fetchGearData();
       } catch (err: unknown) {
         setAddError(err instanceof Error ? err.message : "সার্ভার এরর");
+      }
+    });
+  };
+
+  // Open Edit Gear Modal
+  const handleOpenEdit = (item: GearItemRow) => {
+    setEditGearItem(item);
+    setEditName(item.name);
+    setEditCategory(item.category);
+    setEditSerial(item.serial_number);
+    setEditStatus(item.status);
+    setEditMaintenanceNote(item.maintenance_note || "");
+    setEditError(null);
+    setShowEditModal(true);
+  };
+
+  // Submit Edit Gear
+  const handleSubmitEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editGearItem) return;
+    setEditError(null);
+
+    startEdit(async () => {
+      try {
+        const res = await fetch(`/api/gear/${editGearItem.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: editName,
+            category: editCategory,
+            serial_number: editSerial,
+            status: editStatus,
+            maintenance_note: editStatus === "maintenance" ? editMaintenanceNote : null,
+          }),
+        });
+
+        const data = await res.json();
+        if (res.status === 409) {
+          setEditError(data.error || "সিরিয়াল নম্বর ইতিমধ্যে নিবন্ধিত");
+          return;
+        }
+        if (!data.success) {
+          setEditError(data.error || "সরঞ্জাম আপডেট করা যায়নি");
+          return;
+        }
+
+        setShowEditModal(false);
+        setSuccessToast(`সরঞ্জাম "${data.item.name}" সফলভাবে আপডেট করা হয়েছে।`);
+        setTimeout(() => setSuccessToast(null), 4000);
+        await fetchGearData();
+      } catch (err: unknown) {
+        setEditError(err instanceof Error ? err.message : "সার্ভার এরর");
       }
     });
   };
@@ -722,35 +786,46 @@ export default function AdminGearPage() {
 
                         {/* Action Column */}
                         <td className="py-3.5 px-5 text-right">
-                          {isAvailable && (
-                            <button
-                              onClick={() => handleOpenCheckout(item)}
-                              data-testid={`btn-checkout-${item.serial_number}`}
-                              className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#0F766E] hover:bg-[#0D655E] text-white shadow-sm transition-all active:scale-95"
-                            >
-                              Check-Out
-                            </button>
-                          )}
+                          <div className="flex items-center justify-end gap-1.5">
+                            {isAvailable && (
+                              <button
+                                onClick={() => handleOpenCheckout(item)}
+                                data-testid={`btn-checkout-${item.serial_number}`}
+                                className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-[#0F766E] hover:bg-[#0D655E] text-white shadow-sm transition-all active:scale-95"
+                              >
+                                Check-Out
+                              </button>
+                            )}
 
-                          {isInUse && (
-                            <button
-                              onClick={() => handleOpenCheckin(item)}
-                              data-testid={`btn-checkin-${item.serial_number}`}
-                              className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 shadow-sm transition-all active:scale-95"
-                            >
-                              Check-In
-                            </button>
-                          )}
+                            {isInUse && (
+                              <button
+                                onClick={() => handleOpenCheckin(item)}
+                                data-testid={`btn-checkin-${item.serial_number}`}
+                                className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 shadow-sm transition-all active:scale-95"
+                              >
+                                Check-In
+                              </button>
+                            )}
 
-                          {isMaintenance && (
+                            {isMaintenance && (
+                              <button
+                                onClick={() => handleMarkReady(item)}
+                                data-testid={`btn-markready-${item.serial_number}`}
+                                className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-sm transition-all active:scale-95"
+                              >
+                                Mark Ready
+                              </button>
+                            )}
+
                             <button
-                              onClick={() => handleMarkReady(item)}
-                              data-testid={`btn-markready-${item.serial_number}`}
-                              className="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-sm transition-all active:scale-95"
+                              onClick={() => handleOpenEdit(item)}
+                              data-testid={`btn-edit-${item.serial_number}`}
+                              title="Edit Gear"
+                              className="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 border border-slate-200 transition-all active:scale-95"
                             >
-                              Mark Ready
+                              <Edit2 className="w-3.5 h-3.5" />
                             </button>
-                          )}
+                          </div>
                         </td>
                       </tr>
                     );
@@ -805,11 +880,20 @@ export default function AdminGearPage() {
 
                     {/* Action buttons */}
                     <div className="pt-1 flex items-center justify-end gap-2">
+                      <button
+                        onClick={() => handleOpenEdit(item)}
+                        data-testid={`btn-mobile-edit-${item.serial_number}`}
+                        className="py-2 px-3 rounded-xl text-xs font-semibold bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-sm transition-all text-center flex items-center gap-1 justify-center shrink-0"
+                      >
+                        <Edit2 className="w-3.5 h-3.5" />
+                        <span>Edit</span>
+                      </button>
+
                       {isAvailable && (
                         <button
                           onClick={() => handleOpenCheckout(item)}
                           data-testid={`btn-mobile-checkout-${item.serial_number}`}
-                          className="w-full py-2 rounded-xl text-xs font-semibold bg-[#0F766E] hover:bg-[#0D655E] text-white shadow-sm transition-all text-center"
+                          className="flex-1 py-2 rounded-xl text-xs font-semibold bg-[#0F766E] hover:bg-[#0D655E] text-white shadow-sm transition-all text-center"
                         >
                           Check-Out
                         </button>
@@ -819,7 +903,7 @@ export default function AdminGearPage() {
                         <button
                           onClick={() => handleOpenCheckin(item)}
                           data-testid={`btn-mobile-checkin-${item.serial_number}`}
-                          className="w-full py-2 rounded-xl text-xs font-semibold bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 shadow-sm transition-all text-center"
+                          className="flex-1 py-2 rounded-xl text-xs font-semibold bg-white hover:bg-slate-50 text-slate-800 border border-slate-300 shadow-sm transition-all text-center"
                         >
                           Check-In
                         </button>
@@ -829,7 +913,7 @@ export default function AdminGearPage() {
                         <button
                           onClick={() => handleMarkReady(item)}
                           data-testid={`btn-mobile-markready-${item.serial_number}`}
-                          className="w-full py-2 rounded-xl text-xs font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-sm transition-all text-center"
+                          className="flex-1 py-2 rounded-xl text-xs font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-sm transition-all text-center"
                         >
                           Mark Ready
                         </button>
@@ -1416,6 +1500,143 @@ export default function AdminGearPage() {
                   className="px-4 py-2 text-xs font-semibold bg-[#0F766E] hover:bg-[#0D655E] text-white rounded-xl shadow-sm transition-all"
                 >
                   {isAdding ? "যোগ হচ্ছে..." : "সংরক্ষণ করুন (Save Gear)"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ---------------------------------------------------------------------- */}
+      {/* MODAL 4: Edit Gear Item Modal (Admin Only)                            */}
+      {/* ---------------------------------------------------------------------- */}
+      {showEditModal && editGearItem && (
+        <div
+          data-testid="edit-gear-modal"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200"
+        >
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xl w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-200">
+            <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/60">
+              <div className="flex items-center gap-2">
+                <Edit2 className="w-5 h-5 text-[#0F766E]" />
+                <h3 className="text-sm font-bold text-slate-900">
+                  সরঞ্জাম সম্পাদনা করুন (Edit Gear Item)
+                </h3>
+              </div>
+              <button
+                onClick={() => setShowEditModal(false)}
+                className="p-1 text-slate-400 hover:text-slate-600 rounded-lg"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmitEdit} className="p-5 space-y-4">
+              {editError && (
+                <div
+                  data-testid="edit-gear-error"
+                  className="bg-red-50 border border-red-200 text-red-800 rounded-xl p-3 text-xs flex items-center gap-2"
+                >
+                  <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
+                  <span>{editError}</span>
+                </div>
+              )}
+
+              {/* Gear Name */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-700">
+                  সরঞ্জামের নাম ও মডেল (Gear & Model Name)
+                </label>
+                <input
+                  type="text"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  placeholder="e.g. Sony FX3 Cinema Body"
+                  data-testid="input-edit-gear-name"
+                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                  required
+                />
+              </div>
+
+              {/* Category */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-700">ক্যাটাগরি (Category)</label>
+                <select
+                  value={editCategory}
+                  onChange={(e) => setEditCategory(e.target.value as GearCategory)}
+                  data-testid="select-edit-gear-category"
+                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                  required
+                >
+                  {GEAR_CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {GEAR_CATEGORY_LABELS[cat].en} ({GEAR_CATEGORY_LABELS[cat].bn})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Serial Number */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-700">
+                  সিরিয়াল নম্বর (Unique Serial Number)
+                </label>
+                <input
+                  type="text"
+                  value={editSerial}
+                  onChange={(e) => setEditSerial(e.target.value)}
+                  placeholder="e.g. SN-FX3-01"
+                  data-testid="input-edit-gear-serial"
+                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 font-mono text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                  required
+                />
+              </div>
+
+              {/* Status */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-700">স্ট্যাটাস (Status)</label>
+                <select
+                  value={editStatus}
+                  onChange={(e) => setEditStatus(e.target.value as GearStatus)}
+                  data-testid="select-edit-gear-status"
+                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                >
+                  <option value="available">Available (উপলব্ধ)</option>
+                  <option value="in_use">In Use (ব্যবহৃত)</option>
+                  <option value="maintenance">Maintenance (রক্ষণাবেক্ষণে)</option>
+                </select>
+              </div>
+
+              {/* Maintenance Note if maintenance */}
+              {editStatus === "maintenance" && (
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-slate-700">রক্ষণাবেক্ষণ নোট</label>
+                  <input
+                    type="text"
+                    value={editMaintenanceNote}
+                    onChange={(e) => setEditMaintenanceNote(e.target.value)}
+                    placeholder="e.g. Battery lock issue"
+                    data-testid="input-edit-gear-maintenance-note"
+                    className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400"
+                  />
+                </div>
+              )}
+
+              <div className="pt-2 flex items-center justify-end gap-2.5 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setShowEditModal(false)}
+                  className="px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100 rounded-xl"
+                >
+                  বাতিল
+                </button>
+                <button
+                  type="submit"
+                  disabled={isEditing}
+                  data-testid="submit-edit-gear-btn"
+                  className="px-4 py-2 text-xs font-semibold bg-[#0F766E] hover:bg-[#0D655E] text-white rounded-xl shadow-sm transition-all"
+                >
+                  {isEditing ? "আপডেট হচ্ছে..." : "আপডেট নিশ্চিত করুন (Update Gear)"}
                 </button>
               </div>
             </form>

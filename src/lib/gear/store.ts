@@ -88,14 +88,23 @@ export class RlsForbiddenError extends Error {
 // TSTZRANGE Parser & Overlap Helper (PostgreSQL GiST Overlap Emulation)
 // ----------------------------------------------------------------------------
 
+export interface ParsedTimeRange {
+  start: number;
+  end: number;
+  startInclusive: boolean;
+  endInclusive: boolean;
+}
+
 export function formatTimeWindow(start: Date | string, end: Date | string): string {
   const s = new Date(start).toISOString();
   const e = new Date(end).toISOString();
-  return `[${s}, ${e}]`;
+  return `[${s}, ${e})`;
 }
 
-export function parseTimeRange(rangeStr: string): { start: number; end: number } {
+export function parseTimeRange(rangeStr: string): ParsedTimeRange {
   const trimmed = rangeStr.trim();
+  const startInclusive = trimmed.startsWith("[");
+  const endInclusive = trimmed.endsWith("]");
   const inner = trimmed.replace(/^[\[\(]/, "").replace(/[\]\)]$/, "");
   const parts = inner.split(",");
   if (parts.length !== 2) {
@@ -103,18 +112,21 @@ export function parseTimeRange(rangeStr: string): { start: number; end: number }
   }
   const start = new Date(parts[0].trim().replace(/^"/, "").replace(/"$/, "")).getTime();
   const end = new Date(parts[1].trim().replace(/^"/, "").replace(/"$/, "")).getTime();
-  return { start, end };
+  return { start, end, startInclusive, endInclusive };
 }
 
 /**
  * Checks whether two time windows overlap (equivalent to PostgreSQL && operator).
- * [s1, e1] && [s2, e2] is true if s1 <= e2 AND s2 <= e1.
+ * For standard continuous intervals [s1, e1) and [s2, e2): s1 < e2 AND s2 < e1.
+ * Boundary equality only overlaps if both intersecting boundary ends are inclusive ('[' and ']').
  */
 export function timeWindowsOverlap(rangeA: string, rangeB: string): boolean {
   try {
     const a = parseTimeRange(rangeA);
     const b = parseTimeRange(rangeB);
-    return a.start <= b.end && b.start <= a.end;
+    const leftOverlap = a.startInclusive && b.endInclusive ? a.start <= b.end : a.start < b.end;
+    const rightOverlap = b.startInclusive && a.endInclusive ? b.start <= a.end : b.start < a.end;
+    return leftOverlap && rightOverlap;
   } catch {
     return false;
   }

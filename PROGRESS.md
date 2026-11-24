@@ -29,7 +29,7 @@
 ## Instructor-Ready Walkthrough: Full 4-Role Lifecycle
 
 ### Phase 1: User Provisioning (`Admin` Role)
-1. Media Head signs in at `/login` as `admin@assdi.edu.bd`.
+1. Media Head signs in at `/login` as `admin@assdi.org`.
 2. Visits `/admin/users` to review the central user directory. Public signups are strictly disabled.
 3. System provisions role-scoped accounts using server-only `service_role` credentials (Admin, Course Coordinator, Permanent Staff, and Intern).
 

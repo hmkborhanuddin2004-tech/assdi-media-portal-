@@ -655,7 +655,12 @@ export default function CoordinatorNewRequisitionPage() {
                             Delivered
                           </span>
                         )}
-                        {req.status === "approved" && !req.final_drive_url && (
+                        {req.status === "approved" && !req.final_drive_url && (req.task_stage === "shoot_done" || req.task_stage === "editing" || req.task_stage === "review") && (
+                          <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[10px] font-bold shrink-0">
+                            Shoot Done
+                          </span>
+                        )}
+                        {req.status === "approved" && !req.final_drive_url && req.task_stage !== "shoot_done" && req.task_stage !== "editing" && req.task_stage !== "review" && (
                           <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold shrink-0">
                             Approved
                           </span>

@@ -150,9 +150,10 @@ export const createRequisitionSchema = z
     call_time: z.string().min(1, "কল টাইম আবশ্যক (Call time is required)"),
     coordinator_phone: z
       .string()
-      .regex(
-        /^(?:\+?88)?01[3-9]\d{8}$/,
-        "সঠিক বাংলাদেশি মোবাইল নম্বর দিন (যেমন: 01711000000)"
+      .min(1, "ফোন নম্বর দিন (Phone number is required)")
+      .refine(
+        (val) => /^(?:\+?88)?01[3-9]\d{8}$/.test(val.replace(/[\s-]/g, "")),
+        "সঠিক বাংলাদেশি মোবাইল নম্বর দিন (যেমন: 01711000000 বা 017XX-XXXXXX)"
       ),
     notes: z.string().optional().nullable(),
     is_emergency_override: z.boolean().default(false),
@@ -165,6 +166,29 @@ export const createRequisitionSchema = z
           code: z.ZodIssueCode.custom,
           message: "Emergency Override requires a non-empty override_reason.",
           path: ["override_reason"],
+        });
+      }
+      return;
+    }
+
+    // Enforce 3-day (routine) vs 7-day (major event) lead-time rule in Asia/Dhaka time in Zod
+    if (data.shoot_date && data.program_type) {
+      const todayDhaka = getDhakaTodayString();
+      const compliance = checkLeadTimeCompliance({
+        programType: data.program_type,
+        shootDate: data.shoot_date,
+        isEmergencyOverride: false,
+        callerRole: "coordinator",
+        todayStr: todayDhaka,
+      });
+
+      if (!compliance.ok) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            compliance.error ||
+            `Lead-time rule violation: ${data.program_type} requires at least ${compliance.requiredDays} days notice before shoot_date (Asia/Dhaka).`,
+          path: ["shoot_date"],
         });
       }
     }

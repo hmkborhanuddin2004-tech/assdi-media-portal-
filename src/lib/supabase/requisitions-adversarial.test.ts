@@ -591,5 +591,144 @@ describe("S4-02 & S4-03: Requisitions Adversarial Bypass & Database Constraints"
         }).success
       ).toBe(true);
     });
+
+    it("REJECTS routine shoot with tomorrow's date directly in createRequisitionSchema (Zod defense-in-depth)", () => {
+      const result = createRequisitionSchema.safeParse({
+        course_id: validCourseId,
+        program_type: "workshop",
+        format_duration: "30-40s Reel",
+        framing_type: "vertical_9_16",
+        venue_id: venueId,
+        shoot_date: tomorrowStr,
+        call_time: "09:00 AM",
+        coordinator_phone: "01711000002",
+        is_emergency_override: false,
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const shootDateIssue = result.error.issues.find((issue) => issue.path.includes("shoot_date"));
+        expect(shootDateIssue).toBeDefined();
+        expect(shootDateIssue?.message).toContain("Lead-time rule violation");
+        expect(shootDateIssue?.message).toContain("requires at least 3 days notice");
+      }
+    });
+
+    it("REJECTS major event (orientation) with 6 days notice directly in createRequisitionSchema", () => {
+      const result = createRequisitionSchema.safeParse({
+        course_id: validCourseId,
+        program_type: "orientation",
+        format_duration: "3-5m Documentary",
+        framing_type: "horizontal_16_9",
+        venue_id: venueId,
+        shoot_date: plusSixDaysStr,
+        call_time: "10:00 AM",
+        coordinator_phone: "01711000002",
+        is_emergency_override: false,
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const shootDateIssue = result.error.issues.find((issue) => issue.path.includes("shoot_date"));
+        expect(shootDateIssue).toBeDefined();
+        expect(shootDateIssue?.message).toContain("orientation requires at least 7 days notice");
+      }
+    });
+
+    it("SUCCEEDS createRequisitionSchema on +8 days notice", () => {
+      const result = createRequisitionSchema.safeParse({
+        course_id: validCourseId,
+        program_type: "orientation",
+        format_duration: "3-5m Documentary",
+        framing_type: "horizontal_16_9",
+        venue_id: venueId,
+        shoot_date: plusEightDaysStr,
+        call_time: "10:00 AM",
+        coordinator_phone: "01711000002",
+        is_emergency_override: false,
+      });
+
+      expect(result.success).toBe(true);
+    });
+
+    it("ACCEPTS formatted/hyphenated Bangladeshi phone number in createRequisitionSchema (matching mockup)", () => {
+      const result = createRequisitionSchema.safeParse({
+        course_id: validCourseId,
+        program_type: "workshop",
+        format_duration: "30-40s Reel",
+        framing_type: "vertical_9_16",
+        venue_id: venueId,
+        shoot_date: plusEightDaysStr,
+        call_time: "09:00 AM",
+        coordinator_phone: "01711-000002",
+        is_emergency_override: false,
+      });
+
+      expect(result.success).toBe(true);
+    });
+
+    it("ALLOWS Emergency Override for tomorrow in createRequisitionSchema when override_reason is provided", () => {
+      const result = createRequisitionSchema.safeParse({
+        course_id: validCourseId,
+        program_type: "workshop",
+        format_duration: "30-40s Reel",
+        framing_type: "vertical_9_16",
+        venue_id: venueId,
+        shoot_date: tomorrowStr,
+        call_time: "09:00 AM",
+        coordinator_phone: "01711000002",
+        is_emergency_override: true,
+        override_reason: "Special approval by Media Head for VIP session",
+      });
+
+      expect(result.success).toBe(true);
+    });
+
+    it("REJECTS Emergency Override in createRequisitionSchema when override_reason is empty", () => {
+      const result = createRequisitionSchema.safeParse({
+        course_id: validCourseId,
+        program_type: "workshop",
+        format_duration: "30-40s Reel",
+        framing_type: "vertical_9_16",
+        venue_id: venueId,
+        shoot_date: tomorrowStr,
+        call_time: "09:00 AM",
+        coordinator_phone: "01711000002",
+        is_emergency_override: true,
+        override_reason: "   ",
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const reasonIssue = result.error.issues.find((issue) => issue.path.includes("override_reason"));
+        expect(reasonIssue).toBeDefined();
+        expect(reasonIssue?.message).toContain("Emergency Override requires a non-empty override_reason");
+      }
+    });
+
+    it("verifies getRequisitionsForUser returns all 5 live status varieties for Coordinator", () => {
+      const reqs = getRequisitionsForUser(coordinatorUser);
+      const pending = reqs.find((r) => r.status === "pending");
+      const approved = reqs.find(
+        (r) =>
+          r.status === "approved" &&
+          !r.final_drive_url &&
+          r.task_stage !== "completed" &&
+          r.task_stage !== "shoot_done"
+      );
+      const shootDone = reqs.find(
+        (r) => r.status === "approved" && !r.final_drive_url && r.task_stage === "shoot_done"
+      );
+      const delivered = reqs.find(
+        (r) => r.status === "approved" && (Boolean(r.final_drive_url) || r.task_stage === "completed")
+      );
+      const rejected = reqs.find((r) => r.status === "rejected");
+
+      expect(pending).toBeDefined();
+      expect(approved).toBeDefined();
+      expect(shootDone).toBeDefined();
+      expect(delivered).toBeDefined();
+      expect(rejected).toBeDefined();
+    });
   });
 });

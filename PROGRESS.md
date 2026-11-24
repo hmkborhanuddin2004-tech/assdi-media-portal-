@@ -11,20 +11,22 @@
   - `pnpm lint` passed with `✔ No ESLint warnings or errors`.
   - `pnpm build` passed generating all 19 static/dynamic routes and middleware (96.4 kB).
 - **Gate 2 (Live API, PostgreSQL Trigger & Adversarial Bypass Tests):**
-  - Automated Vitest test suite executed 80 tests (including 19 targeted adversarial bypass tests in `src/lib/supabase/requisitions-adversarial.test.ts`):
+  - Automated Vitest test suite executed 87 tests (including 26 targeted adversarial bypass tests in `src/lib/supabase/requisitions-adversarial.test.ts`):
     - Verified `trg_enforce_requisition_lead_time` trigger logic: Coordinator attempting to insert tomorrow's date (< 3 days routine, < 7 days major events in Asia/Dhaka) is strictly rejected with SQLSTATE `P0001`.
     - Verified compliant lead times (+4 days for routine, +8 days for major events) succeed cleanly.
-    - Verified Media Head Admin can execute Emergency Override (`is_emergency = true`) with mandatory `emergency_override_reason`.
-    - Verified Admin attempting Emergency Override with empty/whitespace reason is rejected by DB CHECK constraint.
+    - Verified direct Zod schema `createRequisitionSchema.safeParse` strictly enforces 3-day (routine) and 7-day (major event) lead-time rule in `Asia/Dhaka` time zone as defense-in-depth.
+    - Verified Media Head Admin can execute Emergency Override (`is_emergency_override = true`) with mandatory `override_reason`.
+    - Verified Admin attempting Emergency Override with empty/whitespace reason is rejected by DB CHECK constraint and Zod schema.
     - Verified non-admin (Coordinator) attempting Emergency Override is rejected with permission exception.
     - Verified Rejection requires non-empty `rejection_reason` (enforcing `chk_rejected_requisition_has_reason`).
-    - Verified atomic task creation upon Media Head approval: creates task in `tasks` with status `pending`, inherits course/title/date, and updates requisition to `approved`.
+    - Verified atomic task creation upon Media Head approval: creates task in `tasks` with status `shoot_assigned`, inherits course/title/date, and updates requisition to `approved`.
     - Verified strict Course Isolation: Coordinator cannot view or query requisitions belonging to another course.
-    - Verified all 9 official ASSDI trade/dawah courses and 3 venues load from master PostgreSQL records.
-    - Verified strict Zod validation schemas for program types, framing types, formats, dates, and phone numbers.
+    - Verified all 9 official ASSDI trade/dawah courses and 3 venues load from master PostgreSQL records (`courses` and `venues` tables).
+    - Verified phone number normalization accepting standard Bangladeshi formats including hyphenated numbers (`01711-000002` matching mockup).
+    - Verified coordinator live queries return all 5 statuses: `Pending`, `Approved`, `Shoot Done`, `Delivered`, and `Rejected`.
 - **Gate 3 (Live Browser E2E):**
   - Playwright tested across Desktop (1280x800) and Mobile (390x844) viewports:
-    - 30 tests passed with exit code 0 (24.0s).
+    - 32 tests passed with exit code 0 (25.5s).
     - 0 console errors.
     - 0 failed network requests.
     - 0 horizontal overflow across desktop and mobile.
@@ -34,6 +36,7 @@
     - Verified `/admin/requisitions` approval queue: Media Head rejects with mandatory reason; coordinator requests page displays exact rejection reason in dedicated rejection box.
     - Verified Admin creates Emergency Override with mandatory reason, renders `Emergency Override` badge, and persists cleanly.
     - Verified Coordinator sidebar on desktop and mobile navigation has strictly ONLY `New Requisition` and `My Requests`.
+    - Verified `/coordinator/requests` renders all 5 live status badges (`Pending`, `Approved`, `Shoot Done`, `Delivered` with Drive link, and `Rejected` with reason), and tested live filter tabs.
 - **Gate 4 (Adversarial Audit & Fresh Diff):**
   - Matched `docs/mockups/requisitions.jpg` visual layout with 2-column desktop split, status badges, format pills, and mobile responsive design.
   - Zero placeholder stubs, zero `TODO`s, zero mock-only bypasses.

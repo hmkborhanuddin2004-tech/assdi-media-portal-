@@ -59,11 +59,22 @@ export async function GET(request: NextRequest) {
           };
         });
 
+        // Live master records from PostgreSQL tables
+        const { data: liveVenues } = await supabase
+          .from("venues")
+          .select("id, name, is_active")
+          .order("name", { ascending: true });
+
+        const { data: liveCourses } = await supabase
+          .from("courses")
+          .select("id, name, code, is_active")
+          .order("name", { ascending: true });
+
         return NextResponse.json({
           success: true,
           requisitions: formatted,
-          venues: getAllVenues(),
-          courses: DEMO_COURSES,
+          venues: liveVenues && liveVenues.length > 0 ? liveVenues : getAllVenues(),
+          courses: liveCourses && liveCourses.length > 0 ? liveCourses : DEMO_COURSES,
         });
       }
     } catch {

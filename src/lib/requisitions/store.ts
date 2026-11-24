@@ -246,22 +246,63 @@ function getInitialRequisitions(): RequisitionItem[] {
       task_stage: null,
       final_drive_url: null,
     },
+    // RAC Shoot Done Requisition (for Shoot Done live status tracking)
+    {
+      id: "r1000000-0000-0000-0000-000000000008",
+      course_id: "c1000000-0000-0000-0000-000000000001", // RAC
+      coordinator_id: "00000000-0000-0000-0000-000000000002",
+      coordinator_name: "Muhammad Abdullah",
+      program_type: "documentary",
+      format_duration: "3-5m Documentary",
+      framing_type: "horizontal_16_9",
+      venue_id: "ba000000-0000-0000-0000-000000000001", // 50 Katha Campus
+      shoot_date: "2026-11-21",
+      call_time: "11:00 AM",
+      coordinator_phone: "01711000002",
+      notes: "RAC Trade Annual Documentary",
+      is_emergency_override: false,
+      override_reason: null,
+      status: "approved",
+      rejection_reason: null,
+      reviewed_by: "00000000-0000-0000-0000-000000000001",
+      reviewed_at: "2026-11-14T10:00:00Z",
+      created_at: "2026-11-14T09:00:00Z",
+      updated_at: "2026-11-21T18:00:00Z",
+      task_id: "t1000000-0000-0000-0000-000000000004",
+      task_stage: "shoot_done",
+      final_drive_url: null,
+    },
+    // RAC Approved / Shoot Assigned Requisition
+    {
+      id: "r1000000-0000-0000-0000-000000000009",
+      course_id: "c1000000-0000-0000-0000-000000000001", // RAC
+      coordinator_id: "00000000-0000-0000-0000-000000000002",
+      coordinator_name: "Muhammad Abdullah",
+      program_type: "orientation",
+      format_duration: "30-40s Reel",
+      framing_type: "vertical_9_16",
+      venue_id: "ba000000-0000-0000-0000-000000000003", // Lab Room
+      shoot_date: "2026-12-02",
+      call_time: "09:30 AM",
+      coordinator_phone: "01711000002",
+      notes: "RAC Batch 05 Orientation Promo",
+      is_emergency_override: false,
+      override_reason: null,
+      status: "approved",
+      rejection_reason: null,
+      reviewed_by: "00000000-0000-0000-0000-000000000001",
+      reviewed_at: "2026-11-22T10:00:00Z",
+      created_at: "2026-11-22T08:30:00Z",
+      updated_at: "2026-11-22T10:00:00Z",
+      task_id: "t1000000-0000-0000-0000-000000000005",
+      task_stage: "shoot_assigned",
+      final_drive_url: null,
+    },
   ];
 }
 
-interface RequisitionsGlobalStore {
-  __assdi_requisitions?: RequisitionItem[];
-  __assdi_tasks?: TaskItem[];
-}
-
-const globalStore = globalThis as unknown as RequisitionsGlobalStore;
-
-if (!globalStore.__assdi_requisitions) {
-  globalStore.__assdi_requisitions = getInitialRequisitions();
-}
-
-if (!globalStore.__assdi_tasks) {
-  globalStore.__assdi_tasks = [
+function getInitialTasks(): TaskItem[] {
+  return [
     {
       id: "t1000000-0000-0000-0000-000000000001",
       requisition_id: "r1000000-0000-0000-0000-000000000001",
@@ -298,11 +339,51 @@ if (!globalStore.__assdi_tasks) {
       created_at: "2026-11-20T10:00:00Z",
       updated_at: "2026-11-20T10:00:00Z",
     },
+    {
+      id: "t1000000-0000-0000-0000-000000000004",
+      requisition_id: "r1000000-0000-0000-0000-000000000008",
+      stage: "shoot_done",
+      lead_staff_id: "00000000-0000-0000-0000-000000000003",
+      deadline_at: "2026-11-28T18:00:00Z",
+      raw_footage_uploaded: true,
+      final_drive_url: null,
+      completed_at: null,
+      created_at: "2026-11-14T10:00:00Z",
+      updated_at: "2026-11-21T18:00:00Z",
+    },
+    {
+      id: "t1000000-0000-0000-0000-000000000005",
+      requisition_id: "r1000000-0000-0000-0000-000000000009",
+      stage: "shoot_assigned",
+      lead_staff_id: "00000000-0000-0000-0000-000000000003",
+      deadline_at: "2026-12-08T18:00:00Z",
+      raw_footage_uploaded: false,
+      final_drive_url: null,
+      completed_at: null,
+      created_at: "2026-11-22T10:00:00Z",
+      updated_at: "2026-11-22T10:00:00Z",
+    },
   ];
+}
+
+interface RequisitionsGlobalStore {
+  __assdi_requisitions?: RequisitionItem[];
+  __assdi_tasks?: TaskItem[];
+}
+
+const globalStore = globalThis as unknown as RequisitionsGlobalStore;
+
+if (!globalStore.__assdi_requisitions) {
+  globalStore.__assdi_requisitions = getInitialRequisitions();
+}
+
+if (!globalStore.__assdi_tasks) {
+  globalStore.__assdi_tasks = getInitialTasks();
 }
 
 export function resetRequisitionsForTesting(): void {
   globalStore.__assdi_requisitions = getInitialRequisitions();
+  globalStore.__assdi_tasks = getInitialTasks();
 }
 
 export function getAllVenues(): Venue[] {

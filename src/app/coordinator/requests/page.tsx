@@ -11,7 +11,7 @@ import type { RequisitionItem } from "@/lib/requisitions/store";
 import type { UserProfile } from "@/lib/types/auth";
 import { PROGRAM_TYPE_LABELS, FRAMING_LABELS } from "@/lib/validations/requisitions";
 
-type FilterStatus = "all" | "pending" | "approved" | "delivered" | "rejected";
+type FilterStatus = "all" | "pending" | "approved" | "shoot_done" | "delivered" | "rejected";
 
 export default function CoordinatorRequestsPage() {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -49,10 +49,29 @@ export default function CoordinatorRequestsPage() {
     if (activeFilter === "all") return requisitions;
     if (activeFilter === "pending") return requisitions.filter((r) => r.status === "pending");
     if (activeFilter === "approved") {
-      return requisitions.filter((r) => r.status === "approved" && !r.final_drive_url && r.task_stage !== "completed");
+      return requisitions.filter(
+        (r) =>
+          r.status === "approved" &&
+          !r.final_drive_url &&
+          r.task_stage !== "completed" &&
+          r.task_stage !== "shoot_done" &&
+          r.task_stage !== "editing" &&
+          r.task_stage !== "review"
+      );
+    }
+    if (activeFilter === "shoot_done") {
+      return requisitions.filter(
+        (r) =>
+          r.status === "approved" &&
+          !r.final_drive_url &&
+          r.task_stage !== "completed" &&
+          (r.task_stage === "shoot_done" || r.task_stage === "editing" || r.task_stage === "review")
+      );
     }
     if (activeFilter === "delivered") {
-      return requisitions.filter((r) => r.status === "approved" && (r.final_drive_url || r.task_stage === "completed"));
+      return requisitions.filter(
+        (r) => r.status === "approved" && (Boolean(r.final_drive_url) || r.task_stage === "completed")
+      );
     }
     if (activeFilter === "rejected") {
       return requisitions.filter((r) => r.status === "rejected");
@@ -65,10 +84,23 @@ export default function CoordinatorRequestsPage() {
   const countAll = requisitions.length;
   const countPending = requisitions.filter((r) => r.status === "pending").length;
   const countApproved = requisitions.filter(
-    (r) => r.status === "approved" && !r.final_drive_url && r.task_stage !== "completed"
+    (r) =>
+      r.status === "approved" &&
+      !r.final_drive_url &&
+      r.task_stage !== "completed" &&
+      r.task_stage !== "shoot_done" &&
+      r.task_stage !== "editing" &&
+      r.task_stage !== "review"
+  ).length;
+  const countShootDone = requisitions.filter(
+    (r) =>
+      r.status === "approved" &&
+      !r.final_drive_url &&
+      r.task_stage !== "completed" &&
+      (r.task_stage === "shoot_done" || r.task_stage === "editing" || r.task_stage === "review")
   ).length;
   const countDelivered = requisitions.filter(
-    (r) => r.status === "approved" && (r.final_drive_url || r.task_stage === "completed")
+    (r) => r.status === "approved" && (Boolean(r.final_drive_url) || r.task_stage === "completed")
   ).length;
   const countRejected = requisitions.filter((r) => r.status === "rejected").length;
 
@@ -123,6 +155,7 @@ export default function CoordinatorRequestsPage() {
         </button>
         <button
           onClick={() => setActiveFilter("approved")}
+          id="filter-approved"
           className={`px-3 py-1.5 rounded-lg font-semibold transition-all shrink-0 ${
             activeFilter === "approved"
               ? "bg-[#0F766E] text-white shadow-xs"
@@ -132,7 +165,19 @@ export default function CoordinatorRequestsPage() {
           অনুমোদিত ({countApproved})
         </button>
         <button
+          onClick={() => setActiveFilter("shoot_done")}
+          id="filter-shoot-done"
+          className={`px-3 py-1.5 rounded-lg font-semibold transition-all shrink-0 ${
+            activeFilter === "shoot_done"
+              ? "bg-[#0F766E] text-white shadow-xs"
+              : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium"
+          }`}
+        >
+          শ্যুট সম্পন্ন ({countShootDone})
+        </button>
+        <button
           onClick={() => setActiveFilter("delivered")}
+          id="filter-delivered"
           className={`px-3 py-1.5 rounded-lg font-semibold transition-all shrink-0 ${
             activeFilter === "delivered"
               ? "bg-[#0F766E] text-white shadow-xs"

@@ -325,4 +325,74 @@ test.describe("S4-01, S4-02 & S4-03: Course Requisition Portal & Lead-Time Rules
       expect(mobileCount).toBe(2);
     }
   });
+
+  test("Coordinator requests tracker (/coordinator/requests): displays all 5 live statuses and filters correctly", async ({
+    page,
+  }) => {
+    const consoleErrors: string[] = [];
+    const failedRequests: string[] = [];
+
+    page.on("console", (msg) => {
+      const text = msg.text();
+      if (
+        msg.type() === "error" &&
+        !text.includes("favicon") &&
+        !text.includes("Failed to load resource")
+      ) {
+        consoleErrors.push(text);
+      }
+    });
+
+    page.on("requestfailed", (request) => {
+      const errorText = request.failure()?.errorText || "";
+      if (!request.url().includes("favicon.ico") && errorText !== "net::ERR_ABORTED") {
+        failedRequests.push(`${request.method()} ${request.url()} - ${errorText}`);
+      }
+    });
+
+    // 1. Log in as Coordinator
+    await page.goto("/login");
+    await page.waitForLoadState("domcontentloaded");
+    await page.fill("#login-email", "coordinator@assdi.org");
+    await page.fill("#login-password", "assdi123");
+    await page.click("#login-submit-button");
+    await page.waitForURL("**/coordinator/requests", { timeout: 10000 });
+
+    // 2. Verify all 5 live status badges exist
+    await page.waitForSelector("#requisitions-container", { timeout: 10000 });
+    await expect(page.getByText("Delivered (সম্পন্ন)").first()).toBeVisible();
+    await expect(page.getByText("Shoot Done (পোস্ট-প্রোডাকশন)").first()).toBeVisible();
+    await expect(page.getByText("Approved (অনুমোদিত)").first()).toBeVisible();
+    await expect(page.getByText("Pending (বিবেচনাধীন)").first()).toBeVisible();
+    await expect(page.getByText("Rejected (বাতিলকৃত)").first()).toBeVisible();
+
+    // Verify Drive link on Delivered card
+    await expect(page.locator("a[href*='drive.google.com']").first()).toBeVisible();
+
+    // Verify Rejection reason box
+    await expect(page.locator("[id^='rejection-reason-']").first()).toBeVisible();
+
+    // 3. Test filter tabs
+    const shootDoneFilter = page.locator("#filter-shoot-done");
+    await expect(shootDoneFilter).toBeVisible();
+    await shootDoneFilter.click();
+    await expect(page.getByText("Shoot Done (পোস্ট-প্রোডাকশন)").first()).toBeVisible();
+
+    const deliveredFilter = page.locator("#filter-delivered");
+    await expect(deliveredFilter).toBeVisible();
+    await deliveredFilter.click();
+    await expect(page.getByText("Delivered (সম্পন্ন)").first()).toBeVisible();
+
+    // 4. Verify 0 console errors, 0 failed requests, 0 horizontal overflow
+    expect(consoleErrors).toEqual([]);
+    expect(failedRequests).toEqual([]);
+
+    const hasOverflow = await page.evaluate(() => {
+      const docWidth = document.documentElement.scrollWidth;
+      const bodyWidth = document.body.scrollWidth;
+      const winWidth = window.innerWidth;
+      return docWidth > winWidth || bodyWidth > winWidth;
+    });
+    expect(hasOverflow).toBe(false);
+  });
 });

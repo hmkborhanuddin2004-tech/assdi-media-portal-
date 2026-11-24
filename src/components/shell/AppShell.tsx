@@ -28,78 +28,220 @@ interface NavItem {
   badge?: string;
 }
 
-const mainNavItems: NavItem[] = [
-  {
-    name: "Dashboard",
-    bnName: "ড্যাশবোর্ড",
-    href: "/admin/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    name: "Requisitions",
-    bnName: "রিকুইজিশন",
-    href: "/coordinator/requests",
-    icon: FilePlus2,
-  },
-  {
-    name: "Task Board",
-    bnName: "টাস্ক বোর্ড",
-    href: "/admin/tasks",
-    icon: Kanban,
-    badge: "6-Stage",
-  },
-  {
-    name: "Gear Inventory",
-    bnName: "গিয়ার স্টক",
-    href: "/admin/gear",
-    icon: Camera,
-  },
-  {
-    name: "Master Calendar",
-    bnName: "ক্যালেন্ডার",
-    href: "/admin/calendar",
-    icon: Calendar,
-  },
-  {
-    name: "Daily Worklog",
-    bnName: "ডেইলি লগ",
-    href: "/staff/tasks",
-    icon: Clock,
-  },
-  {
-    name: "User Management",
-    bnName: "ইউজার কন্ট্রোল",
-    href: "/admin/users",
-    icon: Users,
-  },
-];
+function getNavItemsForRole(role: UserRole | undefined | null): NavItem[] {
+  if (!role) {
+    return [
+      {
+        name: "Login",
+        bnName: "লগইন",
+        href: "/login",
+        icon: LogIn,
+      },
+    ];
+  }
 
-const mobileNavItems: NavItem[] = [
-  {
-    name: "Home",
-    bnName: "হোম",
-    href: "/",
-    icon: LayoutDashboard,
-  },
-  {
-    name: "Request",
-    bnName: "রিকুইজিশন",
-    href: "/coordinator/requests",
-    icon: FilePlus2,
-  },
-  {
-    name: "Tasks",
-    bnName: "টাস্ক",
-    href: "/staff/tasks",
-    icon: Kanban,
-  },
-  {
-    name: "Users",
-    bnName: "ইউজার",
-    href: "/admin/users",
-    icon: Users,
-  },
-];
+  switch (role) {
+    case "coordinator":
+      return [
+        {
+          name: "Requisitions",
+          bnName: "রিকুইজিশন তালিকা",
+          href: "/coordinator/requests",
+          icon: FilePlus2,
+        },
+        {
+          name: "New Request",
+          bnName: "নতুন রিকুইজিশন",
+          href: "/coordinator/new",
+          icon: LayoutDashboard,
+        },
+      ];
+    case "staff":
+      return [
+        {
+          name: "Tasks",
+          bnName: "টাস্ক তালিকা",
+          href: "/staff/tasks",
+          icon: Kanban,
+        },
+        {
+          name: "Daily Worklog",
+          bnName: "ডেইলি কাজের লগ",
+          href: "/staff/daily-log",
+          icon: Clock,
+        },
+      ];
+    case "intern":
+      return [
+        {
+          name: "Daily Log",
+          bnName: "ডেইলি কাজের লগ",
+          href: "/intern/daily-log",
+          icon: Clock,
+        },
+        {
+          name: "Schedule",
+          bnName: "শুটিং শিডিউল",
+          href: "/intern/schedule",
+          icon: Calendar,
+        },
+        {
+          name: "Tasks",
+          bnName: "অ্যাসাইনমেন্ট",
+          href: "/intern/tasks",
+          icon: Kanban,
+        },
+      ];
+    case "admin":
+    default:
+      return [
+        {
+          name: "Dashboard",
+          bnName: "ড্যাশবোর্ড",
+          href: "/admin/dashboard",
+          icon: LayoutDashboard,
+        },
+        {
+          name: "Requisitions",
+          bnName: "রিকুইজিশন",
+          href: "/coordinator/requests",
+          icon: FilePlus2,
+        },
+        {
+          name: "Task Board",
+          bnName: "টাস্ক বোর্ড",
+          href: "/admin/tasks",
+          icon: Kanban,
+          badge: "6-Stage",
+        },
+        {
+          name: "Gear Inventory",
+          bnName: "গিয়ার স্টক",
+          href: "/admin/gear",
+          icon: Camera,
+        },
+        {
+          name: "Master Calendar",
+          bnName: "ক্যালেন্ডার",
+          href: "/admin/calendar",
+          icon: Calendar,
+        },
+        {
+          name: "Daily Worklog",
+          bnName: "ডেইলি লগ",
+          href: "/staff/tasks",
+          icon: Clock,
+        },
+        {
+          name: "User Management",
+          bnName: "ইউজার কন্ট্রোল",
+          href: "/admin/users",
+          icon: Users,
+        },
+      ];
+  }
+}
+
+function getMobileNavItemsForRole(role: UserRole | undefined | null): NavItem[] {
+  if (!role) {
+    return [
+      {
+        name: "Home",
+        bnName: "হোম",
+        href: "/",
+        icon: LayoutDashboard,
+      },
+      {
+        name: "Login",
+        bnName: "লগইন",
+        href: "/login",
+        icon: LogIn,
+      },
+    ];
+  }
+
+  switch (role) {
+    case "coordinator":
+      return [
+        {
+          name: "Requests",
+          bnName: "রিকুইজিশন",
+          href: "/coordinator/requests",
+          icon: FilePlus2,
+        },
+        {
+          name: "New",
+          bnName: "নতুন আবেদন",
+          href: "/coordinator/new",
+          icon: LayoutDashboard,
+        },
+      ];
+    case "staff":
+      return [
+        {
+          name: "Tasks",
+          bnName: "টাস্ক",
+          href: "/staff/tasks",
+          icon: Kanban,
+        },
+        {
+          name: "Worklog",
+          bnName: "ডেইলি লগ",
+          href: "/staff/daily-log",
+          icon: Clock,
+        },
+      ];
+    case "intern":
+      return [
+        {
+          name: "Daily Log",
+          bnName: "ডেইলি লগ",
+          href: "/intern/daily-log",
+          icon: Clock,
+        },
+        {
+          name: "Schedule",
+          bnName: "শিডিউল",
+          href: "/intern/schedule",
+          icon: Calendar,
+        },
+        {
+          name: "Tasks",
+          bnName: "টাস্ক",
+          href: "/intern/tasks",
+          icon: Kanban,
+        },
+      ];
+    case "admin":
+    default:
+      return [
+        {
+          name: "Dashboard",
+          bnName: "ড্যাশবোর্ড",
+          href: "/admin/dashboard",
+          icon: LayoutDashboard,
+        },
+        {
+          name: "Request",
+          bnName: "রিকুইজিশন",
+          href: "/coordinator/requests",
+          icon: FilePlus2,
+        },
+        {
+          name: "Tasks",
+          bnName: "টাস্ক",
+          href: "/admin/tasks",
+          icon: Kanban,
+        },
+        {
+          name: "Users",
+          bnName: "ইউজার",
+          href: "/admin/users",
+          icon: Users,
+        },
+      ];
+  }
+}
 
 interface CurrentUserSession {
   id: string;
@@ -115,6 +257,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<CurrentUserSession | null>(null);
+
+  const navItems = getNavItemsForRole(user?.role);
+  const mobileNav = getMobileNavItemsForRole(user?.role);
 
   useEffect(() => {
     // Check current auth status
@@ -164,9 +309,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {/* Navigation Links */}
           <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto no-scrollbar">
             <div className="px-3 pb-2 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
-              মেইন মেনু (Portal Navigation)
+              {user ? `${ROLE_LABELS[user.role]?.en} Menu` : "Portal Navigation"}
             </div>
-            {mainNavItems.map((item) => {
+            {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
               return (
@@ -306,7 +451,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
               সকল মেনু (All Sections)
             </div>
-            {mainNavItems.map((item) => {
+            {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
               return (
@@ -362,7 +507,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         aria-label="Mobile Navigation"
         className="md:hidden fixed bottom-0 left-0 right-0 z-40 h-16 bg-white/75 backdrop-blur-md border-t border-white/80 shadow-[0_-4px_12px_rgba(0,0,0,0.04)] px-1 flex items-center justify-around"
       >
-        {mobileNavItems.map((item) => {
+        {mobileNav.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
           return (

@@ -1,11 +1,14 @@
 import { cookies } from "next/headers";
+import { type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import { DEMO_USERS, toUserProfile } from "@/lib/auth/demo-users";
+import { verifySessionToken } from "@/lib/auth/session-token";
 import type { UserProfile } from "@/lib/types/auth";
 
 export const SESSION_COOKIE_NAME = "assdi_portal_session";
 
-export async function getCurrentUser(): Promise<UserProfile | null> {
+export async function getCurrentUser(
+  request?: Request | NextRequest | null
+): Promise<UserProfile | null> {
   // 1. Try Supabase Auth via SSR client
   try {
     const supabase = await createClient();
@@ -59,21 +62,32 @@ export async function getCurrentUser(): Promise<UserProfile | null> {
 
   // 2. Read portal session cookie
   try {
-    const cookieStore = await cookies();
-    const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME);
-    if (sessionCookie?.value) {
-      const parsed = JSON.parse(decodeURIComponent(sessionCookie.value)) as UserProfile;
-      if (parsed && parsed.email) {
-        // If known demo user, verify is_active flag
-        const demo = DEMO_USERS[parsed.email.toLowerCase()];
-        if (demo) {
-          return toUserProfile(demo);
-        }
-        return parsed;
+    let rawCookieValue: string | undefined;
+
+    if (request) {
+      const cookieHeader = request.headers.get("cookie") || "";
+      const match = cookieHeader.match(
+        new RegExp(`(?:^|;\\s*)${SESSION_COOKIE_NAME}=([^;]*)`)
+      );
+      if (match) {
+        rawCookieValue = match[1];
       }
     }
+
+    if (!rawCookieValue) {
+      const cookieStore = await cookies();
+      rawCookieValue = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+    }
+
+    if (rawCookieValue) {
+      const verified = await verifySessionToken(rawCookieValue);
+      if (verified && (verified.id || verified.email)) {
+        return verified;
+      }
+      return null;
+    }
   } catch {
-    // Malformed session cookie
+    // Malformed session cookie or outside request context
   }
 
   return null;

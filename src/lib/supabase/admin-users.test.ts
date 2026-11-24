@@ -1,8 +1,13 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import * as fs from "fs";
 import * as path from "path";
+import { NextRequest } from "next/server";
 import { createUserSchema } from "@/lib/validations/user-management";
 import type { UserRole } from "@/lib/types/auth";
+import { GET as getUsers, POST as createUser, PATCH as updateUserStatus } from "@/app/api/admin/users/route";
+import { POST as authLogin } from "@/app/api/auth/login/route";
+import { SESSION_COOKIE_NAME } from "@/lib/auth/session";
+import { DEMO_USERS, toUserProfile, resetDynamicUsersForTesting } from "@/lib/auth/demo-users";
 
 describe("S3-02: Admin User Management & Service-Role Security", () => {
   describe("Zod Validation & Database Constraint Alignment", () => {
@@ -168,6 +173,88 @@ describe("S3-02: Admin User Management & Service-Role Security", () => {
       expect(loginContent).not.toContain('href="/signup"');
       expect(loginContent).not.toContain('href="/register"');
       expect(loginContent).toContain("নিরাপত্তা নীতি");
+    });
+  });
+
+  describe("Admin Users API Handlers (/api/admin/users) & End-to-End Fallback Auth", () => {
+    beforeEach(() => {
+      resetDynamicUsersForTesting();
+    });
+
+    const createAdminReq = (body?: unknown, method = "POST") => {
+      const adminUser = toUserProfile(DEMO_USERS["admin@assdi.org"]);
+      const headers = new Headers();
+      headers.set(
+        "cookie",
+        `${SESSION_COOKIE_NAME}=${encodeURIComponent(JSON.stringify(adminUser))}`
+      );
+      if (body) {
+        headers.set("content-type", "application/json");
+      }
+      return new NextRequest(new URL("http://localhost:3000/api/admin/users"), {
+        method,
+        headers,
+        body: body ? JSON.stringify(body) : undefined,
+      });
+    };
+
+    it("GET /api/admin/users returns list of users and courses when called by admin", async () => {
+      const req = createAdminReq(undefined, "GET");
+      const res = await getUsers(req);
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json.success).toBe(true);
+      expect(Array.isArray(json.users)).toBe(true);
+      expect(json.users.length).toBeGreaterThanOrEqual(4);
+      expect(Array.isArray(json.courses)).toBe(true);
+    });
+
+    it("POST /api/admin/users creates new coordinator and verifies they can immediately log in", async () => {
+      const newEmail = "auto_coordinator@assdi.org";
+      const newPass = "StrongPassword123";
+
+      const createReq = createAdminReq({
+        email: newEmail,
+        password: newPass,
+        full_name: "Auto Created Coordinator",
+        phone: "01719998877",
+        role: "coordinator",
+        course_id: "c1000000-0000-0000-0000-000000000001",
+      });
+
+      const createRes = await createUser(createReq);
+      expect(createRes.status).toBe(200);
+      const createJson = await createRes.json();
+      expect(createJson.success).toBe(true);
+      expect(createJson.user.email).toBe(newEmail);
+
+      // Now verify this user can immediately log in via /api/auth/login
+      const loginReq = new NextRequest(new URL("http://localhost:3000/api/auth/login"), {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email: newEmail, password: newPass }),
+      });
+
+      const loginRes = await authLogin(loginReq);
+      expect(loginRes.status).toBe(200);
+      const loginJson = await loginRes.json();
+      expect(loginJson.success).toBe(true);
+      expect(loginJson.role).toBe("coordinator");
+      expect(loginJson.redirectTo).toBe("/coordinator/requests");
+    });
+
+    it("PATCH /api/admin/users prevents admin from deactivating their own account", async () => {
+      const adminId = DEMO_USERS["admin@assdi.org"].id;
+      const patchReq = createAdminReq({
+        userId: adminId,
+        isActive: false,
+      }, "PATCH");
+
+      const res = await updateUserStatus(patchReq);
+      expect(res.status).toBe(400);
+      const json = await res.json();
+      expect(json.success).toBe(false);
+      expect(json.error).toContain("নিজস্ব অ্যাকাউন্ট নিষ্ক্রিয় করা সম্ভব নয়");
     });
   });
 });

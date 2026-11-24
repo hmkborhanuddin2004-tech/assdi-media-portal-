@@ -121,7 +121,83 @@ test.describe("S3-01 & S3-02: Auth, Role-Guard Middleware & User Management E2E"
     await expect(page.getByText("দৈনিক কাজের লগ ও ফুটেজ স্ট্যাটাস")).toBeVisible();
   });
 
-  test("admin user management: admin accesses /admin/users and creates user", async ({ page }) => {
+  test("admin user management: admin accesses /admin/users, creates coordinator, and newly created user logs in", async ({
+    page,
+  }) => {
+    // 1. Log in as admin
+    await page.goto("/login");
+    await page.waitForLoadState("domcontentloaded");
+    await page.fill("#login-email", "admin@assdi.org");
+    await page.fill("#login-password", "assdi123");
+    await page.click("#login-submit-button");
+    await page.waitForURL("**/admin/dashboard", { timeout: 10000 });
+
+    // 2. Navigate to /admin/users
+    await page.goto("/admin/users");
+    await page.waitForLoadState("domcontentloaded");
+    await expect(page.getByText("ব্যবহারকারী ও ভূমিকা ব্যবস্থাপনা")).toBeVisible();
+
+    // Verify zero public self-signup banner
+    await expect(page.getByText("জিরো পাবলিক সেলফ-সাইনআপ নীতি")).toBeVisible();
+
+    // 3. Open Add User Modal
+    await page.click("#admin-add-user-btn");
+    await expect(page.getByText("নতুন ব্যবহারকারী তৈরি করুন")).toBeVisible();
+
+    const uniqueId = Date.now().toString().slice(-4);
+    const newCoordEmail = `coord_${uniqueId}@assdi.org`;
+    const newPassword = "Password123!";
+
+    await page.fill('input[placeholder="যেমন: ইঞ্জিনিয়ার মাহমুদুর রহমান"]', `Coord Test ${uniqueId}`);
+    await page.fill('input[placeholder="user@assdi.org"]', newCoordEmail);
+    await page.fill('input[placeholder="017XXXXXXXX"]', "01712345678");
+    await page.fill('input[placeholder="••••••••"]', newPassword);
+
+    // Explicitly select first available course
+    await page.selectOption("#admin-course-select", { index: 1 });
+
+    // Submit form
+    await page.click("#submit-create-user-btn");
+    await expect(page.getByText("ব্যবহারকারী সফলভাবে তৈরি করা হয়েছে!")).toBeVisible();
+
+    // Verify newly created user appears in table or cards (filter by visible element)
+    await expect(page.getByText(`Coord Test ${uniqueId}`).filter({ visible: true })).toBeVisible({ timeout: 5000 });
+
+    // 4. Log out
+    await page.goto("/api/auth/signout");
+    await page.waitForURL("**/login", { timeout: 10000 });
+
+    // 5. Log in with the newly created user credentials
+    await page.fill("#login-email", newCoordEmail);
+    await page.fill("#login-password", newPassword);
+    await page.click("#login-submit-button");
+
+    // 6. Must successfully redirect to /coordinator/requests
+    await page.waitForURL("**/coordinator/requests", { timeout: 10000 });
+    expect(page.url()).toContain("/coordinator/requests");
+    await expect(page.getByText("কোর্স মিডিয়া রিকুইজিশন ট্র্যাকার")).toBeVisible();
+  });
+
+  test("open redirect vulnerability check: protocol-relative //evil.com is blocked", async ({ page }) => {
+    // Attempt /login?next=//malicious-phishing.com
+    await page.goto("/login?next=//malicious-phishing.com");
+    await page.waitForLoadState("domcontentloaded");
+
+    await page.fill("#login-email", "admin@assdi.org");
+    await page.fill("#login-password", "assdi123");
+    await page.click("#login-submit-button");
+
+    // Must safely redirect to /admin/dashboard, NEVER to malicious-phishing.com
+    await page.waitForURL("**/admin/dashboard", { timeout: 10000 });
+    expect(page.url()).not.toContain("malicious-phishing.com");
+    expect(page.url()).toContain("/admin/dashboard");
+  });
+
+  test("mobile viewport (390px) renders responsive 1-column user cards with 0 horizontal overflow", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+
     // Log in as admin
     await page.goto("/login");
     await page.waitForLoadState("domcontentloaded");
@@ -130,16 +206,21 @@ test.describe("S3-01 & S3-02: Auth, Role-Guard Middleware & User Management E2E"
     await page.click("#login-submit-button");
     await page.waitForURL("**/admin/dashboard", { timeout: 10000 });
 
-    // Navigate to /admin/users
     await page.goto("/admin/users");
     await page.waitForLoadState("domcontentloaded");
     await expect(page.getByText("ব্যবহারকারী ও ভূমিকা ব্যবস্থাপনা")).toBeVisible();
 
-    // Verify zero public self-signup banner
-    await expect(page.getByText("জিরো পাবলিক সেলফ-সাইনআপ নীতি")).toBeVisible();
+    // Check 0 horizontal overflow
+    const hasHorizontalOverflow = await page.evaluate(() => {
+      const docWidth = document.documentElement.scrollWidth;
+      const bodyWidth = document.body.scrollWidth;
+      const winWidth = window.innerWidth;
+      return docWidth > winWidth || bodyWidth > winWidth;
+    });
+    expect(hasHorizontalOverflow).toBe(false);
 
-    // Open Add User Modal
-    await page.click("#admin-add-user-btn");
-    await expect(page.getByText("নতুন ব্যবহারকারী তৈরি করুন")).toBeVisible();
+    // Verify user card elements are present on mobile
+    await expect(page.getByText("Engr. Mahmudul Hasan").filter({ visible: true })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText("Muhammad Abdullah").filter({ visible: true })).toBeVisible({ timeout: 10000 });
   });
 });

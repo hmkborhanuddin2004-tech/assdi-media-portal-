@@ -37,6 +37,11 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("all");
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [actionFeedback, setActionFeedback] = useState<{
+    type: "error" | "success";
+    message: string;
+  } | null>(null);
 
   // Form State
   const [showAddModal, setShowAddModal] = useState(false);
@@ -53,8 +58,15 @@ export default function AdminUsersPage() {
   const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await fetch("/api/admin/users");
+      const [res, meRes] = await Promise.all([
+        fetch("/api/admin/users"),
+        fetch("/api/auth/me"),
+      ]);
       const data = await res.json();
+      const meData = await meRes.json();
+      if (meData.authenticated && meData.user?.id) {
+        setCurrentUserId(meData.user.id);
+      }
       if (data.success) {
         setUsers(data.users || []);
         setCourses(data.courses || []);
@@ -128,6 +140,15 @@ export default function AdminUsersPage() {
   };
 
   const handleToggleStatus = async (userId: string, currentStatus: boolean) => {
+    setActionFeedback(null);
+    if (userId === currentUserId && currentStatus) {
+      setActionFeedback({
+        type: "error",
+        message: "নিজস্ব অ্যাকাউন্ট নিষ্ক্রিয় করা সম্ভব নয়। (Cannot deactivate own account)",
+      });
+      return;
+    }
+
     try {
       const res = await fetch("/api/admin/users", {
         method: "PATCH",
@@ -139,11 +160,21 @@ export default function AdminUsersPage() {
         setUsers((prev) =>
           prev.map((u) => (u.id === userId ? { ...u, is_active: !currentStatus } : u))
         );
+        setActionFeedback({
+          type: "success",
+          message: data.message || "ব্যবহারকারীর স্ট্যাটাস সফলভাবে আপডেট করা হয়েছে।",
+        });
       } else {
-        alert(data.error || "স্ট্যাটাস পরিবর্তন করা সম্ভব হয়নি।");
+        setActionFeedback({
+          type: "error",
+          message: data.error || "স্ট্যাটাস পরিবর্তন করা সম্ভব হয়নি।",
+        });
       }
     } catch {
-      alert("সার্ভার ত্রুটি।");
+      setActionFeedback({
+        type: "error",
+        message: "সার্ভারের সাথে সংযোগ স্থাপন করা সম্ভব হয়নি।",
+      });
     }
   };
 
@@ -229,6 +260,25 @@ export default function AdminUsersPage() {
         </div>
       </div>
 
+      {/* Action Feedback Banner */}
+      {actionFeedback && (
+        <div
+          id="admin-action-feedback"
+          className={`p-3 rounded-xl border flex items-start gap-2.5 text-xs ${
+            actionFeedback.type === "error"
+              ? "bg-red-50 border-red-200 text-red-800"
+              : "bg-emerald-50 border-emerald-200 text-emerald-800"
+          }`}
+        >
+          {actionFeedback.type === "error" ? (
+            <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+          ) : (
+            <CheckCircle2 className="w-4 h-4 text-[#0F766E] shrink-0 mt-0.5" />
+          )}
+          <span>{actionFeedback.message}</span>
+        </div>
+      )}
+
       {/* Users List (Table on Desktop, Cards on Mobile) */}
       {loading ? (
         <div className="p-12 flex flex-col items-center justify-center gap-3 text-slate-400 text-xs">
@@ -240,92 +290,189 @@ export default function AdminUsersPage() {
           কোনো ব্যবহারকারী পাওয়া যায়নি।
         </div>
       ) : (
-        <div className="glass-panel rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden bg-white">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
-                <tr>
-                  <th className="py-3 px-4">নাম ও ইমেইল</th>
-                  <th className="py-3 px-4">মোবাইল নম্বর</th>
-                  <th className="py-3 px-4">ভূমিকা (Role)</th>
-                  <th className="py-3 px-4">বরাদ্দকৃত কোর্স</th>
-                  <th className="py-3 px-4">স্ট্যাটাস</th>
-                  <th className="py-3 px-4 text-right">অ্যাকশন</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {filteredUsers.map((u) => {
-                  const roleStyle = {
-                    admin: "bg-purple-100 text-purple-800 border-purple-200",
-                    coordinator: "bg-sky-100 text-sky-800 border-sky-200",
-                    staff: "bg-indigo-100 text-indigo-800 border-indigo-200",
-                    intern: "bg-amber-100 text-amber-800 border-amber-200",
-                  }[u.role];
+        <>
+          {/* Desktop Table View */}
+          <div className="hidden md:block glass-panel rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden bg-white">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
+                  <tr>
+                    <th className="py-3 px-4">নাম ও ইমেইল</th>
+                    <th className="py-3 px-4">মোবাইল নম্বর</th>
+                    <th className="py-3 px-4">ভূমিকা (Role)</th>
+                    <th className="py-3 px-4">বরাদ্দকৃত কোর্স</th>
+                    <th className="py-3 px-4">স্ট্যাটাস</th>
+                    <th className="py-3 px-4 text-right">অ্যাকশন</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {filteredUsers.map((u) => {
+                    const roleStyle = {
+                      admin: "bg-purple-100 text-purple-800 border-purple-200",
+                      coordinator: "bg-sky-100 text-sky-800 border-sky-200",
+                      staff: "bg-indigo-100 text-indigo-800 border-indigo-200",
+                      intern: "bg-amber-100 text-amber-800 border-amber-200",
+                    }[u.role];
 
-                  return (
-                    <tr key={u.id} className="hover:bg-slate-50/70 transition-colors">
-                      <td className="py-3 px-4">
-                        <div className="font-bold text-slate-900">{u.full_name}</div>
-                        <div className="text-[11px] text-slate-500">{u.email}</div>
-                      </td>
-                      <td className="py-3 px-4 font-mono text-slate-700">{u.phone}</td>
-                      <td className="py-3 px-4">
-                        <span
-                          className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${roleStyle}`}
-                        >
-                          {ROLE_LABELS[u.role]?.bn} ({u.role})
-                        </span>
-                      </td>
-                      <td className="py-3 px-4">
-                        {u.role === "coordinator" ? (
-                          u.courses?.name ? (
-                            <span className="font-medium text-slate-800">
-                              {u.courses.name} ({u.courses.code})
+                    return (
+                      <tr key={u.id} className="hover:bg-slate-50/70 transition-colors">
+                        <td className="py-3 px-4">
+                          <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                            <span>{u.full_name}</span>
+                            {u.id === currentUserId && (
+                              <span className="px-1.5 py-0.5 rounded bg-emerald-100 text-[#0F766E] text-[10px] font-semibold">
+                                আপনি
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-[11px] text-slate-500">{u.email}</div>
+                        </td>
+                        <td className="py-3 px-4 font-mono text-slate-700">{u.phone}</td>
+                        <td className="py-3 px-4">
+                          <span
+                            className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${roleStyle}`}
+                          >
+                            {ROLE_LABELS[u.role]?.bn} ({u.role})
+                          </span>
+                        </td>
+                        <td className="py-3 px-4">
+                          {u.role === "coordinator" ? (
+                            u.courses?.name ? (
+                              <span className="font-medium text-slate-800">
+                                {u.courses.name} ({u.courses.code})
+                              </span>
+                            ) : (
+                              <span className="text-red-500 text-[11px] font-semibold">
+                                কোর্স বরাদ্দ নেই
+                              </span>
+                            )
+                          ) : (
+                            <span className="text-slate-400">সকল ডিপার্টমেন্ট</span>
+                          )}
+                        </td>
+                        <td className="py-3 px-4">
+                          <span
+                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                              u.is_active
+                                ? "bg-emerald-100 text-emerald-800"
+                                : "bg-slate-200 text-slate-700"
+                            }`}
+                          >
+                            <span
+                              className={`w-1.5 h-1.5 rounded-full ${
+                                u.is_active ? "bg-emerald-600" : "bg-slate-500"
+                              }`}
+                            />
+                            <span>{u.is_active ? "সক্রিয় (Active)" : "নিষ্ক্রিয় (Inactive)"}</span>
+                          </span>
+                        </td>
+                        <td className="py-3 px-4 text-right">
+                          {u.id === currentUserId ? (
+                            <span className="text-[11px] text-slate-400 italic font-medium px-2 py-1">
+                              বর্তমান ইউজার
                             </span>
                           ) : (
-                            <span className="text-red-500 text-[11px] font-semibold">
-                              কোর্স বরাদ্দ নেই
-                            </span>
-                          )
-                        ) : (
-                          <span className="text-slate-400">সকল ডিপার্টমেন্ট</span>
+                            <button
+                              onClick={() => handleToggleStatus(u.id, u.is_active)}
+                              className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition-all cursor-pointer ${
+                                u.is_active
+                                  ? "bg-red-50 text-red-700 border-red-200 hover:bg-red-100"
+                                  : "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
+                              }`}
+                            >
+                              {u.is_active ? "নিষ্ক্রিয় করুন" : "সক্রিয় করুন"}
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Mobile 1-Column Cards View */}
+          <div className="block md:hidden space-y-3">
+            {filteredUsers.map((u) => {
+              const roleStyle = {
+                admin: "bg-purple-100 text-purple-800 border-purple-200",
+                coordinator: "bg-sky-100 text-sky-800 border-sky-200",
+                staff: "bg-indigo-100 text-indigo-800 border-indigo-200",
+                intern: "bg-amber-100 text-amber-800 border-amber-200",
+              }[u.role];
+
+              return (
+                <div
+                  key={`mobile-${u.id}`}
+                  className="glass-panel p-4 rounded-xl border border-slate-200 bg-white space-y-2.5 shadow-xs"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="space-y-0.5">
+                      <div className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                        <span>{u.full_name}</span>
+                        {u.id === currentUserId && (
+                          <span className="px-1.5 py-0.5 rounded bg-emerald-100 text-[#0F766E] text-[10px] font-semibold">
+                            আপনি
+                          </span>
                         )}
-                      </td>
-                      <td className="py-3 px-4">
-                        <span
-                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                            u.is_active
-                              ? "bg-emerald-100 text-emerald-800"
-                              : "bg-slate-200 text-slate-700"
-                          }`}
-                        >
-                          <span
-                            className={`w-1.5 h-1.5 rounded-full ${
-                              u.is_active ? "bg-emerald-600" : "bg-slate-500"
-                            }`}
-                          />
-                          <span>{u.is_active ? "সক্রিয় (Active)" : "নিষ্ক্রিয় (Inactive)"}</span>
+                      </div>
+                      <div className="text-xs text-slate-500">{u.email}</div>
+                      <div className="text-xs font-mono text-slate-600">{u.phone}</div>
+                    </div>
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${roleStyle} shrink-0`}
+                    >
+                      {ROLE_LABELS[u.role]?.bn}
+                    </span>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+                    <div>
+                      {u.role === "coordinator" ? (
+                        <span className="text-[11px] font-medium text-slate-700">
+                          {u.courses?.name ? `${u.courses.name} (${u.courses.code})` : "কোর্স নেই"}
                         </span>
-                      </td>
-                      <td className="py-3 px-4 text-right">
+                      ) : (
+                        <span className="text-[11px] text-slate-400">সকল ডিপার্টমেন্ট</span>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                          u.is_active ? "bg-emerald-100 text-emerald-800" : "bg-slate-200 text-slate-700"
+                        }`}
+                      >
+                        <span
+                          className={`w-1.5 h-1.5 rounded-full ${
+                            u.is_active ? "bg-emerald-600" : "bg-slate-500"
+                          }`}
+                        />
+                        <span>{u.is_active ? "সক্রিয়" : "নিষ্ক্রিয়"}</span>
+                      </span>
+
+                      {u.id === currentUserId ? (
+                        <span className="text-[11px] text-slate-400 italic">Self</span>
+                      ) : (
                         <button
                           onClick={() => handleToggleStatus(u.id, u.is_active)}
-                          className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition-all cursor-pointer ${
+                          className={`px-2 py-1 rounded-lg text-[11px] font-semibold border ${
                             u.is_active
-                              ? "bg-red-50 text-red-700 border-red-200 hover:bg-red-100"
-                              : "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
+                              ? "bg-red-50 text-red-700 border-red-200"
+                              : "bg-emerald-50 text-emerald-700 border-emerald-200"
                           }`}
                         >
-                          {u.is_active ? "নিষ্ক্রিয় করুন" : "সক্রিয় করুন"}
+                          {u.is_active ? "নিষ্ক্রিয়" : "সক্রিয়"}
                         </button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        </div>
+        </>
       )}
 
       {/* Add User Modal Dialog */}
@@ -430,6 +577,7 @@ export default function AdminUsersPage() {
                     ভূমিকা <span className="text-slate-400">/ Role</span>
                   </label>
                   <select
+                    id="admin-role-select"
                     value={role}
                     onChange={(e) => setRole(e.target.value as UserRole)}
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#0F766E] focus:outline-none bg-white"
@@ -451,6 +599,7 @@ export default function AdminUsersPage() {
                     )}
                   </label>
                   <select
+                    id="admin-course-select"
                     value={courseId}
                     onChange={(e) => setCourseId(e.target.value)}
                     disabled={role !== "coordinator"}

@@ -1,9 +1,16 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { loginSchema } from "@/lib/validations/user-management";
-import { DEMO_USERS, toUserProfile } from "@/lib/auth/demo-users";
+import { getDemoUserByEmail, toUserProfile } from "@/lib/auth/demo-users";
 import { ROLE_HOME_ROUTES, type UserRole } from "@/lib/types/auth";
 import { SESSION_COOKIE_NAME } from "@/lib/auth/session";
+import { createSignedSessionToken } from "@/lib/auth/session-token";
+
+function isPlaceholderSupabaseConfig(): boolean {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+  return url.includes("your-project-ref") || key === "your-anon-key" || !url || !key;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,78 +30,81 @@ export async function POST(request: NextRequest) {
     const { email, password } = parseResult.data;
     const normalizedEmail = email.toLowerCase().trim();
 
-    // 1. Attempt Supabase Auth login
-    try {
-      const supabase = await createClient();
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email: normalizedEmail,
-        password,
-      });
+    // 1. Attempt Supabase Auth login if live credentials configured
+    if (!isPlaceholderSupabaseConfig()) {
+      try {
+        const supabase = await createClient();
+        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+          email: normalizedEmail,
+          password,
+        });
 
-      if (!authError && authData.user) {
-        // Query profiles table
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("role, is_active, full_name, phone, course_id")
-          .eq("id", authData.user.id)
-          .single();
+        if (!authError && authData.user) {
+          // Query profiles table
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("role, is_active, full_name, phone, course_id")
+            .eq("id", authData.user.id)
+            .single();
 
-        if (profile) {
-          if (!profile.is_active) {
-            await supabase.auth.signOut();
-            return NextResponse.json(
-              {
-                success: false,
-                error:
-                  "আপনার অ্যাকাউন্টটি বর্তমানে নিষ্ক্রিয় করা আছে। মিডিয়া প্রধানের সাথে যোগাযোগ করুন। (Account is deactivated)",
-              },
-              { status: 403 }
-            );
-          }
+          if (profile) {
+            if (!profile.is_active) {
+              await supabase.auth.signOut();
+              return NextResponse.json(
+                {
+                  success: false,
+                  error:
+                    "আপনার অ্যাকাউন্টটি বর্তমানে নিষ্ক্রিয় করা আছে। মিডিয়া প্রধানের সাথে যোগাযোগ করুন। (Account is deactivated)",
+                },
+                { status: 403 }
+              );
+            }
 
-          const role = profile.role as UserRole;
-          const redirectTo = ROLE_HOME_ROUTES[role] || "/admin/dashboard";
+            const role = profile.role as UserRole;
+            const redirectTo = ROLE_HOME_ROUTES[role] || "/admin/dashboard";
 
-          const response = NextResponse.json({
-            success: true,
-            role,
-            redirectTo,
-            user: {
-              id: authData.user.id,
-              email: authData.user.email,
-              full_name: profile.full_name,
+            const response = NextResponse.json({
+              success: true,
               role,
-            },
-          });
+              redirectTo,
+              user: {
+                id: authData.user.id,
+                email: authData.user.email,
+                full_name: profile.full_name,
+                role,
+              },
+            });
 
-          // Set backup session cookie
-          const userSession = {
-            id: authData.user.id,
-            email: authData.user.email || "",
-            full_name: profile.full_name,
-            phone: profile.phone,
-            role,
-            course_id: profile.course_id,
-            is_active: true,
-            created_at: authData.user.created_at,
-          };
+            // Set backup session cookie
+            const userSession = {
+              id: authData.user.id,
+              email: authData.user.email || "",
+              full_name: profile.full_name,
+              phone: profile.phone,
+              role,
+              course_id: profile.course_id,
+              is_active: true,
+              created_at: authData.user.created_at,
+            };
 
-          response.cookies.set(SESSION_COOKIE_NAME, encodeURIComponent(JSON.stringify(userSession)), {
-            path: "/",
-            httpOnly: true,
-            sameSite: "lax",
-            maxAge: 60 * 60 * 24 * 7, // 7 days
-          });
+            const sessionToken = await createSignedSessionToken(userSession);
+            response.cookies.set(SESSION_COOKIE_NAME, sessionToken, {
+              path: "/",
+              httpOnly: true,
+              sameSite: "lax",
+              maxAge: 60 * 60 * 24 * 7, // 7 days
+            });
 
-          return response;
+            return response;
+          }
         }
+      } catch {
+        // Supabase unavailable or local dev/test mode
       }
-    } catch {
-      // Supabase unavailable or local dev/test mode
     }
 
     // 2. Dev / Seed Fallback Authentication
-    const demo = DEMO_USERS[normalizedEmail];
+    const demo = getDemoUserByEmail(normalizedEmail);
     if (demo) {
       if (demo.password !== password) {
         return NextResponse.json(
@@ -132,9 +142,11 @@ export async function POST(request: NextRequest) {
         },
       });
 
+      const sessionToken = await createSignedSessionToken(userProfile);
+
       response.cookies.set(
         SESSION_COOKIE_NAME,
-        encodeURIComponent(JSON.stringify(userProfile)),
+        sessionToken,
         {
           path: "/",
           httpOnly: true,

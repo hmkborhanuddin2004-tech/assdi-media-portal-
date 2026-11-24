@@ -3,12 +3,19 @@ import { NextRequest } from "next/server";
 import {
   getRoleHomeRoute,
   isPathAllowedForRole,
+  isSafeRedirectPath,
   ROLE_LABELS,
   type UserRole,
 } from "@/lib/types/auth";
 import { updateSession } from "@/lib/supabase/middleware";
 import { SESSION_COOKIE_NAME } from "@/lib/auth/session";
-import { DEMO_USERS, toUserProfile } from "@/lib/auth/demo-users";
+import {
+  DEMO_USERS,
+  toUserProfile,
+  addDynamicUser,
+  updateDemoUserStatus,
+  resetDynamicUsersForTesting,
+} from "@/lib/auth/demo-users";
 
 describe("S3-01: Supabase Auth & Role-Guard Middleware Routing", () => {
   describe("Role Route Mapping & Helper Contracts", () => {
@@ -195,6 +202,116 @@ describe("S3-01: Supabase Auth & Role-Guard Middleware Routing", () => {
       const location = res.headers.get("location");
       expect(location).toContain("/login");
       expect(location).toContain("error=deactivated");
+    });
+
+    it("prevents open redirect attacks via protocol-relative URLs in next query param", async () => {
+      // Attacker attempts /login?next=//malicious-phishing.com
+      const adminUser = toUserProfile(DEMO_USERS["admin@assdi.org"]);
+      const req = makeRequest("/login?next=//malicious-phishing.com", adminUser);
+      const res = await updateSession(req);
+
+      expect(res.status).toBe(307);
+      const location = res.headers.get("location");
+      // Must NOT redirect to //malicious-phishing.com
+      expect(location).not.toContain("malicious-phishing.com");
+      expect(location).toContain("/admin/dashboard");
+    });
+
+    it("prevents open redirect attacks via backslash escapes in next query param", async () => {
+      const adminUser = toUserProfile(DEMO_USERS["admin@assdi.org"]);
+      const req = makeRequest("/login?next=/\\evil.com", adminUser);
+      const res = await updateSession(req);
+
+      expect(res.status).toBe(307);
+      const location = res.headers.get("location");
+      expect(location).not.toContain("evil.com");
+      expect(location).toContain("/admin/dashboard");
+    });
+
+    it("prevents cross-role next redirection when coordinator logs in with admin next param", async () => {
+      const coordUser = toUserProfile(DEMO_USERS["coordinator@assdi.org"]);
+      const req = makeRequest("/login?next=/admin/dashboard", coordUser);
+      const res = await updateSession(req);
+
+      expect(res.status).toBe(307);
+      const location = res.headers.get("location");
+      // Must not redirect coordinator to /admin/dashboard
+      expect(location).not.toContain("/admin/dashboard");
+      expect(location).toContain("/coordinator/requests");
+    });
+
+    it("strictly rejects forged cookie with arbitrary unregistered email and redirects to login", async () => {
+      const forgedSession = {
+        id: "forged-id-999",
+        email: "attacker@malicious.com",
+        full_name: "Attacker User",
+        phone: "01711999999",
+        role: "admin",
+        is_active: true,
+      };
+      const req = makeRequest("/admin/dashboard", forgedSession);
+      const res = await updateSession(req);
+
+      expect(res.status).toBe(307);
+      const location = res.headers.get("location");
+      expect(location).toContain("/login");
+      expect(location).toContain("next=%2Fadmin%2Fdashboard");
+    });
+
+    it("properly guards dynamically created users and catches dynamic deactivation", async () => {
+      resetDynamicUsersForTesting();
+
+      // Register dynamic staff user
+      addDynamicUser({
+        id: "dynamic-staff-1",
+        email: "dynamicstaff@assdi.org",
+        password: "password123",
+        full_name: "Dynamic Staff",
+        phone: "01711223344",
+        role: "staff",
+        course_id: null,
+        is_active: true,
+        created_at: new Date().toISOString(),
+      });
+
+      // Active dynamic user should access /staff/tasks
+      const activeSession = {
+        id: "dynamic-staff-1",
+        email: "dynamicstaff@assdi.org",
+      };
+      const activeReq = makeRequest("/staff/tasks", activeSession);
+      const activeRes = await updateSession(activeReq);
+      expect(activeRes.status).toBe(200);
+
+      // Deactivate dynamic user
+      updateDemoUserStatus("dynamic-staff-1", false);
+
+      // Subsequent access should be blocked immediately
+      const deactReq = makeRequest("/staff/tasks", activeSession);
+      const deactRes = await updateSession(deactReq);
+      expect(deactRes.status).toBe(307);
+      expect(deactRes.headers.get("location")).toContain("/login?error=deactivated");
+    });
+  });
+
+  describe("Redirect Path Security Contract (isSafeRedirectPath)", () => {
+    it("accepts valid internal paths", () => {
+      expect(isSafeRedirectPath("/admin/dashboard")).toBe(true);
+      expect(isSafeRedirectPath("/coordinator/requests?tab=all")).toBe(true);
+      expect(isSafeRedirectPath("/staff/tasks#section")).toBe(true);
+      expect(isSafeRedirectPath("/")).toBe(true);
+    });
+
+    it("strictly rejects protocol-relative, backslash, external, and nullish paths", () => {
+      expect(isSafeRedirectPath("//evil.com")).toBe(false);
+      expect(isSafeRedirectPath("//attacker.com/path")).toBe(false);
+      expect(isSafeRedirectPath("/\\evil.com")).toBe(false);
+      expect(isSafeRedirectPath("https://external.com")).toBe(false);
+      expect(isSafeRedirectPath("http://external.com")).toBe(false);
+      expect(isSafeRedirectPath("javascript:alert(1)")).toBe(false);
+      expect(isSafeRedirectPath(null)).toBe(false);
+      expect(isSafeRedirectPath(undefined)).toBe(false);
+      expect(isSafeRedirectPath("")).toBe(false);
     });
   });
 });

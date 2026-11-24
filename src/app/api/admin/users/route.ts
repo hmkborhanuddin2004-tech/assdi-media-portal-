@@ -2,15 +2,25 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/session";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createUserSchema, updateUserStatusSchema } from "@/lib/validations/user-management";
-import { DEMO_USERS, DEMO_COURSES, type DemoUser } from "@/lib/auth/demo-users";
+import {
+  DEMO_COURSES,
+  type DemoUser,
+  getAllDemoUsers,
+  getDemoUserByEmail,
+  addDynamicUser,
+  updateDemoUserStatus,
+} from "@/lib/auth/demo-users";
 import type { UserRole } from "@/lib/types/auth";
 
-// In-memory store for dynamic users in development / fallback mode
-const dynamicDevUsers: Map<string, DemoUser> = new Map();
+function isPlaceholderSupabaseConfig(): boolean {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+  return url.includes("your-project-ref") || key === "your-service-role-key" || !url || !key;
+}
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   // 1. Enforce Admin Role
-  const currentUser = await getCurrentUser();
+  const currentUser = await getCurrentUser(request);
   if (!currentUser || currentUser.role !== "admin") {
     return NextResponse.json(
       { success: false, error: "অননুমোদিত অ্যাক্সেস। শুধুমাত্র অ্যাডমিন ইউজার দেখতে পারেন।" },
@@ -18,32 +28,34 @@ export async function GET() {
     );
   }
 
-  // 2. Fetch Users from Supabase if configured
-  try {
-    const adminSupabase = createAdminClient();
-    const { data: profiles, error: profilesError } = await adminSupabase
-      .from("profiles")
-      .select("*, courses(name, code)")
-      .order("created_at", { ascending: false });
+  // 2. Fetch Users from Supabase if live credentials configured
+  if (!isPlaceholderSupabaseConfig()) {
+    try {
+      const adminSupabase = createAdminClient();
+      const { data: profiles, error: profilesError } = await adminSupabase
+        .from("profiles")
+        .select("*, courses(name, code)")
+        .order("created_at", { ascending: false });
 
-    const { data: courses, error: coursesError } = await adminSupabase
-      .from("courses")
-      .select("id, name, code, is_active")
-      .order("name", { ascending: true });
+      const { data: courses, error: coursesError } = await adminSupabase
+        .from("courses")
+        .select("id, name, code, is_active")
+        .order("name", { ascending: true });
 
-    if (!profilesError && profiles && !coursesError && courses) {
-      return NextResponse.json({
-        success: true,
-        users: profiles,
-        courses,
-      });
+      if (!profilesError && profiles && !coursesError && courses) {
+        return NextResponse.json({
+          success: true,
+          users: profiles,
+          courses,
+        });
+      }
+    } catch {
+      // Fallback to local dev data
     }
-  } catch {
-    // Fallback to local dev data
   }
 
-  // Combine DEMO_USERS with dynamic dev users
-  const allDevUsers = [...Object.values(DEMO_USERS), ...Array.from(dynamicDevUsers.values())];
+  // Authoritative user store (seed users + dynamic users)
+  const allDevUsers = getAllDemoUsers();
 
   const formattedUsers = allDevUsers.map((u) => {
     const course = DEMO_COURSES.find((c) => c.id === u.course_id);
@@ -69,7 +81,7 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   // 1. Enforce Admin Role
-  const currentUser = await getCurrentUser();
+  const currentUser = await getCurrentUser(request);
   if (!currentUser || currentUser.role !== "admin") {
     return NextResponse.json(
       { success: false, error: "অননুমোদিত অ্যাক্সেস: শুধুমাত্র অ্যাডমিন ইউজার তৈরি করতে পারবেন।" },
@@ -94,66 +106,74 @@ export async function POST(request: NextRequest) {
   const { email, password, full_name, phone, role, course_id } = validation.data;
   const normalizedEmail = email.toLowerCase().trim();
 
-  // 3. Attempt creation via Supabase Service Role Admin Client
-  try {
-    const adminSupabase = createAdminClient();
+  // 3. Attempt creation via Supabase Service Role Admin Client if configured
+  if (!isPlaceholderSupabaseConfig()) {
+    try {
+      const adminSupabase = createAdminClient();
 
-    // Create auth user
-    const { data: authUser, error: authError } = await adminSupabase.auth.admin.createUser({
-      email: normalizedEmail,
-      password,
-      email_confirm: true,
-      user_metadata: {
-        full_name,
-        phone,
-        role,
-        course_id: role === "coordinator" ? course_id : null,
-      },
-    });
-
-    if (authError) {
-      return NextResponse.json(
-        { success: false, error: `Auth Error: ${authError.message}` },
-        { status: 400 }
-      );
-    }
-
-    if (authUser.user) {
-      // Insert into public.profiles table
-      const { error: profileError } = await adminSupabase.from("profiles").insert({
-        id: authUser.user.id,
-        full_name,
-        phone,
-        role: role as UserRole,
-        course_id: role === "coordinator" && course_id ? course_id : null,
-        is_active: true,
+      // Create auth user
+      const { data: authUser, error: authError } = await adminSupabase.auth.admin.createUser({
+        email: normalizedEmail,
+        password,
+        email_confirm: true,
+        user_metadata: {
+          full_name,
+          phone,
+          role,
+          course_id: role === "coordinator" ? course_id : null,
+        },
       });
 
-      if (profileError) {
+      if (authError && !authError.message.includes("fetch failed")) {
         return NextResponse.json(
-          { success: false, error: `Profile Creation Error: ${profileError.message}` },
+          { success: false, error: `Auth Error: ${authError.message}` },
           { status: 400 }
         );
       }
 
-      return NextResponse.json({
-        success: true,
-        message: "নতুন ব্যবহারকারী সফলভাবে তৈরি করা হয়েছে!",
-        user: {
+      if (authUser?.user) {
+        // Insert into public.profiles table
+        const { error: profileError } = await adminSupabase.from("profiles").insert({
           id: authUser.user.id,
-          email: normalizedEmail,
           full_name,
-          role,
-        },
-      });
+          phone,
+          role: role as UserRole,
+          course_id: role === "coordinator" && course_id ? course_id : null,
+          is_active: true,
+        });
+
+        if (profileError) {
+          // Rollback created auth user to avoid orphan auth record
+          try {
+            await adminSupabase.auth.admin.deleteUser(authUser.user.id);
+          } catch {
+            // ignore rollback error
+          }
+          return NextResponse.json(
+            { success: false, error: `Profile Creation Error: ${profileError.message}` },
+            { status: 400 }
+          );
+        }
+
+        return NextResponse.json({
+          success: true,
+          message: "নতুন ব্যবহারকারী সফলভাবে তৈরি করা হয়েছে!",
+          user: {
+            id: authUser.user.id,
+            email: normalizedEmail,
+            full_name,
+            role,
+          },
+        });
+      }
+    } catch {
+      // If Supabase service role is offline / mock in dev
     }
-  } catch {
-    // If Supabase service role is offline / mock in dev
   }
 
   // 4. Local Dev Store Fallback
   // Check if email already exists
-  if (DEMO_USERS[normalizedEmail] || dynamicDevUsers.has(normalizedEmail)) {
+  if (getDemoUserByEmail(normalizedEmail)) {
     return NextResponse.json(
       { success: false, error: "এই ইমেইল দিয়ে ইতোমধ্যে একটি অ্যাকাউন্ট বিদ্যমান।" },
       { status: 400 }
@@ -175,7 +195,7 @@ export async function POST(request: NextRequest) {
     created_at: new Date().toISOString(),
   };
 
-  dynamicDevUsers.set(normalizedEmail, newDevUser);
+  addDynamicUser(newDevUser);
 
   return NextResponse.json({
     success: true,
@@ -191,7 +211,7 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   // 1. Enforce Admin Role
-  const currentUser = await getCurrentUser();
+  const currentUser = await getCurrentUser(request);
   if (!currentUser || currentUser.role !== "admin") {
     return NextResponse.json(
       { success: false, error: "অননুমোদিত অ্যাক্সেস। শুধুমাত্র অ্যাডমিন স্ট্যাটাস পরিবর্তন করতে পারেন।" },
@@ -220,43 +240,33 @@ export async function PATCH(request: NextRequest) {
     );
   }
 
-  // 3. Update in Supabase if available
-  try {
-    const adminSupabase = createAdminClient();
-    const { error } = await adminSupabase
-      .from("profiles")
-      .update({ is_active: isActive })
-      .eq("id", userId);
+  // 3. Update in Supabase if live credentials available
+  if (!isPlaceholderSupabaseConfig()) {
+    try {
+      const adminSupabase = createAdminClient();
+      const { error } = await adminSupabase
+        .from("profiles")
+        .update({ is_active: isActive })
+        .eq("id", userId);
 
-    if (!error) {
-      return NextResponse.json({
-        success: true,
-        message: `ব্যবহারকারীর স্ট্যাটাস সফলভাবে ${isActive ? "সক্রিয়" : "নিষ্ক্রিয়"} করা হয়েছে।`,
-      });
-    }
-  } catch {
-    // Fallback to dev store
-  }
-
-  // Update in local dev store
-  for (const user of Object.values(DEMO_USERS)) {
-    if (user.id === userId) {
-      user.is_active = isActive;
-      return NextResponse.json({
-        success: true,
-        message: `ব্যবহারকারীর স্ট্যাটাস সফলভাবে ${isActive ? "সক্রিয়" : "নিষ্ক্রিয়"} করা হয়েছে।`,
-      });
+      if (!error) {
+        return NextResponse.json({
+          success: true,
+          message: `ব্যবহারকারীর স্ট্যাটাস সফলভাবে ${isActive ? "সক্রিয়" : "নিষ্ক্রিয়"} করা হয়েছে।`,
+        });
+      }
+    } catch {
+      // Fallback to dev store
     }
   }
 
-  for (const user of dynamicDevUsers.values()) {
-    if (user.id === userId) {
-      user.is_active = isActive;
-      return NextResponse.json({
-        success: true,
-        message: `ব্যবহারকারীর স্ট্যাটাস সফলভাবে ${isActive ? "সক্রিয়" : "নিষ্ক্রিয়"} করা হয়েছে।`,
-      });
-    }
+  // Authoritative dev store update
+  const updated = updateDemoUserStatus(userId, isActive);
+  if (updated) {
+    return NextResponse.json({
+      success: true,
+      message: `ব্যবহারকারীর স্ট্যাটাস সফলভাবে ${isActive ? "সক্রিয়" : "নিষ্ক্রিয়"} করা হয়েছে।`,
+    });
   }
 
   return NextResponse.json({

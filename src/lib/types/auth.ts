@@ -47,7 +47,32 @@ export function getRoleHomeRoute(role: UserRole | string | null | undefined): st
   return "/login";
 }
 
+/**
+ * Validates whether a pathname is a safe relative internal route.
+ * Rejects protocol-relative URLs (e.g. `//evil.com`), backslash escapes,
+ * and external URL schemes to prevent open redirect vulnerabilities.
+ */
+export function isSafeRedirectPath(path: string | null | undefined): boolean {
+  if (!path || typeof path !== "string") {
+    return false;
+  }
+  const trimmed = path.trim();
+  // Must start with single slash, not double slash or backslash
+  if (!trimmed.startsWith("/") || trimmed.startsWith("//") || trimmed.startsWith("/\\")) {
+    return false;
+  }
+  // Must not contain scheme delimiter or backslashes
+  if (trimmed.includes("://") || trimmed.includes("\\")) {
+    return false;
+  }
+  return true;
+}
+
 export function isPathAllowedForRole(role: UserRole, pathname: string): boolean {
+  if (!isSafeRedirectPath(pathname)) {
+    return false;
+  }
+
   if (role === "admin") {
     // Admin has access to all portal routes
     return true;

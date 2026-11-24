@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   Sparkles,
 } from "lucide-react";
+import { isSafeRedirectPath, isPathAllowedForRole } from "@/lib/types/auth";
 
 function LoginForm() {
   const router = useRouter();
@@ -78,8 +79,15 @@ function LoginForm() {
 
         setSuccessMessage("লগইন সফল হয়েছে! ড্যাশবোর্ডে প্রবেশ করা হচ্ছে...");
 
-        // Determine destination: prioritize next param if authorized, else data.redirectTo
-        const destination = nextParam && nextParam.startsWith("/") ? nextParam : data.redirectTo;
+        // Determine destination: prioritize safe authorized next param, else data.redirectTo
+        let destination = data.redirectTo;
+        if (
+          nextParam &&
+          isSafeRedirectPath(nextParam) &&
+          isPathAllowedForRole(data.role, nextParam)
+        ) {
+          destination = nextParam;
+        }
 
         // Redirect after brief visual feedback
         setTimeout(() => {

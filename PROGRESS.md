@@ -9,26 +9,32 @@
 - **Gate 1 (Static):**
   - `pnpm typecheck` passed with 0 TypeScript errors.
   - `pnpm lint` passed with `✔ No ESLint warnings or errors`.
-  - `pnpm build` passed generating all 15 static/dynamic routes and middleware (95.8 kB).
+  - `pnpm build` passed generating all 15 static/dynamic routes and middleware (96.4 kB).
 - **Gate 2 (Live API, Auth & Security):**
-  - Automated Vitest test suite (`src/lib/supabase/auth-routing.test.ts` & `src/lib/supabase/admin-users.test.ts`) executed 51 tests:
+  - Automated Vitest test suite (`src/lib/supabase/auth-routing.test.ts`, `src/lib/supabase/admin-users.test.ts`, `client.test.ts`, and `db-constraints.test.ts`) executed 61 tests:
     - Verified exact role home routing: Admin -> `/admin/dashboard`, Coordinator -> `/coordinator/requests`, Staff -> `/staff/tasks`, Intern -> `/intern/daily-log`.
     - Verified Role-Guard Middleware redirects unauthenticated requests to `/login?next=...` while allowing `/login` and `/api/health`.
     - Verified authenticated users visiting `/login` or `/` are redirected to their assigned role dashboard.
     - Verified strict role isolation: unauthorized access attempts (e.g. Coordinator accessing `/admin/users` or Staff accessing `/admin/dashboard`) are blocked and redirected to the user's role home.
-    - Verified deactivated accounts (`is_active = false`) are redirected to `/login?error=deactivated` with session cleared.
+    - Verified open redirect protection (`isSafeRedirectPath`) rejecting protocol-relative URLs (`//evil.com`), backslash escapes (`/\\evil.com`), external URLs, and cross-role `next` parameter tampering.
+    - Verified cryptographic HMAC-SHA256 signed session tokens (`session-token.ts`) preventing arbitrary cookie forgery.
+    - Verified self-deactivation protection in API and UI: admin users cannot deactivate their own active account.
+    - Verified deactivated accounts (`is_active = false`) are immediately redirected to `/login?error=deactivated` with session cleared.
     - Verified Zod user creation schema strictly enforces database constraint `chk_coordinator_must_have_course` (Coordinator requires `course_id`).
     - Verified server-only protection: `src/lib/supabase/admin.ts` enforces `import "server-only";` and `SUPABASE_SERVICE_ROLE_KEY` is never prefixed with `NEXT_PUBLIC_` anywhere in client/production code.
     - Verified public self-signup is disabled: zero `/signup` or `/register` route exists.
-    - All 51 tests passed with exit code 0.
+    - All 61 tests passed with exit code 0.
 - **Gate 3 (Live Browser E2E):**
   - Playwright tested across Desktop (1280x800) and Mobile (390x844) viewports:
-    - 18 tests passed in 11.3s with exit code 0.
+    - 22 tests passed in 13.7s with exit code 0.
     - 0 console errors.
     - 0 failed network requests.
     - 0 horizontal overflow across desktop and mobile.
     - Verified login flows for Admin, Coordinator, Staff, and Intern with automatic role-based redirection.
     - Verified Admin User Management modal, role selection, and course assignment dropdown.
+    - Verified creating a new coordinator from UI, logging in with newly created credentials, and redirecting to `/coordinator/requests`.
+    - Verified protocol-relative open redirect vulnerability check passes.
+    - Verified Mobile (390px) responsive 1-column user cards with 0 horizontal overflow.
 - **Gate 4 (Adversarial Audit & Fresh Diff):**
   - Server-only service_role client strictly guarded with `import "server-only";`.
   - Zero leaked keys or passwords; `.env.local` remains clean.

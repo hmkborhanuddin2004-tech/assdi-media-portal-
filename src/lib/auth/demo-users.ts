@@ -86,8 +86,72 @@ export const DEMO_COURSES = [
   { id: "c1000000-0000-0000-0000-000000000009", name: "Dawah", code: "DAWAH" },
 ];
 
+const globalStore = globalThis as unknown as {
+  __assdi_dynamic_users?: Map<string, DemoUser>;
+};
+
+if (!globalStore.__assdi_dynamic_users) {
+  globalStore.__assdi_dynamic_users = new Map();
+}
+
+const dynamicUsers = globalStore.__assdi_dynamic_users;
+
+export function addDynamicUser(user: DemoUser): void {
+  dynamicUsers.set(user.email.toLowerCase().trim(), user);
+}
+
+export function getAllDemoUsers(): DemoUser[] {
+  const usersMap = new Map<string, DemoUser>();
+  for (const [key, user] of Object.entries(DEMO_USERS)) {
+    usersMap.set(key, user);
+  }
+  for (const [key, user] of dynamicUsers.entries()) {
+    usersMap.set(key, user);
+  }
+  return Array.from(usersMap.values());
+}
+
 export function getDemoUserByEmail(email: string): DemoUser | null {
-  return DEMO_USERS[email.toLowerCase().trim()] || null;
+  if (!email) return null;
+  const normalized = email.toLowerCase().trim();
+  if (dynamicUsers.has(normalized)) {
+    return dynamicUsers.get(normalized) || null;
+  }
+  return DEMO_USERS[normalized] || null;
+}
+
+export function getDemoUserById(id: string): DemoUser | null {
+  if (!id) return null;
+  for (const user of dynamicUsers.values()) {
+    if (user.id === id) return user;
+  }
+  for (const user of Object.values(DEMO_USERS)) {
+    if (user.id === id) return user;
+  }
+  return null;
+}
+
+export function updateDemoUserStatus(id: string, isActive: boolean): boolean {
+  for (const user of dynamicUsers.values()) {
+    if (user.id === id) {
+      user.is_active = isActive;
+      return true;
+    }
+  }
+  for (const user of Object.values(DEMO_USERS)) {
+    if (user.id === id) {
+      user.is_active = isActive;
+      return true;
+    }
+  }
+  return false;
+}
+
+export function resetDynamicUsersForTesting(): void {
+  dynamicUsers.clear();
+  for (const [key, user] of Object.entries(DEMO_USERS)) {
+    user.is_active = key !== "deactivated@assdi.org";
+  }
 }
 
 export function toUserProfile(user: DemoUser): UserProfile {

@@ -5,8 +5,9 @@ import {
   type UserProfile,
   ROLE_HOME_ROUTES,
   isPathAllowedForRole,
+  isSafeRedirectPath,
 } from "@/lib/types/auth";
-import { DEMO_USERS, toUserProfile } from "@/lib/auth/demo-users";
+import { verifySessionToken } from "@/lib/auth/session-token";
 
 const SESSION_COOKIE_NAME = "assdi_portal_session";
 
@@ -117,14 +118,9 @@ export async function updateSession(request: NextRequest) {
     const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME);
     if (sessionCookie?.value) {
       try {
-        const parsed = JSON.parse(decodeURIComponent(sessionCookie.value)) as UserProfile;
-        if (parsed?.email) {
-          const demo = DEMO_USERS[parsed.email.toLowerCase()];
-          if (demo) {
-            userProfile = toUserProfile(demo);
-          } else {
-            userProfile = parsed;
-          }
+        const verified = await verifySessionToken(sessionCookie.value);
+        if (verified) {
+          userProfile = verified;
         }
       } catch {
         // Invalid session cookie
@@ -148,7 +144,7 @@ export async function updateSession(request: NextRequest) {
     if (isAuthenticated && userRole) {
       // Check if there is a 'next' query param that is authorized for this role
       const nextParam = searchParams.get("next");
-      if (nextParam && nextParam.startsWith("/") && isPathAllowedForRole(userRole, nextParam)) {
+      if (nextParam && isSafeRedirectPath(nextParam) && isPathAllowedForRole(userRole, nextParam)) {
         return createRedirect(nextParam);
       }
       return createRedirect(roleHome);

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import {
   X,
   Printer,
@@ -67,7 +68,16 @@ export function ShootAssignmentSlipModal({
         {/* Printable Slip Content */}
         <div className="p-6 overflow-y-auto space-y-5 bg-white print:p-8 print:m-0 print:shadow-none print:border-none print:w-full">
           {/* Slip Header Badge */}
-          <div className="text-center pb-2">
+          <div className="flex flex-col items-center text-center pb-2">
+            <div className="w-12 h-12 mb-2 flex items-center justify-center">
+              <Image
+                src="/images/assdi-logo.png"
+                alt="ASSDI Logo"
+                width={48}
+                height={48}
+                className="w-full h-full object-contain"
+              />
+            </div>
             <div className="inline-block border-2 border-dashed border-slate-800/80 px-4 py-1.5 rounded-lg">
               <span
                 id="slip-number-badge"

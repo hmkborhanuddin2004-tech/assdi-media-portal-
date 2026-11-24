@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useTransition, Suspense } from "react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-  Video,
   Lock,
   Mail,
   Eye,
@@ -109,8 +109,15 @@ function LoginForm() {
         <div className="glass-panel rounded-2xl p-6 sm:p-8 border border-emerald-600/20 shadow-md bg-white/90 backdrop-blur-md">
           {/* Brand Header */}
           <div className="flex flex-col items-center text-center space-y-2.5 pb-4 border-b border-slate-200/80">
-            <div className="w-12 h-12 rounded-2xl bg-[#0F766E] text-white flex items-center justify-center shadow-md shadow-emerald-900/15">
-              <Video className="w-6 h-6" />
+            <div className="w-16 h-16 rounded-2xl bg-white p-2 border border-emerald-100 flex items-center justify-center shadow-md shadow-emerald-900/10">
+              <Image
+                src="/images/assdi-logo.png"
+                alt="ASSDI Logo"
+                width={56}
+                height={56}
+                className="w-full h-full object-contain"
+                priority
+              />
             </div>
 
             <div className="space-y-1">

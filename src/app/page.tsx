@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   Video,
   FilePlus2,
@@ -17,10 +18,22 @@ export default function HomePage() {
     <div className="space-y-6 md:space-y-8 w-full max-w-full">
       {/* Top Hero / Welcome Banner */}
       <div className="glass-emerald-card rounded-2xl p-5 md:p-8 border border-emerald-600/20 shadow-sm relative overflow-hidden">
-        <div className="relative z-10 max-w-3xl space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-[#0F766E] text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>সেন্ট্রাল মিডিয়া অপারেশন হাব • ASSDI Portal v2.0</span>
+        <div className="relative z-10 max-w-3xl space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="w-14 h-14 rounded-2xl bg-white p-2 border border-emerald-100 flex items-center justify-center shadow-md shadow-emerald-900/10 shrink-0">
+              <Image
+                src="/images/assdi-logo.png"
+                alt="ASSDI Logo"
+                width={48}
+                height={48}
+                className="w-full h-full object-contain"
+                priority
+              />
+            </div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-[#0F766E] text-xs font-semibold">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>সেন্ট্রাল মিডিয়া অপারেশন হাব • ASSDI Portal v2.0</span>
+            </div>
           </div>
 
           <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#0F172A] tracking-tight leading-snug">

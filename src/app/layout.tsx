@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   title: "ASSDI Central Media Management Portal",
   description:
     "As-Sunnah Skill Development Institute Central Media Management Portal for Requisitions, Central Task Board, Gear Inventory & Worklogs",
+  icons: {
+    icon: "/images/assdi-logo.png",
+  },
 };
 
 export const viewport: Viewport = {

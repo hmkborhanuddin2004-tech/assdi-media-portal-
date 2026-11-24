@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -11,7 +12,6 @@ import {
   Calendar,
   Clock,
   Users,
-  Video,
   ShieldCheck,
   Menu,
   X,
@@ -334,8 +334,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="flex flex-col h-full">
           {/* Brand Header */}
           <div className="h-16 px-5 border-b border-slate-200/80 flex items-center gap-3 bg-gradient-to-r from-emerald-50/50 to-transparent">
-            <div className="w-10 h-10 rounded-xl bg-[#0F766E] text-white flex items-center justify-center shadow-md shadow-emerald-900/10">
-              <Video className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-white p-1 border border-emerald-100 flex items-center justify-center shadow-sm shrink-0 overflow-hidden">
+              <Image
+                src="/images/assdi-logo.png"
+                alt="ASSDI Logo"
+                width={36}
+                height={36}
+                className="w-full h-full object-contain"
+                priority
+              />
             </div>
             <div className="flex flex-col leading-tight">
               <span className="font-bold text-slate-900 text-sm tracking-tight">
@@ -452,8 +459,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         className="print:hidden md:hidden sticky top-0 z-30 h-14 w-full bg-white/75 backdrop-blur-md border-b border-white/80 flex items-center justify-between px-4 shadow-xs"
       >
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#0F766E] text-white flex items-center justify-center shadow-sm">
-            <Video className="w-4 h-4" />
+          <div className="w-8 h-8 rounded-lg bg-white p-0.5 border border-emerald-100 flex items-center justify-center shadow-xs shrink-0 overflow-hidden">
+            <Image
+              src="/images/assdi-logo.png"
+              alt="ASSDI Logo"
+              width={28}
+              height={28}
+              className="w-full h-full object-contain"
+              priority
+            />
           </div>
           <div className="flex flex-col leading-none">
             <span className="font-bold text-slate-900 text-xs">ASSDI Media</span>

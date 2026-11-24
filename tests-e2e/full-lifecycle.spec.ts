@@ -391,9 +391,20 @@ test.describe("S9-01: Final Full 4-Role Lifecycle E2E & Security Audit", () => {
     await page.waitForLoadState("domcontentloaded");
     await verifyZeroHorizontalOverflow();
 
+    const inventoryScope = isMobile
+      ? page.locator('[data-testid="gear-mobile-cards"]')
+      : page.locator('[data-testid="gear-master-table"]');
+
+    // Wait for gear inventory items to load from API
+    await expect(inventoryScope.getByText("Sony FX3 Cinema Body")).toBeVisible({ timeout: 10000 });
+
     const checkinBtn = isMobile
       ? page.locator('[data-testid="btn-mobile-checkin-SN-FX3-01"]')
       : page.locator('[data-testid="btn-checkin-SN-FX3-01"]');
+
+    const statusBadge = isMobile
+      ? page.locator('[data-testid="mobile-status-badge-SN-FX3-01"]')
+      : page.locator('[data-testid="status-badge-SN-FX3-01"]');
 
     if (await checkinBtn.isVisible()) {
       await checkinBtn.click();
@@ -407,10 +418,10 @@ test.describe("S9-01: Final Full 4-Role Lifecycle E2E & Security Audit", () => {
       await expect(page.getByText("সরঞ্জাম রিটার্ন ও কন্ডিশন চেক-ইন (Return Check-In)")).toBeHidden({
         timeout: 5000,
       });
-
-      // Verify status flipped back to Available
-      await expect(page.locator('[data-testid="gear-status-SN-FX3-01"]').first()).toContainText("Available");
     }
+
+    // Verify status is Available (green pill)
+    await expect(statusBadge).toHaveText(/Available/i);
 
     // ========================================================================
     // ZERO CONSOLE ERRORS & ZERO FAILED NETWORK REQUESTS

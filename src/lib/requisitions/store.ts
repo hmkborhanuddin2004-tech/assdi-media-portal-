@@ -298,6 +298,110 @@ function getInitialRequisitions(): RequisitionItem[] {
       task_stage: "shoot_assigned",
       final_drive_url: null,
     },
+    // SBMC Bakery Reel (Pending)
+    {
+      id: "r1000000-0000-0000-0000-000000000010",
+      course_id: "c1000000-0000-0000-0000-000000000005",
+      coordinator_id: "00000000-0000-0000-0000-000000000001",
+      coordinator_name: "Engr. Mahmudul Hasan",
+      program_type: "visitor_reel",
+      format_duration: "30-40s Reel",
+      framing_type: "vertical_9_16",
+      venue_id: "ba000000-0000-0000-0000-000000000003",
+      shoot_date: "2026-11-30",
+      call_time: "10:00 AM",
+      coordinator_phone: "01711000001",
+      notes: "SBMC Bakery Reel",
+      is_emergency_override: false,
+      override_reason: null,
+      status: "pending",
+      rejection_reason: null,
+      reviewed_by: null,
+      reviewed_at: null,
+      created_at: "2026-11-23T10:00:00Z",
+      updated_at: "2026-11-23T10:00:00Z",
+      task_id: "t1000000-0000-0000-0000-000000000010",
+      task_stage: "pending",
+      final_drive_url: null,
+    },
+    // Motorcycle Servicing (Editing)
+    {
+      id: "r1000000-0000-0000-0000-000000000011",
+      course_id: "c1000000-0000-0000-0000-000000000002",
+      coordinator_id: "00000000-0000-0000-0000-000000000001",
+      coordinator_name: "Engr. Mahmudul Hasan",
+      program_type: "workshop",
+      format_duration: "3-5m Documentary",
+      framing_type: "horizontal_16_9",
+      venue_id: "ba000000-0000-0000-0000-000000000002",
+      shoot_date: "2026-11-25",
+      call_time: "02:00 PM",
+      coordinator_phone: "01711000001",
+      notes: "Motorcycle Servicing Workshop Promo",
+      is_emergency_override: false,
+      override_reason: null,
+      status: "approved",
+      rejection_reason: null,
+      reviewed_by: "00000000-0000-0000-0000-000000000001",
+      reviewed_at: "2026-11-18T10:00:00Z",
+      created_at: "2026-11-18T09:00:00Z",
+      updated_at: "2026-11-22T14:00:00Z",
+      task_id: "t1000000-0000-0000-0000-000000000006",
+      task_stage: "editing",
+      final_drive_url: null,
+    },
+    // English Language (Review)
+    {
+      id: "r1000000-0000-0000-0000-000000000012",
+      course_id: "c1000000-0000-0000-0000-000000000006",
+      coordinator_id: "00000000-0000-0000-0000-000000000001",
+      coordinator_name: "Engr. Mahmudul Hasan",
+      program_type: "promotional_video",
+      format_duration: "30-40s Reel",
+      framing_type: "vertical_9_16",
+      venue_id: "ba000000-0000-0000-0000-000000000003",
+      shoot_date: "2026-11-26",
+      call_time: "10:30 AM",
+      coordinator_phone: "01711000001",
+      notes: "English Language Promo",
+      is_emergency_override: false,
+      override_reason: null,
+      status: "approved",
+      rejection_reason: null,
+      reviewed_by: "00000000-0000-0000-0000-000000000001",
+      reviewed_at: "2026-11-17T09:00:00Z",
+      created_at: "2026-11-17T08:00:00Z",
+      updated_at: "2026-11-23T15:00:00Z",
+      task_id: "t1000000-0000-0000-0000-000000000008",
+      task_stage: "review",
+      final_drive_url: null,
+    },
+    // Professional Cooking (Completed)
+    {
+      id: "r1000000-0000-0000-0000-000000000013",
+      course_id: "c1000000-0000-0000-0000-000000000008",
+      coordinator_id: "00000000-0000-0000-0000-000000000001",
+      coordinator_name: "Engr. Mahmudul Hasan",
+      program_type: "final_exam",
+      format_duration: "3-5m Documentary",
+      framing_type: "horizontal_16_9",
+      venue_id: "ba000000-0000-0000-0000-000000000003",
+      shoot_date: "2026-11-20",
+      call_time: "10:00 AM",
+      coordinator_phone: "01711000001",
+      notes: "Professional Cooking Final Delivery",
+      is_emergency_override: false,
+      override_reason: null,
+      status: "approved",
+      rejection_reason: null,
+      reviewed_by: "00000000-0000-0000-0000-000000000001",
+      reviewed_at: "2026-11-22T17:30:00Z",
+      created_at: "2026-11-16T10:00:00Z",
+      updated_at: "2026-11-22T17:30:00Z",
+      task_id: "t1000000-0000-0000-0000-000000000009",
+      task_stage: "completed",
+      final_drive_url: "https://drive.google.com/drive/folders/1ProfCooking-Final-Delivery",
+    },
   ];
 }
 
@@ -384,6 +488,13 @@ if (!globalStore.__assdi_tasks) {
 export function resetRequisitionsForTesting(): void {
   globalStore.__assdi_requisitions = getInitialRequisitions();
   globalStore.__assdi_tasks = getInitialTasks();
+}
+
+export function getAllRequisitionsRaw(): RequisitionItem[] {
+  if (!globalStore.__assdi_requisitions) {
+    globalStore.__assdi_requisitions = getInitialRequisitions();
+  }
+  return globalStore.__assdi_requisitions;
 }
 
 export function getAllVenues(): Venue[] {

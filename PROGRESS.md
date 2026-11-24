@@ -1,9 +1,46 @@
 # ASSDI Media Portal — Session Progress Log
 
 ## Current Status
-- **Active Step:** Step 5 Completed (Verified across all 4 gates, ready for Step 6)
-- **Completed Features:** 10 / 19 (S1-01, S2-01, S2-02, S3-01, S3-02, S4-01, S4-02, S4-03, S5-01, S5-02)
-- **Last Verified Step:** S5-01 & S5-02 (Gear Master Inventory `/admin/gear`, PostgreSQL `EXCLUDE USING gist` Double-Booking Lock, Check-Out & Return Condition Check-In)
+- **Active Step:** Step 6 Completed (Verified across all 4 gates, ready for Step 7)
+- **Completed Features:** 14 / 19 (S1-01, S2-01, S2-02, S3-01, S3-02, S4-01, S4-02, S4-03, S5-01, S5-02, S6-01, S6-02, S6-03, S6-04)
+- **Last Verified Step:** Step 6 (S6-01, S6-02, S6-03, S6-04 — Central Task Board, 6-Stage Kanban Pipeline, Shoot Assignment Slip with WhatsApp share, Staff Lead Controls, and Coordinator Status Mapping)
+
+## Step 6 (S6-01, S6-02, S6-03, S6-04) Verification Summary
+- **Gate 1 (Static):**
+  - `pnpm typecheck` passed with 0 TypeScript errors.
+  - `pnpm lint` passed with `✔ No ESLint warnings or errors`.
+  - `pnpm build` passed generating all 29 static/dynamic routes and middleware (96.5 kB).
+- **Gate 2 (Live API, PostgreSQL RLS & DB Constraints Tests):**
+  - Automated Vitest test suite executed 135 tests (including 24 targeted unit and DB tests in `src/lib/supabase/tasks-kanban.test.ts`):
+    - Verified atomic requisition approval and task card creation (`S6-01`): transitions requisition from `pending` to `approved`, creates task with `stage = 'shoot_assigned'`, inserts assignees with designated `lead_staff_id`, and books assigned gear.
+    - Verified team member rules: minimum 2 and maximum 3 members required; exactly 1 lead staff member designated; lead must be a permanent staff member.
+    - Verified atomic gear conflict handling: if gear has an overlapping booking, Postgres exclusion error `23P01` is returned cleanly and no partial task/assignee records are written.
+    - Verified RLS Policy `tasks_lead_staff_update`: designated Staff Project Lead (`lead_staff_id = auth.uid()`) can transition task stages (`shoot_done`, `editing`, `review`) and attach `final_drive_url`.
+    - Verified RLS blocking: unauthorized staff or interns who are not the designated `lead_staff_id` are strictly blocked from updating the task stage (HTTP 403 / Postgres code `42501`).
+    - Verified DB CHECK constraint `chk_completed_drive_url` (Postgres code `23514`): tasks marked `completed` MUST include a valid Google Drive or Docs URL matching `^https://(drive|docs)\.google\.com/`; non-Google-Drive URLs (e.g., Dropbox, OneDrive, raw MP4s) are rejected at the DB level.
+    - Verified Coordinator status mapping (`S6-03`): correctly maps the 6 task stages (`pending`, `shoot_assigned`, `shoot_done`, `editing`, `review`, `completed`) to the Coordinator's 4 statuses (`Pending`, `Approved`, `Shoot Done`, `Delivered`). Completed tasks expose the clickable Google Drive link.
+    - Verified Shoot Assignment Slip data derivation (`S6-04`): produces Course Name, Venue, Call Time (30 mins before shoot), Team Members & Phone numbers, and Assigned Gear Serial numbers.
+    - Verified Intern footage upload sync: updates `raw_footage_uploaded` flag on the task card.
+- **Gate 3 (Live Browser E2E):**
+  - Playwright tested across Desktop (1280x800) and Mobile (390x844) viewports:
+    - 36 tests passed with exit code 0 (39.0s).
+    - 0 console errors.
+    - 0 failed network requests.
+    - 0 horizontal overflow across desktop and mobile.
+    - Verified Media Head opens Approve & Assign modal on `/admin/requisitions`, picks 2-3 team members with Arif Rahman as Lead, designates deadline, and books available gear.
+    - Verified Automated Shoot Assignment Slip modal renders with formatted slip badge, course, venue, call time, team phone numbers, and assigned gear list.
+    - Verified 1-click Print/PDF button with `@media print` single-page slip layout.
+    - Verified 1-click zero-cost WhatsApp share link (`https://wa.me/?text=...`) prefilled with formatted Bangladeshi shoot details.
+    - Verified `/admin/tasks` 6-stage Kanban board matching `docs/mockups/task-board.jpg` (`Pending`, `Shoot Assigned`, `Shoot Done`, `Editing`, `Review`, `Completed`) with column counts, search bar, live countdown timers, and footage upload indicator.
+    - Verified mobile stage selector tabs (`All Stages`, `Shoot Assigned`, `Shoot Done`, etc.) work responsively without horizontal overflow.
+    - Verified Staff Project Lead (Arif Rahman) accesses `/staff/tasks`, sees Project Lead badge, transitions stages (Shoot Assigned -> Shoot Done -> Editing -> Review), and attaches Google Drive URL (validating rejection of invalid URL and acceptance of valid Drive URL).
+    - Verified `/staff/intern-status` route displays assigned interns and raw footage upload toggle.
+    - Verified Admin transitions task from Review to Completed with Drive URL modal, and Completed card displays the Google Drive Link button matching mockup.
+    - Verified Course Coordinator (The Art of Creation) visits `/coordinator/requests` and sees live status updated to `Delivered` with clickable Google Drive Link.
+- **Gate 4 (Adversarial Audit & Fresh Diff):**
+  - Matched `docs/mockups/task-board.jpg` and `docs/mockups/calendar-slip.jpg`.
+  - Zero placeholder stubs, zero `TODO`s, zero mock-only bypasses.
+  - Real database records, verified RLS enforcement, and atomic transaction semantics.
 
 ## Step 5 (S5-01 & S5-02) Verification Summary
 - **Gate 1 (Static):**

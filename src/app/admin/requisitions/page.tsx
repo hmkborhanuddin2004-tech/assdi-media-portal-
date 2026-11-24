@@ -8,6 +8,7 @@ import {
   X,
   ShieldAlert,
   Search,
+  FileText,
 } from "lucide-react";
 import type { RequisitionItem } from "@/lib/requisitions/store";
 import type { ProgramType, FramingType } from "@/lib/types/database";
@@ -19,6 +20,9 @@ import {
   FRAMING_TYPES,
 } from "@/lib/validations/requisitions";
 import type { Venue } from "@/lib/requisitions/store";
+import { ApproveAndAssignModal } from "@/components/tasks/ApproveAndAssignModal";
+import { ShootAssignmentSlipModal } from "@/components/tasks/ShootAssignmentSlipModal";
+import type { ShootSlipData, EnrichedTask } from "@/lib/tasks/store";
 
 type FilterStatus = "all" | "pending" | "approved" | "rejected";
 
@@ -35,6 +39,11 @@ export default function AdminRequisitionsPage() {
   const [rejectionReason, setRejectionReason] = useState<string>("");
   const [actionError, setActionError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
+
+  // Approve & Assign Modal + Shoot Slip Modal states
+  const [approvingReq, setApprovingReq] = useState<RequisitionItem | null>(null);
+  const [activeSlip, setActiveSlip] = useState<ShootSlipData | null>(null);
+  const [showSlipModal, setShowSlipModal] = useState(false);
 
   // Emergency Requisition Modal
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
@@ -83,33 +92,27 @@ export default function AdminRequisitionsPage() {
     fetchData();
   }, [fetchData]);
 
-  const handleApprove = async (id: string) => {
-    setActionError(null);
-    setActionLoading(true);
-    try {
-      const res = await fetch(`/api/requisitions/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "approve" }),
-      });
+  const handleApproveSuccess = (_task: EnrichedTask, slip: ShootSlipData) => {
+    setActiveSlip(slip);
+    setShowSlipModal(true);
+    fetchData();
+  };
 
-      const data = await res.json();
-      if (!res.ok || !data.success) {
-        setActionError(data.error || "অনুমোদন করা সম্ভব হয়নি।");
-        return;
+  const handleViewSlip = async (req: RequisitionItem) => {
+    if (req.task_id) {
+      try {
+        const res = await fetch(`/api/tasks/${req.task_id}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.slip) {
+            setActiveSlip(data.slip);
+            setShowSlipModal(true);
+            return;
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load task slip:", err);
       }
-
-      // Update state locally
-      setRequisitions((prev) =>
-        prev.map((r) =>
-          r.id === id ? { ...r, status: "approved", rejection_reason: null } : r
-        )
-      );
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "সার্ভার এরর।";
-      setActionError(msg);
-    } finally {
-      setActionLoading(false);
     }
   };
 
@@ -465,13 +468,13 @@ export default function AdminRequisitionsPage() {
                 {isPending && (
                   <div className="pt-2 border-t border-slate-100 flex items-center justify-end gap-2.5">
                     <button
-                      onClick={() => handleApprove(req.id)}
+                      onClick={() => setApprovingReq(req)}
                       id={`approve-btn-${req.id}`}
                       disabled={actionLoading}
                       className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#0F766E] hover:bg-[#115E59] text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer disabled:opacity-50"
                     >
                       <Check className="w-3.5 h-3.5" />
-                      <span>Approve (অনুমোদন)</span>
+                      <span>Approve & Assign (অনুমোদন)</span>
                     </button>
 
                     <button
@@ -482,6 +485,20 @@ export default function AdminRequisitionsPage() {
                     >
                       <X className="w-3.5 h-3.5" />
                       <span>Reject (বাতিল)</span>
+                    </button>
+                  </div>
+                )}
+
+                {/* View Shoot Slip Button for Approved Requisitions */}
+                {isApproved && (
+                  <div className="pt-2 border-t border-slate-100 flex items-center justify-end gap-2.5">
+                    <button
+                      onClick={() => handleViewSlip(req)}
+                      id={`view-slip-btn-${req.id}`}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-emerald-600/30 bg-emerald-50 text-[#0F766E] hover:bg-emerald-100 text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+                    >
+                      <FileText className="w-3.5 h-3.5" />
+                      <span>Shoot Slip (স্লিপ দেখুন)</span>
                     </button>
                   </div>
                 )}
@@ -739,6 +756,21 @@ export default function AdminRequisitionsPage() {
           </div>
         </div>
       )}
+
+      {/* Atomic Approve & Assign Modal */}
+      <ApproveAndAssignModal
+        requisition={approvingReq}
+        isOpen={Boolean(approvingReq)}
+        onClose={() => setApprovingReq(null)}
+        onSuccess={handleApproveSuccess}
+      />
+
+      {/* Shoot Assignment Slip Modal */}
+      <ShootAssignmentSlipModal
+        slip={activeSlip}
+        isOpen={showSlipModal}
+        onClose={() => setShowSlipModal(false)}
+      />
     </div>
   );
 }

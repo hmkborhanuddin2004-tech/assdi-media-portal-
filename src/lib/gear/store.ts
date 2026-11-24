@@ -52,6 +52,16 @@ export class PostgresExclusionError extends Error {
     time_window: string;
     formatted_message: string;
   };
+  details: {
+    gear_id: string;
+    gear_name: string;
+    serial_number: string;
+    assigned_lead_name: string;
+    team_label: string;
+    task_title: string;
+    time_window: string;
+    formatted_message: string;
+  };
 
   constructor(
     message: string,
@@ -60,6 +70,7 @@ export class PostgresExclusionError extends Error {
     super(message);
     this.name = "PostgresExclusionError";
     this.conflictingBooking = conflictingBooking;
+    this.details = conflictingBooking;
   }
 }
 
@@ -275,13 +286,28 @@ export const SEEDED_GEAR_ITEMS: GearItem[] = [
   },
 ];
 
-// Authoritative in-memory state
-let inMemoryGear: GearItem[] = JSON.parse(JSON.stringify(SEEDED_GEAR_ITEMS));
-let inMemoryBookings: GearBooking[] = [];
+// Authoritative in-memory state with globalStore persistence across Next.js API routes
+interface GearGlobalStore {
+  __assdi_gear?: GearItem[];
+  __assdi_gear_bookings?: GearBooking[];
+}
+
+const gearGlobalStore = globalThis as unknown as GearGlobalStore;
+if (!gearGlobalStore.__assdi_gear) {
+  gearGlobalStore.__assdi_gear = JSON.parse(JSON.stringify(SEEDED_GEAR_ITEMS));
+}
+if (!gearGlobalStore.__assdi_gear_bookings) {
+  gearGlobalStore.__assdi_gear_bookings = [];
+}
+
+let inMemoryGear: GearItem[] = gearGlobalStore.__assdi_gear!;
+let inMemoryBookings: GearBooking[] = gearGlobalStore.__assdi_gear_bookings!;
 
 export function resetGearForTesting(options?: { withMockupSeed?: boolean }) {
-  inMemoryGear = JSON.parse(JSON.stringify(SEEDED_GEAR_ITEMS));
-  inMemoryBookings = [];
+  gearGlobalStore.__assdi_gear = JSON.parse(JSON.stringify(SEEDED_GEAR_ITEMS));
+  gearGlobalStore.__assdi_gear_bookings = [];
+  inMemoryGear = gearGlobalStore.__assdi_gear!;
+  inMemoryBookings = gearGlobalStore.__assdi_gear_bookings!;
 
   if (options?.withMockupSeed) {
     // Optionally seed state matching docs/mockups/gear.jpg
@@ -335,7 +361,7 @@ export function resetGearForTesting(options?: { withMockupSeed?: boolean }) {
 
     if (rs4) {
       rs4.status = "maintenance";
-      rs4.maintenance_note = "Battery lock issue";
+      rs4.maintenance_note = "Gimbal axis motor calibration needed";
     }
   }
 }
@@ -732,4 +758,99 @@ export function markGearReady(gearId: string, user: UserProfile): GearItem {
 
 export function getAllBookings(): GearBooking[] {
   return inMemoryBookings;
+}
+
+export function getAllGearItemsRaw(): GearItem[] {
+  return inMemoryGear;
+}
+
+export function getGearItemsByIds(ids: string[]): GearItem[] {
+  return inMemoryGear.filter((g) => ids.includes(g.id));
+}
+
+/**
+ * Atomic batch booking for Task approval & assignment.
+ * If ANY item has an overlapping active booking, throws PostgresExclusionError (code 23P01)
+ * without partial state mutations.
+ */
+export function bookGearBatchForTask(params: {
+  gearIds: string[];
+  taskId: string;
+  responsibleLeadId: string;
+  leadName: string;
+  taskTitle: string;
+  teamLabel?: string;
+  timeWindow: string;
+}): GearBooking[] {
+  const { gearIds, taskId, responsibleLeadId, leadName, taskTitle, teamLabel, timeWindow } = params;
+
+  // 1. Validate all gear items exist and none are in maintenance
+  const selectedGear: GearItem[] = [];
+  for (const gid of gearIds) {
+    const item = inMemoryGear.find((g) => g.id === gid);
+    if (!item) {
+      throw new Error(`সরঞ্জাম পাওয়া যায়নি (Gear item not found: ${gid})`);
+    }
+    if (item.status === "maintenance") {
+      throw new Error(`"${item.name}" বর্তমানে রক্ষণাবেক্ষণে রয়েছে: ${item.maintenance_note || "Maintenance in progress"}`);
+    }
+    selectedGear.push(item);
+  }
+
+  // 2. Atomic check for double-booking conflicts across all requested items
+  for (const gear of selectedGear) {
+    const conflicting = inMemoryBookings.find(
+      (b) => b.gear_id === gear.id && !b.returned_at && timeWindowsOverlap(b.time_window, timeWindow)
+    );
+    if (conflicting) {
+      const range = parseTimeRange(conflicting.time_window);
+      const formattedDate = formatReadableDateTime(new Date(range.start).toISOString());
+      const leadLabel = conflicting.team_label || conflicting.lead_name || "Team A";
+      const formattedMessage = `Double-Booking Blocked: ${gear.name} (${gear.serial_number}) is already assigned to ${leadLabel} on ${formattedDate}.`;
+
+      throw new PostgresExclusionError(
+        `new row for relation "gear_bookings" violates exclusion constraint "excl_no_gear_double_booking"`,
+        {
+          gear_id: gear.id,
+          gear_name: gear.name,
+          serial_number: gear.serial_number,
+          assigned_lead_name: conflicting.lead_name || "Lead Staff",
+          team_label: conflicting.team_label || "Team A",
+          task_title: conflicting.task_title || "Active Shoot",
+          time_window: conflicting.time_window,
+          formatted_message: formattedMessage,
+        }
+      );
+    }
+  }
+
+  // 3. Atomically create bookings and update status to in_use
+  const createdBookings: GearBooking[] = [];
+  const now = new Date().toISOString();
+  for (const gear of selectedGear) {
+    const booking: GearBooking = {
+      id: `b-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      gear_id: gear.id,
+      task_id: taskId,
+      responsible_lead_id: responsibleLeadId,
+      time_window: timeWindow,
+      checked_out_at: now,
+      returned_at: null,
+      battery_ok: null,
+      sd_card_ok: null,
+      return_condition_note: null,
+      created_at: now,
+      task_title: taskTitle,
+      lead_name: leadName,
+      team_label: teamLabel || "Shoot Team",
+      gear_name: gear.name,
+      serial_number: gear.serial_number,
+    };
+    inMemoryBookings.push(booking);
+    gear.status = "in_use";
+    gear.updated_at = now;
+    createdBookings.push(booking);
+  }
+
+  return createdBookings;
 }

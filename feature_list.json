@@ -67,25 +67,25 @@
       "id": "S6-01",
       "step": 6,
       "name": "Atomic Requisition Approval + 2-3 Member Team & Gear Assignment creating 6-stage Task Board card",
-      "passes": false
+      "passes": true
     },
     {
       "id": "S6-02",
       "step": 6,
       "name": "Central Task Board (Pending -> Shoot Assigned -> Shoot Done -> Editing -> Review -> Completed) with deadline countdown & Google Drive URL",
-      "passes": false
+      "passes": true
     },
     {
       "id": "S6-03",
       "step": 6,
       "name": "Coordinator 4-status mapping (Pending/Approved/Shoot Done/Delivered + Drive Link) & Staff Project Lead task stage update",
-      "passes": false
+      "passes": true
     },
     {
       "id": "S6-04",
       "step": 6,
       "name": "Automated Shoot Assignment Slip (Team, Phones, Venue, Call Time, Gear List) with 1-click Print/PDF & wa.me WhatsApp share",
-      "passes": false
+      "passes": true
     },
     {
       "id": "S7-01",

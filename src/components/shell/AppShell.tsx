@@ -65,6 +65,12 @@ function getNavItemsForRole(role: UserRole | undefined | null): NavItem[] {
           icon: Kanban,
         },
         {
+          name: "Intern Status",
+          bnName: "ইন্টার্ন ট্র্যাকিং",
+          href: "/staff/intern-status",
+          icon: Users,
+        },
+        {
           name: "Daily Worklog",
           bnName: "ডেইলি কাজের লগ",
           href: "/staff/daily-log",
@@ -189,6 +195,12 @@ function getMobileNavItemsForRole(role: UserRole | undefined | null): NavItem[] 
           bnName: "টাস্ক",
           href: "/staff/tasks",
           icon: Kanban,
+        },
+        {
+          name: "Interns",
+          bnName: "ইন্টার্ন",
+          href: "/staff/intern-status",
+          icon: Users,
         },
         {
           name: "Worklog",

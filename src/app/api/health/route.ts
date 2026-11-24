@@ -1,7 +1,21 @@
-import { NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { resetRequisitionsForTesting } from "@/lib/requisitions/store";
+import { resetGearForTesting } from "@/lib/gear/store";
+import { resetTasksForTesting } from "@/lib/tasks/store";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const resetParam = request.nextUrl.searchParams.get("reset");
+  if (resetParam === "true" || resetParam === "1") {
+    resetRequisitionsForTesting();
+    resetGearForTesting({ withMockupSeed: true });
+    resetTasksForTesting();
+    return NextResponse.json({
+      status: "reset_ok",
+      timestamp: new Date().toISOString(),
+    });
+  }
+
   try {
     const supabase = await createClient();
 

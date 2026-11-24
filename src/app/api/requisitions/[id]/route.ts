@@ -5,6 +5,10 @@ import {
   approveRequisition,
   rejectRequisition,
 } from "@/lib/requisitions/store";
+import {
+  approveAndAssignTask,
+  PostgresExclusionError,
+} from "@/lib/tasks/store";
 import { rejectRequisitionSchema } from "@/lib/validations/requisitions";
 
 function isPlaceholderSupabaseConfig(): boolean {
@@ -35,6 +39,44 @@ export async function PATCH(
     const action = body.action || (body.status === "rejected" ? "reject" : "approve");
 
     if (action === "approve") {
+      // If team members & gear are provided, execute full atomic assignment
+      if (body.assignee_ids && body.gear_ids) {
+        try {
+          const result = approveAndAssignTask(
+            {
+              requisition_id: id,
+              lead_staff_id: body.lead_staff_id,
+              assignee_ids: body.assignee_ids,
+              deadline_at: body.deadline_at,
+              gear_ids: body.gear_ids,
+              notes: body.notes || null,
+            },
+            currentUser
+          );
+
+          return NextResponse.json({
+            success: true,
+            requisition: { id, status: "approved" },
+            task: result.task,
+            slip: result.slip,
+          });
+        } catch (err: unknown) {
+          if (err instanceof PostgresExclusionError) {
+            return NextResponse.json(
+              {
+                success: false,
+                code: err.code, // "23P01"
+                error: err.message,
+                details: err.details,
+              },
+              { status: 409 }
+            );
+          }
+          const message = err instanceof Error ? err.message : "অনুমোদন ব্যর্থ হয়েছে";
+          return NextResponse.json({ success: false, error: message }, { status: 400 });
+        }
+      }
+
       // 1. Try Supabase if live credentials configured
       if (!isPlaceholderSupabaseConfig()) {
         try {

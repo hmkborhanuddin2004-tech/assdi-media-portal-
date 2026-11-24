@@ -1,6 +1,10 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("S5-01 & S5-02: Gear Master Inventory, Task Check-Out & Double-Booking Lock E2E", () => {
+  test.beforeEach(async ({ request }) => {
+    await request.get("/api/health?reset=true");
+  });
+
   test("Admin checks out Sony FX3 → attempts conflicting check-out and verifies red Double-Booking alert banner → performs Return Check-In with condition note", async ({
     page,
   }, testInfo) => {

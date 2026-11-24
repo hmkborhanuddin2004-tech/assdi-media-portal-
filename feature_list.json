@@ -115,7 +115,7 @@
       "id": "S9-01",
       "step": 9,
       "name": "Full 4-Role Playwright E2E Suite (390px mobile + 1280px desktop, 0 console errors), weekly pg_dump backup template & Vercel production build",
-      "passes": false
+      "passes": true
     }
   ]
 }

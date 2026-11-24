@@ -19,6 +19,9 @@ import {
   LogIn,
   Home,
   User,
+  Search,
+  Bell,
+  ChevronDown,
 } from "lucide-react";
 import { ROLE_LABELS, type UserRole } from "@/lib/types/auth";
 
@@ -322,7 +325,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col md:flex-row antialiased overflow-x-hidden">
+    <div className="min-h-screen bg-transparent flex flex-col md:flex-row antialiased overflow-x-hidden">
       {/* Desktop Fixed Sidebar */}
       <aside
         id="desktop-sidebar"
@@ -542,6 +545,53 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         className="flex-1 md:pl-64 print:pl-0 print:pb-0 w-full max-w-full flex flex-col min-h-screen pb-20 md:pb-8 overflow-x-hidden"
       >
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 md:py-8 print:p-0 print:m-0 print:max-w-full">
+          {/* Executive Desktop Top Navigation Bar (Hidden on Login, Mobile & Print) */}
+          {pathname !== "/login" && user && (
+            <header className="hidden md:flex items-center justify-between gap-4 mb-6 print:hidden">
+              {pathname !== "/admin/tasks" && pathname !== "/admin/gear" ? (
+                <div className="relative flex-1 max-w-md">
+                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder="Search requisitions, gear, staff..."
+                    className="w-full pl-10 pr-4 py-2 text-xs rounded-xl glass-panel text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E] transition-all"
+                    readOnly
+                  />
+                </div>
+              ) : (
+                <div className="flex-1 max-w-md" />
+              )}
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  className="w-9 h-9 rounded-xl glass-panel flex items-center justify-center text-slate-600 hover:text-slate-900 transition-colors relative"
+                  aria-label="Notifications"
+                >
+                  <Bell className="w-4 h-4" />
+                  <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-[#0F766E] rounded-full ring-2 ring-white" />
+                </button>
+                <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl glass-panel text-xs cursor-pointer hover:bg-white/90 transition-all">
+                  <div className="w-7 h-7 rounded-full bg-emerald-100 text-[#0F766E] flex items-center justify-center font-bold text-xs shrink-0">
+                    {user.full_name?.[0] || "U"}
+                  </div>
+                  <div className="flex flex-col text-left">
+                    <span className="font-semibold text-slate-900 leading-tight">
+                      {user.role === "admin"
+                        ? "Media Head"
+                        : user.role === "coordinator"
+                        ? `Coordinator · ${user.course_name || "Art of Creation"}`
+                        : user.role === "staff"
+                        ? `${user.full_name?.split(" ")[0] || "Arif"} · Permanent Staff`
+                        : user.role === "intern"
+                        ? `${user.full_name?.split(" ")[0] || "Hasan"} · Trainee`
+                        : "User"}
+                    </span>
+                  </div>
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-1" />
+                </div>
+              </div>
+            </header>
+          )}
           {children}
         </div>
       </main>

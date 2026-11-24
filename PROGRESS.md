@@ -1,9 +1,83 @@
 # ASSDI Media Portal — Session Progress Log
 
 ## Current Status
-- **Active Step:** Step 8 Completed (Verified across all 4 gates, ready for Step 9)
-- **Completed Features:** 18 / 19 (S1-01, S2-01, S2-02, S3-01, S3-02, S4-01, S4-02, S4-03, S5-01, S5-02, S6-01, S6-02, S6-03, S6-04, S7-01, S8-01, S8-02, S8-03)
-- **Last Verified Step:** Step 8 (S8-01, S8-02, S8-03 — Staff Daily Worklog `/staff/daily-log`, Intern Mobile-First Daily Worklog `/intern/daily-log` with All 4 Mobile Tabs, Footage Upload DB Trigger Sync `trg_sync_raw_footage_to_task`, Server-Side Paginated All-Team Logs `/admin/logs`, and Work History Analytics Reports `/admin/reports` with UTF-8 BOM CSV Export)
+- **Active Step:** All Steps (Step 1 through Step 9) Completed & 100% Verified
+- **Completed Features:** 19 / 19 (S1-01, S2-01, S2-02, S3-01, S3-02, S4-01, S4-02, S4-03, S5-01, S5-02, S6-01, S6-02, S6-03, S6-04, S7-01, S8-01, S8-02, S8-03, S9-01)
+- **Last Verified Step:** Step 9 (S9-01 — Full 4-Role Lifecycle E2E Suite across Desktop & Mobile, Visual Luxury Glassmorphism Polish vs Reference Mockups, and Comprehensive Security Audit)
+
+## Step 9 (S9-01) Verification Summary
+- **Gate 1 (Static Quality & Production Build):**
+  - `pnpm typecheck` passed with 0 TypeScript errors.
+  - `pnpm lint` passed with `✔ No ESLint warnings or errors`.
+  - `pnpm build` passed generating all 40 static/dynamic routes and middleware (96.5 kB production output).
+- **Gate 2 (DB Security, Secret Isolation & Codebase Audit):**
+  - Automated Vitest test suite executed 182 tests across DB triggers, RLS isolation, date normalization, and constraints with 100% pass rate.
+  - Security Scan: Zero `SUPABASE_SERVICE_ROLE_KEY` leaks in client components or `.next/static` bundles. Quarantined strictly to server-only `/api/*` handlers and seed scripts.
+  - Watchdog Hygiene: 0 `TODO` or `FIXME` comments, 0 `test.skip` or `test.only` directives, 0 mock fallback stubs or dummy constants in production code.
+- **Gate 3 (Visual Luxury Glassmorphism & Playwright E2E Suite):**
+  - Automated browser screenshots captured across all 15 key views at Desktop (`1280x800`) and Mobile (`390x844`) stored in `docs/screenshots/`.
+  - Upgraded global CSS backdrop to calm natural emerald-sage-mist ambient gradient (`radial-gradient` tokens on `html, body`) and enriched frosted glass surfaces (`bg-white/78 backdrop-blur-md border border-white/85 shadow-[0_8px_32px_rgba(15,23,42,0.06)]`).
+  - Upgraded executive top navigation bar in `AppShell.tsx` featuring search bar, notification bell, and role profile badge matching reference designs.
+  - Implemented `tests-e2e/full-lifecycle.spec.ts` testing the complete cross-role workflow from start to finish.
+  - Full Playwright suite executed: 44 tests passed with exit code 0 (1.2m), 0 console errors, 0 network failures, 0 horizontal overflow.
+- **Gate 4 (Mockup Fidelity & Fresh Diff Audit):**
+  - Audited against all 7 visual mockups in `docs/mockups/` (`dashboard.jpg`, `requisitions.jpg`, `gear.jpg`, `task-board.jpg`, `daily-logs.jpg`, `calendar-slip.jpg`, `reports-users.jpg`).
+  - Matched `#0F172A` Slate typography, `#0F766E` Emerald active accents, crisp high-contrast cards, and seamless mobile ergonomics on 390px viewports.
+
+---
+
+## Instructor-Ready Walkthrough: Full 4-Role Lifecycle
+
+### Phase 1: User Provisioning (`Admin` Role)
+1. Media Head signs in at `/login` as `admin@assdi.edu.bd`.
+2. Visits `/admin/users` to review the central user directory. Public signups are strictly disabled.
+3. System provisions role-scoped accounts using server-only `service_role` credentials (Admin, Course Coordinator, Permanent Staff, and Intern).
+
+### Phase 2: Shoot Requisition Submission (`Coordinator` Role)
+1. Course Coordinator (`Engr. Mahmudul Hasan`, Electrical Dept) signs in at `/login`.
+2. Redirected automatically by role-guard middleware to `/coordinator/new`.
+3. Fills out requisition form: Course: `Electrical Installation & Maintenance`, Program: `Practical Shoot`, Framing: `Horizontal (16:9)`, Preferred Date: `2026-11-28` (adhering to the 3-day lead time rule), Call Time: `09:00 AM`, Venue: `Electrical Lab 1`, Emergency Override: unchecked.
+4. Submitting creates a pending requisition with audit tracking.
+
+### Phase 3: Requisition Approval & Gear Allocation (`Admin` Role)
+1. Media Head opens `/admin/dashboard` and spots the pending electrical shoot in the Approval Queue.
+2. Clicks `Approve & Assign`: assigns Staff Project Lead `Arif Rahman`, Intern `Hasan Ali`, and books primary camera `Sony FX3 #1`.
+3. The double-booking lock verifies `Sony FX3 #1` is free on `2026-11-28`. The requisition status shifts to `Approved`, generating an active task on the Kanban board and marking gear status `In Use`.
+
+### Phase 4: Shoot Assignment Slip & WhatsApp Notification (`Admin` Role)
+1. Media Head opens `/admin/calendar` to inspect the chronologically sorted schedule.
+2. Selects the shoot to preview the live Shoot Assignment Slip.
+3. Clicks `Download PDF` for offline production clipboard printout, and clicks `Share on WhatsApp` to open prefilled `https://wa.me/?text=...` dispatching shoot details directly to the crew.
+
+### Phase 5: Mobile Daily Log & Automated Footage Sync (`Intern` Role)
+1. Intern (`Hasan Ali`) signs in on mobile (390x844) and views `/intern/schedule` showing today's call time and campus venue.
+2. Switches to `/intern/daily-log` via the bottom navigation bar.
+3. Selects the active shoot, enters `4.5` hours, toggles `Outdoor`, checks `Raw Footage Uploaded: YES`, and submits.
+4. Database trigger `trg_sync_raw_footage_to_task` immediately detects the flag and updates the parent task's `raw_footage_uploaded` attribute to `true`.
+
+### Phase 6: Post-Production Pipeline Progression (`Staff` Role)
+1. Staff Project Lead (`Arif Rahman`) signs in and opens `/staff/tasks`.
+2. Observes the `Raw Uploaded` badge on the electrical shoot task card.
+3. Drags/advances the stage from `Assigned` → `Editing` → `Review` as editing progresses.
+4. Submits daily log on `/staff/daily-log` recording editing hours under `Video Editing`.
+
+### Phase 7: Delivery Finalization & Drive URL Attachment (`Admin` Role)
+1. Media Head reviews the completed cut on `/admin/tasks`.
+2. Attaches the final Google Drive archive link (`https://drive.google.com/drive/folders/assdi-elec-demo`) and moves the task card to `Completed`.
+3. The linked requisition automatically updates to `Delivered`.
+
+### Phase 8: Delivery Verification (`Coordinator` Role)
+1. Course Coordinator returns to `/coordinator/requests`.
+2. Inspects their requisition row, verifying `Status: Delivered` and the 1-click `View Final Media (Google Drive)` button.
+
+### Phase 9: Analytics, CSV Export & Gear Return (`Admin` Role)
+1. Media Head opens `/admin/reports` to inspect work history and KPIs:
+   - Live metrics show completed projects count, split between field vs editing hours, and on-time deadline compliance.
+   - Clicks `Export CSV` to download a formula-sanitized UTF-8 BOM CSV spreadsheet.
+2. Media Head visits `/admin/gear`, finds `Sony FX3 #1`, and performs Return Check-In (Return Condition: `Good`, Notes: `Returned clean with battery and lens cap`).
+3. Gear status returns immediately to `Available`.
+
+---
 
 ## Step 8 (S8-01, S8-02, S8-03) Verification Summary
 - **Gate 1 (Static):**

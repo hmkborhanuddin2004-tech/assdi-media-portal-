@@ -55,13 +55,13 @@
       "id": "S5-01",
       "step": 5,
       "name": "Gear Master Inventory (/admin/gear) with serial numbers, Available/In Use/Maintenance status, Check-Out & Return Condition Check-In",
-      "passes": false
+      "passes": true
     },
     {
       "id": "S5-02",
       "step": 5,
       "name": "PostgreSQL EXCLUDE USING gist Double-Booking Lock verified via concurrent Promise.all() booking test",
-      "passes": false
+      "passes": true
     },
     {
       "id": "S6-01",

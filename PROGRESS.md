@@ -1,9 +1,45 @@
 # ASSDI Media Portal — Session Progress Log
 
 ## Current Status
-- **Active Step:** Step 4 Completed (Verified across all 4 gates, ready for Step 5)
-- **Completed Features:** 8 / 19 (S1-01, S2-01, S2-02, S3-01, S3-02, S4-01, S4-02, S4-03)
-- **Last Verified Step:** S4-01, S4-02 & S4-03 (Course Coordinator Requisition Form, Asia/Dhaka Lead-Time Rules, Admin Approval Queue & Emergency Override)
+- **Active Step:** Step 5 Completed (Verified across all 4 gates, ready for Step 6)
+- **Completed Features:** 10 / 19 (S1-01, S2-01, S2-02, S3-01, S3-02, S4-01, S4-02, S4-03, S5-01, S5-02)
+- **Last Verified Step:** S5-01 & S5-02 (Gear Master Inventory `/admin/gear`, PostgreSQL `EXCLUDE USING gist` Double-Booking Lock, Check-Out & Return Condition Check-In)
+
+## Step 5 (S5-01 & S5-02) Verification Summary
+- **Gate 1 (Static):**
+  - `pnpm typecheck` passed with 0 TypeScript errors.
+  - `pnpm lint` passed with `✔ No ESLint warnings or errors`.
+  - `pnpm build` passed generating all 24 static/dynamic routes and middleware (96.4 kB).
+- **Gate 2 (Live API, PostgreSQL Exclusion Lock & Concurrency Tests):**
+  - Automated Vitest test suite executed 105 tests (including 18 targeted concurrency stress tests in `src/lib/supabase/gear-concurrency.test.ts`):
+    - Verified PostgreSQL `excl_no_gear_double_booking` exclusion constraint: concurrent `Promise.all()` firing two simultaneous check-outs for Sony FX3 (`SN-FX3-01`) over overlapping time windows asserts EXACTLY 1 succeeds and 1 fails with Postgres error code `23P01`.
+    - Verified error details provide clear conflicting booking info (`Sony FX3 (SN-FX3-01) is already assigned to Team A on Nov 24, 9:00 AM`).
+    - Verified sequential non-overlapping bookings on the same gear succeed cleanly.
+    - Verified booking after return check-in succeeds (enforcing `WHERE (returned_at IS NULL)` partial exclusion index).
+    - Verified Return Condition Check-In: saving `battery_ok`, `sd_card_ok`, and `return_condition_note`.
+    - Verified Maintenance lifecycle: flagging maintenance during check-in sets `status = 'maintenance'` and saves `maintenance_note`, blocking subsequent check-outs; "Mark Ready" action restores status to `available`.
+    - Verified RLS Policies: non-admin users (Staff, Intern, Coordinator) are strictly blocked from mutating `gear_items` or `gear_bookings` (`gear_items_admin_all`, `gear_bookings_admin_all`).
+    - Verified Coordinator cannot view gear inventory (`gear_items_select`). Staff and Intern can view items.
+    - Verified unique `serial_number` constraint on `gear_items` (rejecting duplicate serial with code `23505`).
+- **Gate 3 (Live Browser E2E):**
+  - Playwright tested across Desktop (1280x800) and Mobile (390x844) viewports:
+    - 34 tests passed with exit code 0 (30.2s).
+    - 0 console errors.
+    - 0 failed network requests.
+    - 0 horizontal overflow across desktop and mobile.
+    - Verified `/admin/gear` renders matching emerald-sage glassmorphism design in `docs/mockups/gear.jpg`.
+    - Verified consistent 8-item Admin sidebar on desktop with `Gear Stock` active.
+    - Verified Admin checks out Sony FX3 (`SN-FX3-01`) → updates status badge to `In Use` and action button to `Check-In`.
+    - Verified Admin attempts conflicting check-out for Sony FX3 during overlapping time window → red Double-Booking Blocked alert banner appears in modal and on page with exact conflict message.
+    - Verified Admin performs Return Check-In with condition note ("Battery 98%, lens mount clean, no damage") → live status updates back to `Available`.
+    - Verified Admin checks out Sony FX30, flags for maintenance with note "Battery lock issue", and verifies status updates to red `Maintenance`; clicks "Mark Ready" and status restores to `Available`.
+    - Verified Add Gear modal with unique serial number validation rejecting duplicate serials.
+    - Verified category filter (Drones -> Mini 3 Pro & Air 3S), status filter tabs (Available, In Use, Maintenance), and search bar ("RS 4").
+    - Verified Quick Return Condition Check-In bottom panel on desktop and mobile.
+- **Gate 4 (Adversarial Audit & Fresh Diff):**
+  - Matched `docs/mockups/gear.jpg` visual layout with frosted glass containers, emerald accents, and responsive 1-column mobile cards.
+  - Zero placeholder stubs, zero `TODO`s, zero mock-only bypasses.
+  - All admin endpoints authenticated and guarded server-side.
 
 ## Step 4 (S4-01, S4-02 & S4-03) Verification Summary
 - **Gate 1 (Static):**

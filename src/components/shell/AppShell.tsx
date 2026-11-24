@@ -115,7 +115,7 @@ function getNavItemsForRole(role: UserRole | undefined | null): NavItem[] {
           badge: "6-Stage",
         },
         {
-          name: "Gear Inventory",
+          name: "Gear Stock",
           bnName: "গিয়ার স্টক",
           href: "/admin/gear",
           icon: Camera,
@@ -127,10 +127,16 @@ function getNavItemsForRole(role: UserRole | undefined | null): NavItem[] {
           icon: Calendar,
         },
         {
-          name: "Daily Worklog",
+          name: "Daily Logs",
           bnName: "ডেইলি লগ",
-          href: "/staff/tasks",
+          href: "/admin/logs",
           icon: Clock,
+        },
+        {
+          name: "Reports",
+          bnName: "রিপোর্ট",
+          href: "/admin/reports",
+          icon: ShieldCheck,
         },
         {
           name: "User Management",
@@ -226,6 +232,12 @@ function getMobileNavItemsForRole(role: UserRole | undefined | null): NavItem[] 
           bnName: "রিকুইজিশন",
           href: "/admin/requisitions",
           icon: FilePlus2,
+        },
+        {
+          name: "Gear",
+          bnName: "গিয়ার",
+          href: "/admin/gear",
+          icon: Camera,
         },
         {
           name: "Tasks",

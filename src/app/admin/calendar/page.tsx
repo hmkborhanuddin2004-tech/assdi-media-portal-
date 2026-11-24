@@ -72,20 +72,22 @@ export default function AdminMasterCalendarPage() {
     setActiveWindow(windowType);
   };
 
-  const selectedShoot = shoots.find((s) => s.id === selectedShootId) || shoots[0] || null;
-
   const filteredShoots = shoots.filter((s) => {
     if (!searchQuery.trim()) return true;
-    const q = searchQuery.toLowerCase();
+    const q = searchQuery.toLowerCase().trim();
     return (
-      s.course_name.toLowerCase().includes(q) ||
-      s.course_code.toLowerCase().includes(q) ||
-      s.venue_name.toLowerCase().includes(q) ||
-      s.lead_name.toLowerCase().includes(q) ||
-      s.program_type_label.toLowerCase().includes(q) ||
-      s.gear_summary.toLowerCase().includes(q)
+      (s.course_name || "").toLowerCase().includes(q) ||
+      (s.course_code || "").toLowerCase().includes(q) ||
+      (s.venue_name || "").toLowerCase().includes(q) ||
+      (s.lead_name || "").toLowerCase().includes(q) ||
+      (s.program_type_label || "").toLowerCase().includes(q) ||
+      (s.gear_summary || "").toLowerCase().includes(q)
     );
   });
+
+  const activeList = searchQuery.trim() ? filteredShoots : shoots;
+  const selectedShoot =
+    activeList.find((s) => s.id === selectedShootId) || activeList[0] || null;
 
   const handlePrintSlip = () => {
     if (typeof window !== "undefined") {
@@ -105,7 +107,7 @@ export default function AdminMasterCalendarPage() {
   return (
     <div className="space-y-6 w-full max-w-full">
       {/* Top Emerald Glassmorphic Banner */}
-      <div className="glass-emerald-card rounded-2xl p-5 md:p-8 border border-emerald-600/20 shadow-xs relative overflow-hidden bg-gradient-to-br from-emerald-50/80 via-white to-teal-50/50">
+      <div className="print:hidden glass-emerald-card rounded-2xl p-5 md:p-8 border border-emerald-600/20 shadow-xs relative overflow-hidden bg-gradient-to-br from-emerald-50/80 via-white to-teal-50/50">
         <div className="relative z-10 max-w-3xl space-y-2.5">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-[#0F766E] text-xs font-semibold">
             <CalendarDays className="w-4 h-4" />
@@ -124,7 +126,7 @@ export default function AdminMasterCalendarPage() {
       </div>
 
       {/* Filter Tabs & Search Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-2.5 rounded-2xl border border-slate-200/80 shadow-xs">
+      <div className="print:hidden flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-2.5 rounded-2xl border border-slate-200/80 shadow-xs">
         {/* Tabs: Tomorrow, Next 3 Days, Next 7 Days */}
         <div className="inline-flex p-1 bg-slate-100/90 rounded-xl gap-1 shrink-0">
           {(["tomorrow", "next_3_days", "next_7_days"] as CalendarWindow[]).map((win) => {
@@ -170,9 +172,9 @@ export default function AdminMasterCalendarPage() {
       </div>
 
       {/* Main 2-Column Responsive Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start print:block print:w-full print:m-0 print:p-0">
         {/* Left Column: Chronological Shoot Schedule Cards (7 cols) */}
-        <div className="lg:col-span-7 space-y-3.5">
+        <div className="print:hidden lg:col-span-7 space-y-3.5">
           <div className="flex items-center justify-between px-1">
             <h2 className="text-sm font-bold text-slate-800 flex items-center gap-2">
               <Calendar className="w-4 h-4 text-[#0F766E]" />
@@ -366,9 +368,9 @@ export default function AdminMasterCalendarPage() {
         </div>
 
         {/* Right Column: Automated Shoot Assignment Slip (5 cols) */}
-        <div className="hidden lg:block lg:col-span-5 sticky top-6">
+        <div className="hidden lg:block lg:col-span-5 sticky top-6 print:block print:w-full print:static print:m-0 print:p-0">
           <div className="space-y-3">
-            <div className="flex items-center justify-between px-1">
+            <div className="print:hidden flex items-center justify-between px-1">
               <h2 className="text-sm font-bold text-slate-800 flex items-center gap-2">
                 <FileText className="w-4 h-4 text-[#0F766E]" />
                 <span>লাইভ শুট অ্যাসাইনমেন্ট স্লিপ</span>
@@ -383,7 +385,7 @@ export default function AdminMasterCalendarPage() {
             {selectedShoot ? (
               <div
                 id="calendar-shoot-slip-panel"
-                className="glass-panel bg-white/95 rounded-2xl p-6 border border-emerald-600/30 shadow-md space-y-5 relative overflow-hidden"
+                className="glass-panel bg-white/95 rounded-2xl p-6 border border-emerald-600/30 shadow-md space-y-5 relative overflow-hidden print:p-8 print:m-0 print:border-none print:shadow-none print:w-full print:bg-white"
               >
                 {/* Slip Header Badge */}
                 <div className="text-center pb-2 border-b border-slate-100">
@@ -523,7 +525,7 @@ export default function AdminMasterCalendarPage() {
                 </div>
 
                 {/* 1-Click Action Buttons matching Step 6 */}
-                <div className="pt-2 flex flex-col sm:flex-row gap-2.5">
+                <div className="print:hidden pt-2 flex flex-col sm:flex-row gap-2.5">
                   <button
                     onClick={handlePrintSlip}
                     id="calendar-download-pdf-btn"

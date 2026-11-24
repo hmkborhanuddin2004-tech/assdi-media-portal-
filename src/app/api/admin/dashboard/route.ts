@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/session";
 import { getDashboardKpiData } from "@/lib/calendar/store";
+import { calendarQuerySchema } from "@/lib/validations/calendar";
 
 export async function GET(request: NextRequest) {
   const currentUser = await getCurrentUser(request);
@@ -22,7 +23,24 @@ export async function GET(request: NextRequest) {
   }
 
   const { searchParams } = new URL(request.url);
-  const refDate = searchParams.get("refDate") || undefined;
+  const refDateParam = searchParams.get("refDate") || undefined;
+
+  const parsed = calendarQuerySchema.safeParse({
+    window: "next_7_days",
+    refDate: refDateParam,
+  });
+
+  if (refDateParam && !parsed.success) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: "অবৈধ তারিখ ফরম্যাট। অনুগ্রহ করে YYYY-MM-DD ফরম্যাট ব্যবহার করুন।",
+      },
+      { status: 400 }
+    );
+  }
+
+  const refDate = parsed.success ? parsed.data.refDate : undefined;
 
   try {
     const data = getDashboardKpiData(currentUser, refDate);

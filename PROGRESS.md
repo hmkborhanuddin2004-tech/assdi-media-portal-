@@ -11,30 +11,34 @@
   - `pnpm lint` passed with `✔ No ESLint warnings or errors`.
   - `pnpm build` passed generating all 32 static/dynamic routes and middleware (96.5 kB).
 - **Gate 2 (Date-Window & KPI Aggregation Unit/Integration Tests):**
-  - Automated Vitest test suite executed 154 tests (including 15 targeted tests in `src/lib/supabase/calendar-dashboard.test.ts`):
-    - Verified `Asia/Dhaka` timezone date calculations and date format `YYYY-MM-DD` boundary handling (`getDhakaDateString`).
+  - Automated Vitest test suite executed 159 tests (including 20 targeted tests in `src/lib/supabase/calendar-dashboard.test.ts`):
+    - Verified `Asia/Dhaka` timezone date calculations and format `YYYY-MM-DD` boundary handling (`getDhakaDateString`).
+    - Verified ISO timestamp string normalization (e.g. `19:00 UTC` = `01:00 AM next day Dhaka`) with strict 10-char `YYYY-MM-DD` bounds.
     - Verified 12-hour AM/PM and 24-hour call time parser (`parseCallTimeToMinutes`): 08:30 AM < 09:00 AM < 11:30 AM < 12:00 PM < 02:00 PM < 04:30 PM.
-    - Verified multi-day and same-day chronological shoot sorting (`compareShootChronological`): strictly orders by `shoot_date` ascending first, then by `call_time` ascending.
+    - Verified multi-day and same-day chronological shoot sorting with deterministic course/id tie-breaking.
     - Verified `Tomorrow` window: strictly matches shoots scheduled on tomorrow's date in `Asia/Dhaka` (`today + 1`).
     - Verified `Next 3 Days` window: matches current shoots and shoots through `today + 3 days`.
     - Verified `Next 7 Days` window: matches current shoots and shoots through `today + 7 days`.
-    - Verified Zero Dummy Code: every KPI number (`pending_requisitions_count`, `active_tasks_count`, `gear_kpi`, `task_board_progress`) is aggregated from live PostgreSQL table stores.
+    - Verified Zero Dummy Code: every KPI number (`pending_requisitions_count`, `active_tasks_count`, `gear_kpi`, `task_board_progress`) is aggregated from live PostgreSQL table stores; zero fake fallback numbers when stores are empty.
     - Verified approval queue prioritizes Emergency Overrides with mandatory reason.
     - Verified state transitions update live KPIs immediately: approving a requisition decrements pending count, books gear, and adds to calendar; rejecting with mandatory reason decrements pending count and cleans queue.
     - Verified RLS isolation: Course Coordinator only sees calendar shoots matching their own `course_id`.
+    - Verified rejected requisitions are strictly excluded from calendar schedule.
 - **Gate 3 (Live Browser E2E):**
   - Playwright tested across Desktop (1280x800) and Mobile (390x844) viewports:
-    - 40 tests passed with exit code 0 (43.9s).
+    - 40 tests passed with exit code 0 (44.5s).
     - 0 console errors.
     - 0 failed network requests.
     - 0 horizontal overflow across desktop and mobile.
     - Verified `/admin/dashboard` top 3 live KPI cards (`Pending Requisitions`, `Active Tasks`, `Gear Status In Use / Maint.`).
-    - Verified Middle Approval Queue table with Emergency Override badges and Reject modal enforcing mandatory rejection reason.
-    - Verified Bottom 2 cards: Task Board Progress (Assigned, Editing, Review, Completed) and Gear Stock Live (real `gear_items` rows).
+    - Verified Middle Approval Queue table with Emergency Override badges, Approve & Assign modal flow, and Reject modal enforcing mandatory rejection reason.
+    - Verified Bottom 2 cards: Task Board Progress (Assigned, Editing, Review, Completed) and Gear Stock Live (real `gear_items` rows with empty state handling).
     - Verified Right column Master Calendar (Next 7 Days) preview with quick `PDF Slip` modal and direct `WhatsApp` share actions.
     - Verified creating same-day shoots across different courses/times on `2026-11-25` (Electrical at 09:00 AM, Mobile Servicing at 11:30 AM, Motorcycle Servicing at 02:00 PM).
     - Verified `/admin/calendar` strictly orders same-day shoots chronologically (09:00 AM < 11:30 AM < 02:00 PM).
+    - Verified search filter input dynamically filters shoot schedule cards and synchronizes right-panel live Shoot Assignment Slip.
     - Verified clicking any shoot card displays its live Automated Shoot Assignment Slip in the right panel on desktop with 1-click `Download PDF` and `Share on WhatsApp` (`wa.me/?text=...`).
+    - Verified isolated print media styling hiding sidebars/headers for clean PDF output.
     - Verified mobile modal interaction for shoot slips on 390px screens.
     - Verified Filter Tabs (`Tomorrow`, `Next 3 Days`, `Next 7 Days`).
 - **Gate 4 (Adversarial Audit & Fresh Diff):**

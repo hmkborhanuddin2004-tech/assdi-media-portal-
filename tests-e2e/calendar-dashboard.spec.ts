@@ -245,7 +245,31 @@ test.describe("Step 7 (S7-01): Master Calendar & Live Dashboard E2E", () => {
     }
 
     // ========================================================================
-    // 5. TEST FILTER TABS (Next 3 Days & Next 7 Days)
+    // 5. TEST SEARCH FILTER & SYNCHRONIZATION
+    // ========================================================================
+    const searchInput = page.locator("#calendar-search-input");
+    await expect(searchInput).toBeVisible();
+
+    // Search for "Electrical"
+    await searchInput.fill("Electrical");
+    await expect(page.locator("#calendar-shoots-list > div")).toHaveCount(1);
+    await expect(page.locator("#calendar-shoots-list")).toContainText("Electrical");
+
+    if (!isMobile) {
+      await expect(page.locator("#calendar-slip-course")).toContainText("Electrical");
+    }
+
+    // Search for non-existent item
+    await searchInput.fill("NonExistentCourseXYZ");
+    await expect(page.locator("#calendar-shoots-list")).not.toBeVisible();
+    await expect(page.getByText("কোনো শুটিং শিডিউল পাওয়া যায়নি")).toBeVisible();
+
+    // Clear search
+    await searchInput.fill("");
+    await expect(page.locator("#calendar-shoots-list > div")).toHaveCount(3);
+
+    // ========================================================================
+    // 6. TEST FILTER TABS (Next 3 Days & Next 7 Days)
     // ========================================================================
     const res3Promise = page.waitForResponse(
       (r) => r.url().includes("/api/calendar?window=next_3_days") && r.status() === 200
@@ -270,7 +294,7 @@ test.describe("Step 7 (S7-01): Master Calendar & Live Dashboard E2E", () => {
     }).toPass({ timeout: 5000 });
 
     // ========================================================================
-    // 6. DASHBOARD REJECTION FLOW (With Mandatory Reason)
+    // 7. DASHBOARD APPROVAL QUEUE: REJECT FLOW (With Mandatory Reason)
     // ========================================================================
     await page.goto("/admin/dashboard");
     await page.waitForLoadState("domcontentloaded");
@@ -298,6 +322,35 @@ test.describe("Step 7 (S7-01): Master Calendar & Live Dashboard E2E", () => {
 
     // Professional Cooking must disappear from queue
     await expect(page.locator("#approval-queue-item-r1000000-0000-0000-0000-000000000007")).not.toBeVisible();
+
+    // ========================================================================
+    // 8. DASHBOARD APPROVAL QUEUE: APPROVE & ASSIGN FLOW
+    // ========================================================================
+    const approveBtn = page.locator("#dashboard-approve-btn-r1000000-0000-0000-0000-000000000010");
+    if (await approveBtn.isVisible()) {
+      await approveBtn.click();
+
+      const assignModal = page.locator("#approve-assign-modal-card");
+      await expect(assignModal).toBeVisible();
+
+      // Submit assignment
+      const confirmApproveBtn = page.locator("#confirm-approve-assign-btn");
+      await expect(confirmApproveBtn).toBeVisible();
+      await confirmApproveBtn.click();
+
+      // Confirm modal closes and shoot assignment slip opens
+      await expect(assignModal).not.toBeVisible();
+      const slipModal = page.locator("#shoot-assignment-slip-card");
+      await expect(slipModal).toBeVisible();
+      await expect(page.locator("#slip-course-title")).toContainText("Reel");
+
+      // Close slip modal
+      await page.click("#close-slip-modal-btn");
+      await expect(slipModal).not.toBeVisible();
+
+      // Verify item removed from approval queue
+      await expect(page.locator("#approval-queue-item-r1000000-0000-0000-0000-000000000010")).not.toBeVisible();
+    }
 
     // Verify 0 console errors and 0 failed requests
     expect(consoleErrors).toEqual([]);

@@ -318,5 +318,98 @@ describe("Step 7 (S7-01): Master Calendar & Live Dashboard Aggregation Engine", 
       const stillInQueue = updatedDashboard.approval_queue.some((r) => r.id === targetReq!.id);
       expect(stillInQueue).toBe(false);
     });
+
+    it("guarantees ZERO dummy numbers when stores are cleared", () => {
+      // Empty all stores
+      getAllRequisitionsRaw().length = 0;
+      getTasksStore().length = 0;
+      getAllGearItemsRaw().length = 0;
+
+      const dashboard = getDashboardKpiData(adminUser, fixedRefDate);
+
+      expect(dashboard.pending_requisitions_count).toBe(0);
+      expect(dashboard.active_tasks_count).toBe(0);
+      expect(dashboard.gear_kpi).toEqual({
+        total: 0,
+        available: 0,
+        in_use: 0,
+        maintenance: 0,
+      });
+      expect(dashboard.task_board_progress).toEqual({
+        assigned: 0,
+        editing: 0,
+        review: 0,
+        completed: 0,
+        total: 0,
+      });
+      expect(dashboard.approval_queue).toEqual([]);
+      expect(dashboard.gear_stock_live).toEqual([]);
+      expect(dashboard.calendar_preview_next_7_days).toEqual([]);
+    });
+  });
+
+  // ==========================================================================
+  // 5. EDGE CASES: BOUNDARIES, ISO STRINGS, TIE-BREAKERS & REJECTIONS
+  // ==========================================================================
+  describe("5. Edge Cases: ISO Timestamps, Boundaries, Tie-Breakers & Rejections", () => {
+    it("handles ISO timestamp strings in refDate with UTC+6 Dhaka date rollover", () => {
+      // 19:00 UTC on 2026-11-24 is 01:00 AM on 2026-11-25 in Asia/Dhaka
+      const isoRef = "2026-11-24T19:00:00Z";
+      const bounds = getWindowBounds(isoRef);
+
+      expect(bounds.todayStr).toBe("2026-11-25");
+      expect(bounds.tomorrowStr).toBe("2026-11-26");
+      expect(bounds.next3DaysEndStr).toBe("2026-11-28");
+      expect(bounds.next7DaysEndStr).toBe("2026-12-02");
+
+      // Length must be strictly 10 characters (YYYY-MM-DD)
+      expect(bounds.todayStr).toHaveLength(10);
+      expect(bounds.tomorrowStr).toHaveLength(10);
+
+      // A shoot on 2026-11-25 must now be recognized as today (in next_3_days)
+      expect(isDateInWindow("2026-11-25", "next_3_days", isoRef)).toBe(true);
+      expect(isDateInWindow("2026-11-26", "tomorrow", isoRef)).toBe(true);
+    });
+
+    it("recovers gracefully from malformed refDate without throwing exceptions", () => {
+      const bounds = getWindowBounds("invalid-date-string");
+      expect(bounds.todayStr).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(bounds.tomorrowStr).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+
+      const shoots = getCalendarShoots({ refDate: "corrupted" });
+      expect(Array.isArray(shoots)).toBe(true);
+    });
+
+    it("completely excludes rejected requisitions from calendar schedule", () => {
+      const initialShoots = getCalendarShoots({ window: "next_7_days", user: adminUser, refDate: "2026-11-24" });
+      const shootCount = initialShoots.length;
+      expect(shootCount).toBeGreaterThanOrEqual(1);
+
+      // Reject a requisition
+      const reqToReject = initialShoots[0].requisition_id;
+      rejectRequisition(reqToReject, "Location permit expired", adminUser);
+
+      const refreshedShoots = getCalendarShoots({ window: "next_7_days", user: adminUser, refDate: "2026-11-24" });
+      expect(refreshedShoots.some((s) => s.requisition_id === reqToReject)).toBe(false);
+    });
+
+    it("breaks ties deterministically when two shoots share identical shoot_date and call_time", () => {
+      const shootAlpha = {
+        shoot_date: "2026-11-25",
+        call_time: "10:00 AM",
+        course_name: "Art of Creation",
+        id: "task-1",
+      };
+      const shootBeta = {
+        shoot_date: "2026-11-25",
+        call_time: "10:00 AM",
+        course_name: "Welding & Fabrication",
+        id: "task-2",
+      };
+
+      const sorted = [shootBeta, shootAlpha].sort(compareShootChronological);
+      expect(sorted[0].course_name).toBe("Art of Creation");
+      expect(sorted[1].course_name).toBe("Welding & Fabrication");
+    });
   });
 });

@@ -128,13 +128,13 @@ export default function AdminDashboardPage() {
     );
   }
 
-  const kpis = data?.gear_kpi || { total: 12, available: 6, in_use: 5, maintenance: 1 };
+  const kpis = data?.gear_kpi || { total: 0, available: 0, in_use: 0, maintenance: 0 };
   const progress = data?.task_board_progress || {
-    assigned: 3,
-    editing: 2,
-    review: 1,
-    completed: 2,
-    total: 8,
+    assigned: 0,
+    editing: 0,
+    review: 0,
+    completed: 0,
+    total: 0,
   };
   const queue = data?.approval_queue || [];
   const gearRows = data?.gear_stock_live || [];
@@ -529,42 +529,51 @@ export default function AdminDashboardPage() {
 
               {/* Scrollable Gear Rows */}
               <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
-                {gearRows.slice(0, 6).map((item) => (
-                  <div
-                    key={item.id}
-                    className="p-2.5 rounded-xl bg-slate-50/80 border border-slate-100 flex items-center justify-between text-xs"
-                  >
-                    <div className="space-y-0.5">
-                      <p className="font-semibold text-slate-800">{item.name}</p>
-                      <p className="text-[10px] text-slate-400 font-mono">
-                        {item.serial_number}
-                      </p>
-                    </div>
-
-                    <div className="text-right space-y-0.5">
-                      <span
-                        className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                          item.status === "available"
-                            ? "bg-emerald-100 text-emerald-800"
-                            : item.status === "in_use"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-red-100 text-red-800"
-                        }`}
-                      >
-                        {item.status === "available"
-                          ? "Available"
-                          : item.status === "in_use"
-                          ? "In Use"
-                          : "Maintenance"}
-                      </span>
-                      {item.assigned_to && (
-                        <p className="text-[9px] text-slate-500 truncate max-w-[100px]">
-                          {item.assigned_to}
-                        </p>
-                      )}
-                    </div>
+                {gearRows.length === 0 ? (
+                  <div className="py-6 text-center text-slate-400 space-y-1">
+                    <Camera className="w-6 h-6 text-slate-300 mx-auto" />
+                    <p className="text-xs text-slate-500 font-medium">
+                      কোনো গিয়ার তালিকাভুক্ত নেই
+                    </p>
                   </div>
-                ))}
+                ) : (
+                  gearRows.map((item) => (
+                    <div
+                      key={item.id}
+                      className="p-2.5 rounded-xl bg-slate-50/80 border border-slate-100 flex items-center justify-between text-xs"
+                    >
+                      <div className="space-y-0.5">
+                        <p className="font-semibold text-slate-800">{item.name}</p>
+                        <p className="text-[10px] text-slate-400 font-mono">
+                          {item.serial_number}
+                        </p>
+                      </div>
+
+                      <div className="text-right space-y-0.5">
+                        <span
+                          className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                            item.status === "available"
+                              ? "bg-emerald-100 text-emerald-800"
+                              : item.status === "in_use"
+                              ? "bg-blue-100 text-blue-800"
+                              : "bg-red-100 text-red-800"
+                          }`}
+                        >
+                          {item.status === "available"
+                            ? "Available"
+                            : item.status === "in_use"
+                            ? "In Use"
+                            : "Maintenance"}
+                        </span>
+                        {item.assigned_to && (
+                          <p className="text-[9px] text-slate-500 truncate max-w-[100px]">
+                            {item.assigned_to}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>

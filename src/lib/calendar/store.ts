@@ -34,14 +34,38 @@ import { DEMO_COURSES, getDemoUserById } from "@/lib/auth/demo-users";
 
 /**
  * Returns current date string (YYYY-MM-DD) in Asia/Dhaka time zone.
+ * Uses formatToParts for deterministic cross-environment YYYY-MM-DD output.
  */
-export function getDhakaDateString(date: Date = new Date()): string {
-  return new Intl.DateTimeFormat("en-CA", {
+export function getDhakaDateString(date: Date | string = new Date()): string {
+  let targetDate: Date;
+  if (typeof date === "string") {
+    const trimmed = date.trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+      return trimmed;
+    }
+    targetDate = new Date(trimmed);
+    if (isNaN(targetDate.getTime())) {
+      targetDate = new Date();
+    }
+  } else {
+    targetDate = date;
+  }
+
+  const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: "Asia/Dhaka",
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
-  }).format(date);
+  }).formatToParts(targetDate);
+
+  const year = parts.find((p) => p.type === "year")?.value;
+  const month = parts.find((p) => p.type === "month")?.value;
+  const day = parts.find((p) => p.type === "day")?.value;
+
+  if (year && month && day) {
+    return `${year}-${month}-${day}`;
+  }
+  return format(targetDate, "yyyy-MM-dd");
 }
 
 /**
@@ -67,14 +91,17 @@ export function parseCallTimeToMinutes(callTime: string | null | undefined): num
  * Compares two shoot items chronologically:
  * 1. shoot_date ascending (e.g. 2026-11-24 < 2026-11-25)
  * 2. call_time ascending (e.g. 09:00 AM < 11:00 AM < 02:00 PM)
+ * 3. course_name / id deterministic tie-breaker
  */
 export function compareShootChronological(
-  a: { shoot_date: string; call_time: string },
-  b: { shoot_date: string; call_time: string }
+  a: { shoot_date: string; call_time: string; course_name?: string; id?: string },
+  b: { shoot_date: string; call_time: string; course_name?: string; id?: string }
 ): number {
   const dateDiff = a.shoot_date.localeCompare(b.shoot_date);
   if (dateDiff !== 0) return dateDiff;
-  return parseCallTimeToMinutes(a.call_time) - parseCallTimeToMinutes(b.call_time);
+  const timeDiff = parseCallTimeToMinutes(a.call_time) - parseCallTimeToMinutes(b.call_time);
+  if (timeDiff !== 0) return timeDiff;
+  return (a.course_name || a.id || "").localeCompare(b.course_name || b.id || "");
 }
 
 export interface WindowBounds {
@@ -88,15 +115,16 @@ export interface WindowBounds {
  * Computes exact Asia/Dhaka calendar window date boundaries.
  */
 export function getWindowBounds(refDate: Date | string = new Date()): WindowBounds {
-  const todayStr =
-    typeof refDate === "string" ? refDate : getDhakaDateString(refDate);
+  const todayStr = getDhakaDateString(refDate);
   const baseDate = parseISO(todayStr);
-  const tomorrowStr = format(addDays(baseDate, 1), "yyyy-MM-dd");
-  const next3DaysEndStr = format(addDays(baseDate, 3), "yyyy-MM-dd");
-  const next7DaysEndStr = format(addDays(baseDate, 7), "yyyy-MM-dd");
+  const safeBaseDate = isNaN(baseDate.getTime()) ? new Date() : baseDate;
+  const safeTodayStr = format(safeBaseDate, "yyyy-MM-dd");
+  const tomorrowStr = format(addDays(safeBaseDate, 1), "yyyy-MM-dd");
+  const next3DaysEndStr = format(addDays(safeBaseDate, 3), "yyyy-MM-dd");
+  const next7DaysEndStr = format(addDays(safeBaseDate, 7), "yyyy-MM-dd");
 
   return {
-    todayStr,
+    todayStr: safeTodayStr,
     tomorrowStr,
     next3DaysEndStr,
     next7DaysEndStr,
@@ -240,7 +268,7 @@ export function getCalendarShoots({
 
   for (const task of allTasks) {
     const req = allReqs.find((r) => r.id === task.requisition_id);
-    if (!req) continue;
+    if (!req || req.status === "rejected") continue;
 
     // RLS: Coordinator can only see shoots for their own course
     if (user?.role === "coordinator" && req.course_id !== user.course_id) {

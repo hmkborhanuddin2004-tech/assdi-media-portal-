@@ -25,13 +25,13 @@
       "id": "S3-01",
       "step": 3,
       "name": "Supabase Auth (@supabase/ssr) Login + Role-Guard Middleware redirecting Admin/Coordinator/Staff/Intern",
-      "passes": false
+      "passes": true
     },
     {
       "id": "S3-02",
       "step": 3,
       "name": "Admin User Management (/admin/users) using server-only service_role API; public self-signup disabled",
-      "passes": false
+      "passes": true
     },
     {
       "id": "S4-01",

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -10,13 +10,15 @@ import {
   Camera,
   Calendar,
   Clock,
-  BarChart3,
   Users,
   Video,
   ShieldCheck,
   Menu,
   X,
+  LogOut,
+  LogIn,
 } from "lucide-react";
+import { ROLE_LABELS, type UserRole } from "@/lib/types/auth";
 
 interface NavItem {
   name: string;
@@ -30,13 +32,13 @@ const mainNavItems: NavItem[] = [
   {
     name: "Dashboard",
     bnName: "ড্যাশবোর্ড",
-    href: "/",
+    href: "/admin/dashboard",
     icon: LayoutDashboard,
   },
   {
     name: "Requisitions",
     bnName: "রিকুইজিশন",
-    href: "/coordinator/new",
+    href: "/coordinator/requests",
     icon: FilePlus2,
   },
   {
@@ -61,14 +63,8 @@ const mainNavItems: NavItem[] = [
   {
     name: "Daily Worklog",
     bnName: "ডেইলি লগ",
-    href: "/staff/daily-log",
+    href: "/staff/tasks",
     icon: Clock,
-  },
-  {
-    name: "Analytics & Reports",
-    bnName: "রিপোর্ট ও হিস্ট্রি",
-    href: "/admin/reports",
-    icon: BarChart3,
   },
   {
     name: "User Management",
@@ -88,35 +84,62 @@ const mobileNavItems: NavItem[] = [
   {
     name: "Request",
     bnName: "রিকুইজিশন",
-    href: "/coordinator/new",
+    href: "/coordinator/requests",
     icon: FilePlus2,
   },
   {
     name: "Tasks",
     bnName: "টাস্ক",
-    href: "/admin/tasks",
+    href: "/staff/tasks",
     icon: Kanban,
   },
   {
-    name: "Calendar",
-    bnName: "ক্যালেন্ডার",
-    href: "/admin/calendar",
-    icon: Calendar,
-  },
-  {
-    name: "Log",
-    bnName: "লগ",
-    href: "/staff/daily-log",
-    icon: Clock,
+    name: "Users",
+    bnName: "ইউজার",
+    href: "/admin/users",
+    icon: Users,
   },
 ];
+
+interface CurrentUserSession {
+  id: string;
+  email: string;
+  full_name: string;
+  role: UserRole;
+  phone?: string;
+  course_id?: string | null;
+  course_name?: string | null;
+}
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [user, setUser] = useState<CurrentUserSession | null>(null);
+
+  useEffect(() => {
+    // Check current auth status
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("/api/auth/me");
+        const data = await res.json();
+        if (data.authenticated && data.user) {
+          setUser(data.user);
+        } else {
+          setUser(null);
+        }
+      } catch {
+        setUser(null);
+      }
+    };
+    checkAuth();
+  }, [pathname]);
+
+  const handleSignOut = () => {
+    window.location.href = "/api/auth/signout";
+  };
 
   return (
-    <div className="min-h-screen w-full bg-[#F8FAFC] flex flex-col md:flex-row overflow-x-hidden">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col md:flex-row antialiased overflow-x-hidden">
       {/* Desktop Fixed Sidebar */}
       <aside
         id="desktop-sidebar"
@@ -182,17 +205,51 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             })}
           </nav>
 
-          {/* Footer Status Panel */}
-          <div className="p-3 border-t border-slate-200 bg-slate-50/80">
-            <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-white border border-slate-200/80">
-              <ShieldCheck className="w-4 h-4 text-[#0F766E]" />
-              <div className="flex flex-col text-[11px] leading-tight">
-                <span className="font-semibold text-slate-900">
-                  Role: Central Admin
-                </span>
-                <span className="text-slate-500">Security Gate Active</span>
+          {/* User Footer Panel */}
+          <div className="p-3 border-t border-slate-200 bg-slate-50/80 space-y-2">
+            {user ? (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between gap-2 px-2 py-1.5 rounded-lg bg-white border border-slate-200/80">
+                  <div className="flex items-center gap-2 overflow-hidden">
+                    <div className="w-7 h-7 rounded-full bg-emerald-100 text-[#0F766E] flex items-center justify-center shrink-0 font-bold text-xs">
+                      {user.full_name?.[0] || "U"}
+                    </div>
+                    <div className="flex flex-col text-[11px] leading-tight truncate">
+                      <span className="font-semibold text-slate-900 truncate">
+                        {user.full_name}
+                      </span>
+                      <span className="text-[#0F766E] text-[10px] font-medium">
+                        {ROLE_LABELS[user.role]?.en || user.role}
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleSignOut}
+                    title="লগআউট"
+                    className="p-1.5 rounded-md text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="flex items-center justify-between gap-2 px-2 py-1.5 rounded-lg bg-white border border-slate-200/80">
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-[#0F766E]" />
+                  <div className="flex flex-col text-[11px] leading-tight">
+                    <span className="font-semibold text-slate-900">গেস্ট ভিজিটর</span>
+                    <span className="text-slate-500">Security Active</span>
+                  </div>
+                </div>
+                <Link
+                  href="/login"
+                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0F766E] hover:underline"
+                >
+                  <LogIn className="w-3.5 h-3.5" />
+                  <span>লগইন</span>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </aside>
@@ -208,17 +265,38 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
           <div className="flex flex-col leading-none">
             <span className="font-bold text-slate-900 text-xs">ASSDI Media</span>
-            <span className="text-[10px] text-[#0F766E] font-medium">মিডিয়া পোর্টাল</span>
+            <span className="text-[10px] text-[#0F766E] font-medium">
+              {user ? ROLE_LABELS[user.role]?.bn : "মিডিয়া পোর্টাল"}
+            </span>
           </div>
         </div>
 
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-1.5 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-          aria-label="Toggle menu"
-        >
-          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        <div className="flex items-center gap-2">
+          {user ? (
+            <button
+              onClick={handleSignOut}
+              className="p-1.5 rounded-md text-slate-500 hover:text-red-600 hover:bg-slate-100"
+              aria-label="লগআউট"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          ) : (
+            <Link
+              href="/login"
+              className="p-1.5 rounded-md text-[#0F766E] hover:bg-emerald-50 text-xs font-semibold"
+            >
+              লগইন
+            </Link>
+          )}
+
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-1.5 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </header>
 
       {/* Mobile Drawer (When hamburger toggled) */}
@@ -249,6 +327,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 </Link>
               );
             })}
+
+            {user && (
+              <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-xs font-medium text-slate-600">
+                  লগইন: {user.full_name}
+                </span>
+                <button
+                  onClick={handleSignOut}
+                  className="text-xs text-red-600 hover:underline font-semibold flex items-center gap-1"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>লগআউট</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

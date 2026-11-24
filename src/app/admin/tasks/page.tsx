@@ -578,6 +578,7 @@ export default function AdminTasksKanbanPage() {
 
       {/* Shoot Assignment Slip Modal */}
       <ShootAssignmentSlipModal
+        key={activeSlip ? activeSlip.slip_number : "slip-closed"}
         slip={activeSlip}
         isOpen={showSlipModal}
         onClose={() => setShowSlipModal(false)}
@@ -585,6 +586,7 @@ export default function AdminTasksKanbanPage() {
 
       {/* Approve & Assign Modal for Pending Card */}
       <ApproveAndAssignModal
+        key={approvingRequisition ? approvingRequisition.id : "modal-closed"}
         requisition={approvingRequisition}
         isOpen={Boolean(approvingRequisition)}
         onClose={() => setApprovingRequisition(null)}

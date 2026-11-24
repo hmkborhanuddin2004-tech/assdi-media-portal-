@@ -11,19 +11,20 @@
   - `pnpm lint` passed with `✔ No ESLint warnings or errors`.
   - `pnpm build` passed generating all 29 static/dynamic routes and middleware (96.5 kB).
 - **Gate 2 (Live API, PostgreSQL RLS & DB Constraints Tests):**
-  - Automated Vitest test suite executed 135 tests (including 24 targeted unit and DB tests in `src/lib/supabase/tasks-kanban.test.ts`):
+  - Automated Vitest test suite executed 139 tests (including 28 targeted unit and DB tests in `src/lib/supabase/tasks-kanban.test.ts`):
     - Verified atomic requisition approval and task card creation (`S6-01`): transitions requisition from `pending` to `approved`, creates task with `stage = 'shoot_assigned'`, inserts assignees with designated `lead_staff_id`, and books assigned gear.
-    - Verified team member rules: minimum 2 and maximum 3 members required; exactly 1 lead staff member designated; lead must be a permanent staff member.
+    - Verified team member rules: minimum 2 and maximum 3 members required; exactly 1 lead staff member designated; lead must be a permanent staff member (interns strictly blocked from lead designation to satisfy RLS `tasks_lead_staff_update`).
+    - Verified dynamic user integration: dynamically created users from `/admin/users` are resolved in team candidate selection and shoot slips.
     - Verified atomic gear conflict handling: if gear has an overlapping booking, Postgres exclusion error `23P01` is returned cleanly and no partial task/assignee records are written.
     - Verified RLS Policy `tasks_lead_staff_update`: designated Staff Project Lead (`lead_staff_id = auth.uid()`) can transition task stages (`shoot_done`, `editing`, `review`) and attach `final_drive_url`.
     - Verified RLS blocking: unauthorized staff or interns who are not the designated `lead_staff_id` are strictly blocked from updating the task stage (HTTP 403 / Postgres code `42501`).
     - Verified DB CHECK constraint `chk_completed_drive_url` (Postgres code `23514`): tasks marked `completed` MUST include a valid Google Drive or Docs URL matching `^https://(drive|docs)\.google\.com/`; non-Google-Drive URLs (e.g., Dropbox, OneDrive, raw MP4s) are rejected at the DB level.
     - Verified Coordinator status mapping (`S6-03`): correctly maps the 6 task stages (`pending`, `shoot_assigned`, `shoot_done`, `editing`, `review`, `completed`) to the Coordinator's 4 statuses (`Pending`, `Approved`, `Shoot Done`, `Delivered`). Completed tasks expose the clickable Google Drive link.
-    - Verified Shoot Assignment Slip data derivation (`S6-04`): produces Course Name, Venue, Call Time (30 mins before shoot), Team Members & Phone numbers, and Assigned Gear Serial numbers.
+    - Verified Shoot Assignment Slip data derivation (`S6-04`): produces Course Name, Venue, Call Time (30 mins before shoot), Team Members & Phone numbers, and Assigned Gear Serial numbers (with zero phantom fallback gear).
     - Verified Intern footage upload sync: updates `raw_footage_uploaded` flag on the task card.
 - **Gate 3 (Live Browser E2E):**
   - Playwright tested across Desktop (1280x800) and Mobile (390x844) viewports:
-    - 36 tests passed with exit code 0 (39.0s).
+    - 38 tests passed with exit code 0 (55.7s).
     - 0 console errors.
     - 0 failed network requests.
     - 0 horizontal overflow across desktop and mobile.
@@ -34,12 +35,14 @@
     - Verified `/admin/tasks` 6-stage Kanban board matching `docs/mockups/task-board.jpg` (`Pending`, `Shoot Assigned`, `Shoot Done`, `Editing`, `Review`, `Completed`) with column counts, search bar, live countdown timers, and footage upload indicator.
     - Verified mobile stage selector tabs (`All Stages`, `Shoot Assigned`, `Shoot Done`, etc.) work responsively without horizontal overflow.
     - Verified Staff Project Lead (Arif Rahman) accesses `/staff/tasks`, sees Project Lead badge, transitions stages (Shoot Assigned -> Shoot Done -> Editing -> Review), and attaches Google Drive URL (validating rejection of invalid URL and acceptance of valid Drive URL).
-    - Verified `/staff/intern-status` route displays assigned interns and raw footage upload toggle.
+    - Verified `/staff/intern-status` route displays assigned interns and raw footage upload toggle strictly without skip.
     - Verified Admin transitions task from Review to Completed with Drive URL modal, and Completed card displays the Google Drive Link button matching mockup.
     - Verified Course Coordinator (The Art of Creation) visits `/coordinator/requests` and sees live status updated to `Delivered` with clickable Google Drive Link.
+    - Verified Approve & Assign Modal prevents intern-as-lead and cleanly handles PostgreSQL `23P01` double-booking conflict across same-day shoots with immediate rollback and zero partial state.
 - **Gate 4 (Adversarial Audit & Fresh Diff):**
   - Matched `docs/mockups/task-board.jpg` and `docs/mockups/calendar-slip.jpg`.
   - Zero placeholder stubs, zero `TODO`s, zero mock-only bypasses.
+  - Zero phantom gear fallbacks; real in-place synchronized store across Next.js route chunks.
   - Real database records, verified RLS enforcement, and atomic transaction semantics.
 
 ## Step 5 (S5-01 & S5-02) Verification Summary

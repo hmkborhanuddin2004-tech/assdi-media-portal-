@@ -24,7 +24,7 @@ import {
 import {
   approveAndAssignSchema,
 } from "@/lib/validations/tasks";
-import { DEMO_USERS, toUserProfile } from "@/lib/auth/demo-users";
+import { DEMO_USERS, toUserProfile, addDynamicUser } from "@/lib/auth/demo-users";
 
 describe("Step 6: Central Task Board, Kanban Pipeline, RLS Security & Shoot Slip (S6-01 to S6-04)", () => {
   const migrationPath = path.resolve(process.cwd(), "supabase/migrations/001_init.sql");
@@ -38,7 +38,7 @@ describe("Step 6: Central Task Board, Kanban Pipeline, RLS Security & Shoot Slip
 
   beforeEach(() => {
     resetRequisitionsForTesting();
-    resetGearForTesting();
+    resetGearForTesting({ withMockupSeed: true });
     resetTasksForTesting();
   });
 
@@ -244,6 +244,23 @@ describe("Step 6: Central Task Board, Kanban Pipeline, RLS Security & Shoot Slip
       expect(completedTask.completed_at).toBeDefined();
       expect(typeof completedTask.completed_at).toBe("string");
     });
+
+    it("SUCCEEDS transitioning to 'completed' without re-providing final_drive_url if task already has one", () => {
+      const validUrl = "https://drive.google.com/drive/folders/1AlreadyAttachedDrive";
+      // Lead attaches drive url during review
+      updateTaskStage(task1Id, { stage: "review", final_drive_url: validUrl }, staffLeadUser);
+
+      // Admin transitions to completed without passing final_drive_url
+      const completed = updateTaskStage(task1Id, { stage: "completed" }, adminUser);
+      expect(completed.stage).toBe("completed");
+      expect(completed.final_drive_url).toBe(validUrl);
+    });
+
+    it("ALLOWS updating only raw_footage_uploaded without passing stage", () => {
+      const updated = updateTaskStage(task1Id, { raw_footage_uploaded: true }, staffLeadUser);
+      expect(updated.raw_footage_uploaded).toBe(true);
+      expect(updated.stage).toBe("shoot_assigned"); // Preserved
+    });
   });
 
   // --------------------------------------------------------------------------
@@ -376,6 +393,63 @@ describe("Step 6: Central Task Board, Kanban Pipeline, RLS Security & Shoot Slip
           gear_ids: [allGear[0].id],
         })
       ).toThrow();
+    });
+
+    it("BLOCKS designating an intern as lead_staff_id (tasks_lead_staff_update requires staff role)", () => {
+      const allGear = getAllGearItemsRaw();
+      const a7c = allGear.find((g) => g.serial_number === "SN-A7C-01")!;
+
+      expect(() =>
+        approveAndAssignTask(
+          {
+            requisition_id: "r1000000-0000-0000-0000-000000000010",
+            lead_staff_id: internUser.id, // Hasan Ali (Intern)
+            assignee_ids: [internUser.id, staffLeadUser.id],
+            deadline_at: "2026-12-02T18:00:00Z",
+            gear_ids: [a7c.id],
+          },
+          adminUser
+        )
+      ).toThrow("পার্মানেন্ট স্টাফ");
+    });
+
+    it("ALLOWS dynamically created staff user (from /admin/users) to be assigned as lead with full profile resolution", () => {
+      const dynamicStaffId = "d0000000-0000-0000-0000-000000000001";
+      addDynamicUser({
+        id: dynamicStaffId,
+        email: "kamrul@assdi.org",
+        password: "assdi123",
+        full_name: "Kamrul Hasan",
+        phone: "01799887766",
+        role: "staff",
+        course_id: null,
+        is_active: true,
+        created_at: new Date().toISOString(),
+      });
+
+      const allGear = getAllGearItemsRaw();
+      const a7c = allGear.find((g) => g.serial_number === "SN-A7C-01")!;
+
+      const result = approveAndAssignTask(
+        {
+          requisition_id: "r1000000-0000-0000-0000-000000000010",
+          lead_staff_id: dynamicStaffId,
+          assignee_ids: [dynamicStaffId, internUser.id],
+          deadline_at: "2026-12-02T18:00:00Z",
+          gear_ids: [a7c.id],
+        },
+        adminUser
+      );
+
+      expect(result.task.lead_staff_id).toBe(dynamicStaffId);
+      expect(result.task.lead_name).toBe("Kamrul Hasan");
+      expect(result.task.lead_phone).toBe("01799887766");
+
+      // Verify Shoot Slip has dynamic user's details
+      const slipLead = result.slip.team_members.find((m) => m.name === "Kamrul Hasan");
+      expect(slipLead).toBeDefined();
+      expect(slipLead?.phone).toBe("01799887766");
+      expect(slipLead?.is_lead).toBe(true);
     });
   });
 

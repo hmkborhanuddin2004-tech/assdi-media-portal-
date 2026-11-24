@@ -52,9 +52,11 @@ export type ApproveAndAssignInput = z.infer<typeof approveAndAssignSchema>;
 
 export const updateTaskStageSchema = z
   .object({
-    stage: z.enum(TASK_STAGES, {
-      errorMap: () => ({ message: "সঠিক টাস্ক স্টেজ নির্বাচন করুন" }),
-    }),
+    stage: z
+      .enum(TASK_STAGES, {
+        errorMap: () => ({ message: "সঠিক টাস্ক স্টেজ নির্বাচন করুন" }),
+      })
+      .optional(),
     final_drive_url: z
       .string()
       .trim()
@@ -74,7 +76,7 @@ export const updateTaskStageSchema = z
   })
   .refine(
     (data) => {
-      if (data.stage === "completed") {
+      if (data.stage === "completed" && data.final_drive_url !== undefined) {
         return (
           Boolean(data.final_drive_url) &&
           GOOGLE_DRIVE_URL_REGEX.test(data.final_drive_url || "")

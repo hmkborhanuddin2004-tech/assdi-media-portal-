@@ -38,7 +38,7 @@ export function ApproveAndAssignModal({
 }: ApproveAndAssignModalProps) {
   const [candidates, setCandidates] = useState<CandidateUser[]>([]);
   const [gearList, setGearList] = useState<GearItem[]>([]);
-  const [loadingData, setLoadingData] = useState(false);
+  const [loadingData, setLoadingData] = useState(true);
 
   // Form states
   const [selectedAssignees, setSelectedAssignees] = useState<string[]>([]);
@@ -62,6 +62,12 @@ export function ApproveAndAssignModal({
     setErrorMessage(null);
     setConflictDetails(null);
     setNotes(requisition.notes || "");
+    setSelectedGearIds([]);
+    setSelectedAssignees([]);
+    setLeadStaffId("");
+    setGearList([]);
+    setCandidates([]);
+    setLoadingData(true);
 
     // Default deadline: shoot date + 2 days at 18:00
     const shootDate = requisition.shoot_date || new Date().toISOString().split("T")[0];
@@ -129,7 +135,8 @@ export function ApproveAndAssignModal({
       const updated = selectedAssignees.filter((id) => id !== userId);
       setSelectedAssignees(updated);
       if (leadStaffId === userId) {
-        setLeadStaffId(updated[0] || "");
+        const remainingStaff = candidates.find((c) => updated.includes(c.id) && c.role === "staff");
+        setLeadStaffId(remainingStaff?.id || "");
       }
     } else {
       if (selectedAssignees.length >= 3) {
@@ -139,7 +146,10 @@ export function ApproveAndAssignModal({
       const updated = [...selectedAssignees, userId];
       setSelectedAssignees(updated);
       if (!leadStaffId) {
-        setLeadStaffId(userId);
+        const candidate = candidates.find((c) => c.id === userId);
+        if (candidate?.role === "staff") {
+          setLeadStaffId(userId);
+        }
       }
     }
   };
@@ -167,6 +177,11 @@ export function ApproveAndAssignModal({
     }
     if (!leadStaffId || !selectedAssignees.includes(leadStaffId)) {
       setErrorMessage("নির্বাচিত সদস্যদের মধ্য থেকে ১ জন টিম লিড নির্ধারণ করুন।");
+      return;
+    }
+    const leadCandidate = candidates.find((c) => c.id === leadStaffId);
+    if (!leadCandidate || leadCandidate.role !== "staff") {
+      setErrorMessage("প্রজেক্ট লিড অবশ্যই একজন পার্মানেন্ট স্টাফ সদস্য হতে হবে।");
       return;
     }
     if (!deadlineAt) {
@@ -340,7 +355,7 @@ export function ApproveAndAssignModal({
                       </div>
 
                       <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                        {isSelected && (
+                        {isSelected && candidate.role === "staff" && (
                           <button
                             type="button"
                             onClick={() => setLeadStaffId(candidate.id)}
@@ -401,52 +416,60 @@ export function ApproveAndAssignModal({
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto p-1" id="gear-selection-list">
-              {gearList.map((gear) => {
-                const isSelected = selectedGearIds.includes(gear.id);
-                const isMaintenance = gear.status === "maintenance";
+            {loadingData ? (
+              <div className="text-xs text-slate-400 p-4 text-center">
+                সরঞ্জাম তালিকা লোড হচ্ছে...
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-48 overflow-y-auto p-1" id="gear-selection-grid">
+                {gearList.map((gear) => {
+                  const isSelected = selectedGearIds.includes(gear.id);
+                  const isMaintenance = gear.status === "maintenance";
 
-                return (
-                  <div
-                    key={gear.id}
-                    onClick={() => {
-                      if (!isMaintenance) toggleGear(gear.id);
-                    }}
-                    className={`p-2.5 rounded-xl border text-xs transition-all flex items-center justify-between ${
-                      isMaintenance
-                        ? "opacity-50 cursor-not-allowed bg-slate-50 border-slate-200"
-                        : isSelected
-                        ? "border-[#0F766E] bg-emerald-50/60 shadow-xs cursor-pointer"
-                        : "border-slate-200 hover:border-slate-300 bg-white cursor-pointer"
-                    }`}
-                  >
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-bold text-slate-900">{gear.name}</span>
-                        {isMaintenance && (
-                          <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-rose-100 text-rose-700">
-                            Maintenance
-                          </span>
-                        )}
-                      </div>
-                      <span className="text-[11px] text-slate-500 font-mono">
-                        {gear.serial_number}
-                      </span>
-                    </div>
-
+                  return (
                     <div
-                      className={`w-4 h-4 rounded flex items-center justify-center border transition-colors ${
-                        isSelected
-                          ? "bg-[#0F766E] border-[#0F766E] text-white"
-                          : "border-slate-300 bg-white"
+                      key={gear.id}
+                      id={`gear-item-${gear.id}`}
+                      data-selected={isSelected ? "true" : "false"}
+                      onClick={() => {
+                        if (!isMaintenance) toggleGear(gear.id);
+                      }}
+                      className={`p-2.5 rounded-xl border text-xs transition-all flex items-center justify-between ${
+                        isMaintenance
+                          ? "opacity-50 cursor-not-allowed bg-slate-50 border-slate-200"
+                          : isSelected
+                          ? "border-[#0F766E] bg-emerald-50/60 shadow-xs cursor-pointer"
+                          : "border-slate-200 hover:border-slate-300 bg-white cursor-pointer"
                       }`}
                     >
-                      {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                      <div className="space-y-0.5">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-bold text-slate-900">{gear.name}</span>
+                          {isMaintenance && (
+                            <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-rose-100 text-rose-700">
+                              Maintenance
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-[11px] text-slate-500 font-mono">
+                          {gear.serial_number}
+                        </span>
+                      </div>
+
+                      <div
+                        className={`w-4 h-4 rounded flex items-center justify-center border transition-colors ${
+                          isSelected
+                            ? "bg-[#0F766E] border-[#0F766E] text-white"
+                            : "border-slate-300 bg-white"
+                        }`}
+                      >
+                        {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* Action Buttons */}
@@ -462,7 +485,7 @@ export function ApproveAndAssignModal({
             <button
               type="submit"
               id="confirm-approve-assign-btn"
-              disabled={submitting}
+              disabled={submitting || loadingData}
               className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#0F766E] hover:bg-[#115E59] text-white text-xs sm:text-sm font-semibold transition-all shadow-xs disabled:opacity-50"
             >
               {submitting ? (

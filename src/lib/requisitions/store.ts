@@ -10,6 +10,7 @@ import {
   type CreateRequisitionInput,
 } from "@/lib/validations/requisitions";
 import { DEMO_COURSES } from "@/lib/auth/demo-users";
+import { getInitialTasks } from "@/lib/tasks/seed-data";
 
 export interface Venue {
   id: string;
@@ -405,70 +406,7 @@ function getInitialRequisitions(): RequisitionItem[] {
   ];
 }
 
-function getInitialTasks(): TaskItem[] {
-  return [
-    {
-      id: "t1000000-0000-0000-0000-000000000001",
-      requisition_id: "r1000000-0000-0000-0000-000000000001",
-      stage: "shoot_assigned",
-      lead_staff_id: "00000000-0000-0000-0000-000000000003",
-      deadline_at: "2026-11-30T18:00:00Z",
-      raw_footage_uploaded: false,
-      final_drive_url: null,
-      completed_at: null,
-      created_at: "2026-11-20T10:00:00Z",
-      updated_at: "2026-11-20T10:00:00Z",
-    },
-    {
-      id: "t1000000-0000-0000-0000-000000000002",
-      requisition_id: "r1000000-0000-0000-0000-000000000002",
-      stage: "completed",
-      lead_staff_id: "00000000-0000-0000-0000-000000000003",
-      deadline_at: "2026-11-18T18:00:00Z",
-      raw_footage_uploaded: true,
-      final_drive_url: "https://drive.google.com/drive/folders/1AOC-Orientation-Batch04",
-      completed_at: "2026-11-18T18:00:00Z",
-      created_at: "2026-11-15T12:00:00Z",
-      updated_at: "2026-11-18T18:00:00Z",
-    },
-    {
-      id: "t1000000-0000-0000-0000-000000000003",
-      requisition_id: "r1000000-0000-0000-0000-000000000004",
-      stage: "completed",
-      lead_staff_id: "00000000-0000-0000-0000-000000000003",
-      deadline_at: "2026-11-20T18:00:00Z",
-      raw_footage_uploaded: true,
-      final_drive_url: "https://drive.google.com/drive/folders/1RAC-Lab-Session-Reel",
-      completed_at: "2026-11-20T18:00:00Z",
-      created_at: "2026-11-20T10:00:00Z",
-      updated_at: "2026-11-20T10:00:00Z",
-    },
-    {
-      id: "t1000000-0000-0000-0000-000000000004",
-      requisition_id: "r1000000-0000-0000-0000-000000000008",
-      stage: "shoot_done",
-      lead_staff_id: "00000000-0000-0000-0000-000000000003",
-      deadline_at: "2026-11-28T18:00:00Z",
-      raw_footage_uploaded: true,
-      final_drive_url: null,
-      completed_at: null,
-      created_at: "2026-11-14T10:00:00Z",
-      updated_at: "2026-11-21T18:00:00Z",
-    },
-    {
-      id: "t1000000-0000-0000-0000-000000000005",
-      requisition_id: "r1000000-0000-0000-0000-000000000009",
-      stage: "shoot_assigned",
-      lead_staff_id: "00000000-0000-0000-0000-000000000003",
-      deadline_at: "2026-12-08T18:00:00Z",
-      raw_footage_uploaded: false,
-      final_drive_url: null,
-      completed_at: null,
-      created_at: "2026-11-22T10:00:00Z",
-      updated_at: "2026-11-22T10:00:00Z",
-    },
-  ];
-}
+
 
 interface RequisitionsGlobalStore {
   __assdi_requisitions?: RequisitionItem[];
@@ -486,8 +424,9 @@ if (!globalStore.__assdi_tasks) {
 }
 
 export function resetRequisitionsForTesting(): void {
-  globalStore.__assdi_requisitions = getInitialRequisitions();
-  globalStore.__assdi_tasks = getInitialTasks();
+  const reqs = getAllRequisitionsRaw();
+  reqs.length = 0;
+  reqs.push(...getInitialRequisitions());
 }
 
 export function getAllRequisitionsRaw(): RequisitionItem[] {

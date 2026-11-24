@@ -1,6 +1,7 @@
 import type { TaskStage, AssignmentRole, UserRole } from "@/lib/types/database";
 import type { UserProfile } from "@/lib/types/auth";
-import { DEMO_USERS, DEMO_COURSES } from "@/lib/auth/demo-users";
+import { DEMO_COURSES, getDemoUserById } from "@/lib/auth/demo-users";
+import { getInitialTasks, getInitialAssignees } from "./seed-data";
 import {
   MASTER_VENUES,
   getAllRequisitionsRaw,
@@ -118,227 +119,6 @@ export interface ShootSlipData {
   whatsapp_url: string;
 }
 
-// ----------------------------------------------------------------------------
-// Initial Seed Data Matching docs/mockups/task-board.jpg & calendar-slip.jpg
-// ----------------------------------------------------------------------------
-function getInitialTasks(): TaskItem[] {
-  return [
-    // 1. Pending: SBMC Bakery Reel (Reel • Nov 30)
-    {
-      id: "t1000000-0000-0000-0000-000000000010",
-      requisition_id: "r1000000-0000-0000-0000-000000000010",
-      stage: "pending",
-      lead_staff_id: null,
-      deadline_at: "2026-11-30T18:00:00Z",
-      raw_footage_uploaded: false,
-      final_drive_url: null,
-      completed_at: null,
-      created_at: "2026-11-23T10:00:00Z",
-      updated_at: "2026-11-23T10:00:00Z",
-    },
-    // 2. Shoot Assigned: The Art of Creation (Team: Arif, Hasan • Due in 2d)
-    {
-      id: "t1000000-0000-0000-0000-000000000001",
-      requisition_id: "r1000000-0000-0000-0000-000000000001",
-      stage: "shoot_assigned",
-      lead_staff_id: "00000000-0000-0000-0000-000000000007", // Arif Rahman
-      deadline_at: "2026-11-26T18:00:00Z",
-      raw_footage_uploaded: false,
-      final_drive_url: null,
-      completed_at: null,
-      created_at: "2026-11-20T10:00:00Z",
-      updated_at: "2026-11-20T10:00:00Z",
-    },
-    // 2b. Shoot Assigned: RAC Promo
-    {
-      id: "t1000000-0000-0000-0000-000000000005",
-      requisition_id: "r1000000-0000-0000-0000-000000000009",
-      stage: "shoot_assigned",
-      lead_staff_id: "00000000-0000-0000-0000-000000000003", // Tariqul Islam
-      deadline_at: "2026-12-04T18:00:00Z",
-      raw_footage_uploaded: false,
-      final_drive_url: null,
-      completed_at: null,
-      created_at: "2026-11-22T10:00:00Z",
-      updated_at: "2026-11-22T10:00:00Z",
-    },
-    // 3. Shoot Done: RAC Trade Workshop (Raw Uploaded ✓)
-    {
-      id: "t1000000-0000-0000-0000-000000000004",
-      requisition_id: "r1000000-0000-0000-0000-000000000008",
-      stage: "shoot_done",
-      lead_staff_id: "00000000-0000-0000-0000-000000000003", // Tariqul Islam
-      deadline_at: "2026-11-27T18:00:00Z",
-      raw_footage_uploaded: true,
-      final_drive_url: null,
-      completed_at: null,
-      created_at: "2026-11-14T10:00:00Z",
-      updated_at: "2026-11-21T18:00:00Z",
-    },
-    // 4. Editing: Motorcycle Servicing (Editor: Nabil • Due in 1d)
-    {
-      id: "t1000000-0000-0000-0000-000000000006",
-      requisition_id: "r1000000-0000-0000-0000-000000000011",
-      stage: "editing",
-      lead_staff_id: "00000000-0000-0000-0000-000000000009", // Nabil Hossain
-      deadline_at: "2026-11-25T18:00:00Z",
-      raw_footage_uploaded: true,
-      final_drive_url: null,
-      completed_at: null,
-      created_at: "2026-11-18T10:00:00Z",
-      updated_at: "2026-11-22T14:00:00Z",
-    },
-    // 4b. Editing: Mobile Servicing
-    {
-      id: "t1000000-0000-0000-0000-000000000007",
-      requisition_id: "r1000000-0000-0000-0000-000000000005",
-      stage: "editing",
-      lead_staff_id: "00000000-0000-0000-0000-000000000003", // Tariqul Islam
-      deadline_at: "2026-11-28T18:00:00Z",
-      raw_footage_uploaded: true,
-      final_drive_url: null,
-      completed_at: null,
-      created_at: "2026-11-19T10:00:00Z",
-      updated_at: "2026-11-23T11:00:00Z",
-    },
-    // 5. Review: English Language Promo (Lead Review)
-    {
-      id: "t1000000-0000-0000-0000-000000000008",
-      requisition_id: "r1000000-0000-0000-0000-000000000012",
-      stage: "review",
-      lead_staff_id: "00000000-0000-0000-0000-000000000007", // Arif Rahman
-      deadline_at: "2026-11-26T12:00:00Z",
-      raw_footage_uploaded: true,
-      final_drive_url: null,
-      completed_at: null,
-      created_at: "2026-11-17T09:00:00Z",
-      updated_at: "2026-11-23T15:00:00Z",
-    },
-    // 6. Completed: Professional Cooking (Delivered ✓)
-    {
-      id: "t1000000-0000-0000-0000-000000000009",
-      requisition_id: "r1000000-0000-0000-0000-000000000013",
-      stage: "completed",
-      lead_staff_id: "00000000-0000-0000-0000-000000000003",
-      deadline_at: "2026-11-22T18:00:00Z",
-      raw_footage_uploaded: true,
-      final_drive_url: "https://drive.google.com/drive/folders/1ProfCooking-Final-Delivery",
-      completed_at: "2026-11-22T17:30:00Z",
-      created_at: "2026-11-16T10:00:00Z",
-      updated_at: "2026-11-22T17:30:00Z",
-    },
-    // 6b. Completed: The Art of Creation Orientation
-    {
-      id: "t1000000-0000-0000-0000-000000000002",
-      requisition_id: "r1000000-0000-0000-0000-000000000002",
-      stage: "completed",
-      lead_staff_id: "00000000-0000-0000-0000-000000000007",
-      deadline_at: "2026-11-18T18:00:00Z",
-      raw_footage_uploaded: true,
-      final_drive_url: "https://drive.google.com/drive/folders/1AOC-Orientation-Batch04",
-      completed_at: "2026-11-18T18:00:00Z",
-      created_at: "2026-11-15T12:00:00Z",
-      updated_at: "2026-11-18T18:00:00Z",
-    },
-    // 6c. Completed: RAC Lab Session Reel
-    {
-      id: "t1000000-0000-0000-0000-000000000003",
-      requisition_id: "r1000000-0000-0000-0000-000000000004",
-      stage: "completed",
-      lead_staff_id: "00000000-0000-0000-0000-000000000003",
-      deadline_at: "2026-11-20T18:00:00Z",
-      raw_footage_uploaded: true,
-      final_drive_url: "https://drive.google.com/drive/folders/1RAC-Lab-Session-Reel",
-      completed_at: "2026-11-20T18:00:00Z",
-      created_at: "2026-11-20T10:00:00Z",
-      updated_at: "2026-11-20T10:00:00Z",
-    },
-  ];
-}
-
-function getInitialAssignees(): TaskAssigneeItem[] {
-  return [
-    // Task 1 (The Art of Creation) -> Arif (lead), Hasan (member)
-    {
-      task_id: "t1000000-0000-0000-0000-000000000001",
-      user_id: "00000000-0000-0000-0000-000000000007", // Arif Rahman
-      assignment_role: "lead",
-      assigned_at: "2026-11-20T10:00:00Z",
-    },
-    {
-      task_id: "t1000000-0000-0000-0000-000000000001",
-      user_id: "00000000-0000-0000-0000-000000000008", // Hasan Ali
-      assignment_role: "member",
-      assigned_at: "2026-11-20T10:00:00Z",
-    },
-    // Task 5 (RAC Promo) -> Tariqul (lead), Habibur (member)
-    {
-      task_id: "t1000000-0000-0000-0000-000000000005",
-      user_id: "00000000-0000-0000-0000-000000000003",
-      assignment_role: "lead",
-      assigned_at: "2026-11-22T10:00:00Z",
-    },
-    {
-      task_id: "t1000000-0000-0000-0000-000000000005",
-      user_id: "00000000-0000-0000-0000-000000000004",
-      assignment_role: "member",
-      assigned_at: "2026-11-22T10:00:00Z",
-    },
-    // Task 4 (RAC Trade Workshop) -> Tariqul (lead), Hasan (member)
-    {
-      task_id: "t1000000-0000-0000-0000-000000000004",
-      user_id: "00000000-0000-0000-0000-000000000003",
-      assignment_role: "lead",
-      assigned_at: "2026-11-14T10:00:00Z",
-    },
-    {
-      task_id: "t1000000-0000-0000-0000-000000000004",
-      user_id: "00000000-0000-0000-0000-000000000008",
-      assignment_role: "member",
-      assigned_at: "2026-11-14T10:00:00Z",
-    },
-    // Task 6 (Motorcycle Servicing) -> Nabil (lead), Habibur (member)
-    {
-      task_id: "t1000000-0000-0000-0000-000000000006",
-      user_id: "00000000-0000-0000-0000-000000000009", // Nabil Hossain
-      assignment_role: "lead",
-      assigned_at: "2026-11-18T10:00:00Z",
-    },
-    {
-      task_id: "t1000000-0000-0000-0000-000000000006",
-      user_id: "00000000-0000-0000-0000-000000000004",
-      assignment_role: "member",
-      assigned_at: "2026-11-18T10:00:00Z",
-    },
-    // Task 8 (English Language) -> Arif (lead), Nabil (member)
-    {
-      task_id: "t1000000-0000-0000-0000-000000000008",
-      user_id: "00000000-0000-0000-0000-000000000007",
-      assignment_role: "lead",
-      assigned_at: "2026-11-17T09:00:00Z",
-    },
-    {
-      task_id: "t1000000-0000-0000-0000-000000000008",
-      user_id: "00000000-0000-0000-0000-000000000009",
-      assignment_role: "member",
-      assigned_at: "2026-11-17T09:00:00Z",
-    },
-    // Task 9 (Professional Cooking) -> Tariqul (lead), Hasan (member)
-    {
-      task_id: "t1000000-0000-0000-0000-000000000009",
-      user_id: "00000000-0000-0000-0000-000000000003",
-      assignment_role: "lead",
-      assigned_at: "2026-11-16T10:00:00Z",
-    },
-    {
-      task_id: "t1000000-0000-0000-0000-000000000009",
-      user_id: "00000000-0000-0000-0000-000000000008",
-      assignment_role: "member",
-      assigned_at: "2026-11-16T10:00:00Z",
-    },
-  ];
-}
-
 // Global Store Persistence
 interface TasksGlobalStore {
   __assdi_tasks?: TaskItem[];
@@ -347,21 +127,27 @@ interface TasksGlobalStore {
 }
 
 const tasksGlobal = globalThis as unknown as TasksGlobalStore;
-if (!tasksGlobal.__assdi_tasks) {
-  tasksGlobal.__assdi_tasks = getInitialTasks();
-}
-if (!tasksGlobal.__assdi_task_assignees) {
-  tasksGlobal.__assdi_task_assignees = getInitialAssignees();
+export function getTasksStore(): TaskItem[] {
+  if (!tasksGlobal.__assdi_tasks) {
+    tasksGlobal.__assdi_tasks = getInitialTasks();
+  }
+  return tasksGlobal.__assdi_tasks;
 }
 
-let inMemoryTasks: TaskItem[] = tasksGlobal.__assdi_tasks!;
-let inMemoryAssignees: TaskAssigneeItem[] = tasksGlobal.__assdi_task_assignees!;
+export function getAssigneesStore(): TaskAssigneeItem[] {
+  if (!tasksGlobal.__assdi_task_assignees) {
+    tasksGlobal.__assdi_task_assignees = getInitialAssignees();
+  }
+  return tasksGlobal.__assdi_task_assignees;
+}
 
 export function resetTasksForTesting() {
-  tasksGlobal.__assdi_tasks = getInitialTasks();
-  tasksGlobal.__assdi_task_assignees = getInitialAssignees();
-  inMemoryTasks = tasksGlobal.__assdi_tasks!;
-  inMemoryAssignees = tasksGlobal.__assdi_task_assignees!;
+  const tasks = getTasksStore();
+  const assignees = getAssigneesStore();
+  tasks.length = 0;
+  tasks.push(...getInitialTasks());
+  assignees.length = 0;
+  assignees.push(...getInitialAssignees());
 }
 
 // ----------------------------------------------------------------------------
@@ -434,11 +220,11 @@ export function deriveShootSlipData(
   }
 
   // Team Members
-  const taskAssigneesList = assignees || inMemoryAssignees.filter((a) => a.task_id === task.id);
+  const taskAssigneesList = assignees || getAssigneesStore().filter((a) => a.task_id === task.id);
   const teamMembers: ShootSlipData["team_members"] = [];
 
   for (const a of taskAssigneesList) {
-    const user = Object.values(DEMO_USERS).find((u) => u.id === a.user_id);
+    const user = getDemoUserById(a.user_id);
     if (user) {
       const isLead = a.assignment_role === "lead" || task.lead_staff_id === user.id;
       teamMembers.push({
@@ -472,26 +258,18 @@ export function deriveShootSlipData(
     }
   }
 
-  // If no live gear bookings yet, provide fallback assigned gear matching mockup
-  if (assignedGear.length === 0) {
-    const fx3 = allGear.find((g) => g.serial_number === "SN-FX3-01");
-    const lens = allGear.find((g) => g.serial_number === "SN-LN-24105-01");
-    const rs4 = allGear.find((g) => g.serial_number === "SN-GM-RS4-01");
-    if (fx3) assignedGear.push({ id: fx3.id, name: fx3.name, serial_number: fx3.serial_number, category: fx3.category });
-    if (lens) assignedGear.push({ id: lens.id, name: lens.name, serial_number: lens.serial_number, category: lens.category });
-    if (rs4) assignedGear.push({ id: rs4.id, name: rs4.name, serial_number: rs4.serial_number, category: rs4.category });
-  }
-
-  const gearSummary = assignedGear.map((g) => `${g.name} (${g.serial_number})`).join(", ");
+  const gearSummary = assignedGear.length > 0
+    ? assignedGear.map((g) => `${g.name} (${g.serial_number})`).join(", ")
+    : "No gear assigned";
 
   // Zero-cost WhatsApp Formatted Message
-  const teamText = teamMembers
-    .map((m) => `• ${m.name}${m.is_lead ? " (Lead)" : ""} - ${m.phone}`)
-    .join("\n");
+  const teamText = teamMembers.length > 0
+    ? teamMembers.map((m) => `• ${m.name}${m.is_lead ? " (Lead)" : ""} - ${m.phone}`).join("\n")
+    : "• Unassigned";
 
-  const gearText = assignedGear
-    .map((g) => `• ${g.name} (${g.serial_number})`)
-    .join("\n");
+  const gearText = assignedGear.length > 0
+    ? assignedGear.map((g) => `• ${g.name} (${g.serial_number})`).join("\n")
+    : "• No gear assigned";
 
   const whatsappText = `*ASSDI MEDIA • SHOOT SLIP ${slipNumber}*\n\n📹 Course: ${courseTitle}\n📍 Venue: ${venueName}\n⏰ Call Time: ${callTimeFormatted}\n\n👥 Team:\n${teamText}\n\n🎥 Assigned Gear:\n${gearText}\n\n_Please arrive 15 minutes before call time._`;
 
@@ -522,13 +300,13 @@ function enrichTask(task: TaskItem): EnrichedTask {
   const venue = MASTER_VENUES.find((v) => v.id === req?.venue_id);
 
   // Assignees
-  const taskAssignees = inMemoryAssignees.filter((a) => a.task_id === task.id);
+  const taskAssignees = getAssigneesStore().filter((a) => a.task_id === task.id);
   const assigneesDetail: TaskAssigneeDetail[] = [];
   let leadName = "Unassigned";
   let leadPhone = "";
 
   for (const a of taskAssignees) {
-    const user = Object.values(DEMO_USERS).find((u) => u.id === a.user_id);
+    const user = getDemoUserById(a.user_id);
     if (user) {
       assigneesDetail.push({
         user_id: user.id,
@@ -582,7 +360,7 @@ function enrichTask(task: TaskItem): EnrichedTask {
 // 1. Get All Tasks (RLS tasks_select_policy)
 // ----------------------------------------------------------------------------
 export function getAllTasks(user?: UserProfile): EnrichedTask[] {
-  let list = inMemoryTasks;
+  let list = getTasksStore();
 
   if (user) {
     if (user.role === "admin") {
@@ -591,7 +369,7 @@ export function getAllTasks(user?: UserProfile): EnrichedTask[] {
       // Staff/Intern reads assigned tasks or tasks where user is lead
       list = list.filter((t) => {
         const isLead = t.lead_staff_id === user.id;
-        const isAssignee = inMemoryAssignees.some(
+        const isAssignee = getAssigneesStore().some(
           (a) => a.task_id === t.id && a.user_id === user.id
         );
         return isLead || isAssignee;
@@ -613,7 +391,7 @@ export function getAllTasks(user?: UserProfile): EnrichedTask[] {
 // 2. Get Single Task By ID
 // ----------------------------------------------------------------------------
 export function getTaskById(taskId: string, user?: UserProfile): EnrichedTask | null {
-  const task = inMemoryTasks.find((t) => t.id === taskId);
+  const task = getTasksStore().find((t) => t.id === taskId);
   if (!task) return null;
 
   // Check RLS select policy
@@ -622,7 +400,7 @@ export function getTaskById(taskId: string, user?: UserProfile): EnrichedTask | 
       // Allowed
     } else if (user.role === "staff" || user.role === "intern") {
       const isLead = task.lead_staff_id === user.id;
-      const isAssignee = inMemoryAssignees.some(
+      const isAssignee = getAssigneesStore().some(
         (a) => a.task_id === task.id && a.user_id === user.id
       );
       if (!isLead && !isAssignee) {
@@ -674,14 +452,23 @@ export function approveAndAssignTask(
   const endIso = `${shootDate}T17:00:00Z`;
   const timeWindow = formatTimeWindow(startIso, endIso);
 
-  // 4. Resolve Lead Name
-  const leadUser = Object.values(DEMO_USERS).find((u) => u.id === validated.lead_staff_id);
-  const leadName = leadUser ? leadUser.full_name : "Lead Staff";
+  // 4. Resolve Lead User and enforce permanent staff role
+  const leadUser = getDemoUserById(validated.lead_staff_id);
+  if (!leadUser) {
+    throw new Error("নির্ধারিত টিম লিডকে ব্যবহারকারী তালিকায় পাওয়া যায়নি।");
+  }
+  if (leadUser.role !== "staff") {
+    throw new Error(
+      "প্রজেক্ট লিড অবশ্যই একজন পার্মানেন্ট স্টাফ সদস্য হতে হবে। ইন্টার্ন বা অন্য কাউকে লিড করা যাবে না। (tasks_lead_staff_update)"
+    );
+  }
+  const leadName = leadUser.full_name;
   const course = DEMO_COURSES.find((c) => c.id === req.course_id);
   const taskTitle = course ? `${course.name} Shoot` : "ASSDI Media Shoot";
 
   // 5. Create or find Task ID
-  const task = inMemoryTasks.find((t) => t.requisition_id === req.id);
+  const tasksStore = getTasksStore();
+  const task = tasksStore.find((t) => t.requisition_id === req.id);
   const taskId = task ? task.id : `t-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
   const now = new Date().toISOString();
 
@@ -719,7 +506,7 @@ export function approveAndAssignTask(
       created_at: now,
       updated_at: now,
     };
-    inMemoryTasks.unshift(savedTask);
+    tasksStore.unshift(savedTask);
   } else {
     task.stage = "shoot_assigned";
     task.lead_staff_id = validated.lead_staff_id;
@@ -730,12 +517,14 @@ export function approveAndAssignTask(
 
   // 9. Insert Task Assignees (2–3 members)
   // Remove any previous assignees for this task
-  inMemoryAssignees = inMemoryAssignees.filter((a) => a.task_id !== taskId);
-  tasksGlobal.__assdi_task_assignees = inMemoryAssignees;
+  const assigneesStore = getAssigneesStore();
+  const filtered = assigneesStore.filter((a) => a.task_id !== taskId);
+  assigneesStore.length = 0;
+  assigneesStore.push(...filtered);
 
   for (const uid of validated.assignee_ids) {
     const isLead = uid === validated.lead_staff_id;
-    inMemoryAssignees.push({
+    assigneesStore.push({
       task_id: taskId,
       user_id: uid,
       assignment_role: isLead ? "lead" : "member",
@@ -758,7 +547,7 @@ export function updateTaskStage(
   input: UpdateTaskStageInput,
   user: UserProfile
 ): EnrichedTask {
-  const task = inMemoryTasks.find((t) => t.id === taskId);
+  const task = getTasksStore().find((t) => t.id === taskId);
   if (!task) {
     throw new Error("টাস্ক পাওয়া যায়নি। (Task not found)");
   }
@@ -789,12 +578,21 @@ export function updateTaskStage(
   const validated = updateTaskStageSchema.parse(input);
 
   // 4. Enforce Completed requires Google Drive URL
-  if (validated.stage === "completed" && !validated.final_drive_url && !task.final_drive_url) {
-    throw new Error("টাস্ক 'Completed' করতে হলে একটি বৈধ গুগল ড্রাইভ ডেলিভারি লিংক আবশ্যক।");
+  const targetStage = validated.stage || task.stage;
+  if (targetStage === "completed") {
+    const effectiveDriveUrl =
+      validated.final_drive_url !== undefined
+        ? validated.final_drive_url
+        : task.final_drive_url;
+    if (!effectiveDriveUrl || !GOOGLE_DRIVE_URL_REGEX.test(effectiveDriveUrl)) {
+      throw new Error("টাস্ক 'Completed' করতে হলে একটি বৈধ গুগল ড্রাইভ ডেলিভারি লিংক আবশ্যক।");
+    }
   }
 
   const now = new Date().toISOString();
-  task.stage = validated.stage;
+  if (validated.stage !== undefined) {
+    task.stage = validated.stage;
+  }
   task.updated_at = now;
 
   if (validated.final_drive_url !== undefined) {
@@ -805,7 +603,7 @@ export function updateTaskStage(
     task.raw_footage_uploaded = validated.raw_footage_uploaded;
   }
 
-  if (validated.stage === "completed") {
+  if (task.stage === "completed") {
     task.completed_at = now;
   }
 
@@ -836,7 +634,7 @@ export function getShootSlip(taskId: string, user?: UserProfile): ShootSlipData 
 // 6. Trigger B Simulation: Intern Footage Upload Sync
 // ----------------------------------------------------------------------------
 export function syncInternFootageUpload(taskId: string): void {
-  const task = inMemoryTasks.find((t) => t.id === taskId);
+  const task = getTasksStore().find((t) => t.id === taskId);
   if (task) {
     task.raw_footage_uploaded = true;
     task.updated_at = new Date().toISOString();

@@ -759,6 +759,7 @@ export default function AdminRequisitionsPage() {
 
       {/* Atomic Approve & Assign Modal */}
       <ApproveAndAssignModal
+        key={approvingReq ? approvingReq.id : "modal-closed"}
         requisition={approvingReq}
         isOpen={Boolean(approvingReq)}
         onClose={() => setApprovingReq(null)}
@@ -767,6 +768,7 @@ export default function AdminRequisitionsPage() {
 
       {/* Shoot Assignment Slip Modal */}
       <ShootAssignmentSlipModal
+        key={activeSlip ? activeSlip.slip_number : "slip-closed"}
         slip={activeSlip}
         isOpen={showSlipModal}
         onClose={() => setShowSlipModal(false)}

@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/session";
-import { DEMO_USERS } from "@/lib/auth/demo-users";
+import { getAllDemoUsers } from "@/lib/auth/demo-users";
 import { getAllGearItemsRaw } from "@/lib/gear/store";
 
 export async function GET(request: NextRequest) {
@@ -12,8 +12,8 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // Eligible team members are staff and intern users who are active
-  const candidates = Object.values(DEMO_USERS)
+  // Eligible team members are staff and intern users who are active (seeded + dynamically created)
+  const candidates = getAllDemoUsers()
     .filter((u) => (u.role === "staff" || u.role === "intern") && u.is_active)
     .map((u) => ({
       id: u.id,

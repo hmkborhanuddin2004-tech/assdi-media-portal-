@@ -296,32 +296,97 @@ const gearGlobalStore = globalThis as unknown as GearGlobalStore;
 if (!gearGlobalStore.__assdi_gear) {
   gearGlobalStore.__assdi_gear = JSON.parse(JSON.stringify(SEEDED_GEAR_ITEMS));
 }
+// Initialize default state matching mockups
 if (!gearGlobalStore.__assdi_gear_bookings) {
   gearGlobalStore.__assdi_gear_bookings = [];
+  const fx3 = gearGlobalStore.__assdi_gear?.find((g) => g.serial_number === "SN-FX3-01");
+  const lens = gearGlobalStore.__assdi_gear?.find((g) => g.serial_number === "SN-LN-24105-01");
+  const rs4 = gearGlobalStore.__assdi_gear?.find((g) => g.serial_number === "SN-GM-RS4-01");
+
+  if (fx3) {
+    fx3.status = "in_use";
+    gearGlobalStore.__assdi_gear_bookings.push({
+      id: "b1000000-0000-0000-0000-000000000001",
+      gear_id: fx3.id,
+      task_id: "t1000000-0000-0000-0000-000000000001",
+      responsible_lead_id: "00000000-0000-0000-0000-000000000007", // Arif Rahman (Lead)
+      time_window: formatTimeWindow("2026-11-24T09:00:00Z", "2026-11-24T17:00:00Z"),
+      checked_out_at: "2026-11-24T09:00:00Z",
+      returned_at: null,
+      battery_ok: null,
+      sd_card_ok: null,
+      return_condition_note: null,
+      created_at: "2026-11-24T09:00:00Z",
+      task_title: "The Art of Creation (Reel)",
+      lead_name: "Arif Rahman",
+      team_label: "Team A",
+      gear_name: fx3.name,
+      serial_number: fx3.serial_number,
+    });
+  }
+
+  if (lens) {
+    lens.status = "in_use";
+    gearGlobalStore.__assdi_gear_bookings.push({
+      id: "b1000000-0000-0000-0000-000000000002",
+      gear_id: lens.id,
+      task_id: "t1000000-0000-0000-0000-000000000001",
+      responsible_lead_id: "00000000-0000-0000-0000-000000000007", // Arif Rahman (Lead)
+      time_window: formatTimeWindow("2026-11-24T09:00:00Z", "2026-11-24T17:00:00Z"),
+      checked_out_at: "2026-11-24T09:00:00Z",
+      returned_at: null,
+      battery_ok: null,
+      sd_card_ok: null,
+      return_condition_note: null,
+      created_at: "2026-11-24T09:00:00Z",
+      task_title: "The Art of Creation (Reel)",
+      lead_name: "Arif Rahman",
+      team_label: "Team A",
+      gear_name: lens.name,
+      serial_number: lens.serial_number,
+    });
+  }
+
+  if (rs4) {
+    rs4.status = "maintenance";
+    rs4.maintenance_note = "Gimbal axis motor calibration needed";
+  }
 }
 
-let inMemoryGear: GearItem[] = gearGlobalStore.__assdi_gear!;
-let inMemoryBookings: GearBooking[] = gearGlobalStore.__assdi_gear_bookings!;
+export function getGearStore(): GearItem[] {
+  if (!gearGlobalStore.__assdi_gear) {
+    gearGlobalStore.__assdi_gear = JSON.parse(JSON.stringify(SEEDED_GEAR_ITEMS));
+  }
+  return gearGlobalStore.__assdi_gear!;
+}
+
+export function getBookingsStore(): GearBooking[] {
+  if (!gearGlobalStore.__assdi_gear_bookings) {
+    gearGlobalStore.__assdi_gear_bookings = [];
+  }
+  return gearGlobalStore.__assdi_gear_bookings!;
+}
 
 export function resetGearForTesting(options?: { withMockupSeed?: boolean }) {
-  gearGlobalStore.__assdi_gear = JSON.parse(JSON.stringify(SEEDED_GEAR_ITEMS));
-  gearGlobalStore.__assdi_gear_bookings = [];
-  inMemoryGear = gearGlobalStore.__assdi_gear!;
-  inMemoryBookings = gearGlobalStore.__assdi_gear_bookings!;
+  const gear = getGearStore();
+  const bookings = getBookingsStore();
+  gear.length = 0;
+  gear.push(...JSON.parse(JSON.stringify(SEEDED_GEAR_ITEMS)));
+  bookings.length = 0;
 
   if (options?.withMockupSeed) {
     // Optionally seed state matching docs/mockups/gear.jpg
-    const fx3 = inMemoryGear.find((g) => g.serial_number === "SN-FX3-01");
-    const lens = inMemoryGear.find((g) => g.serial_number === "SN-LN-24105-01");
-    const rs4 = inMemoryGear.find((g) => g.serial_number === "SN-GM-RS4-01");
+    const fx3 = gear.find((g) => g.serial_number === "SN-FX3-01");
+    const lens = gear.find((g) => g.serial_number === "SN-LN-24105-01");
+    const rs4 = gear.find((g) => g.serial_number === "SN-GM-RS4-01");
 
     if (fx3) {
       fx3.status = "in_use";
-      inMemoryBookings.push({
+      bookings.push({
         id: "b1000000-0000-0000-0000-000000000001",
         gear_id: fx3.id,
         task_id: "t1000000-0000-0000-0000-000000000001",
-        responsible_lead_id: "00000000-0000-0000-0000-000000000003",
+        responsible_lead_id: "00000000-0000-0000-0000-000000000007", // Arif Rahman (Lead)
         time_window: formatTimeWindow("2026-11-24T09:00:00Z", "2026-11-24T17:00:00Z"),
         checked_out_at: "2026-11-24T09:00:00Z",
         returned_at: null,
@@ -329,8 +394,8 @@ export function resetGearForTesting(options?: { withMockupSeed?: boolean }) {
         sd_card_ok: null,
         return_condition_note: null,
         created_at: "2026-11-24T09:00:00Z",
-        task_title: "The Art of Creation Practical Session Reel",
-        lead_name: "Tariqul Islam (Lead)",
+        task_title: "The Art of Creation (Reel)",
+        lead_name: "Arif Rahman",
         team_label: "Team A",
         gear_name: fx3.name,
         serial_number: fx3.serial_number,
@@ -339,11 +404,11 @@ export function resetGearForTesting(options?: { withMockupSeed?: boolean }) {
 
     if (lens) {
       lens.status = "in_use";
-      inMemoryBookings.push({
+      bookings.push({
         id: "b1000000-0000-0000-0000-000000000002",
         gear_id: lens.id,
         task_id: "t1000000-0000-0000-0000-000000000001",
-        responsible_lead_id: "00000000-0000-0000-0000-000000000003",
+        responsible_lead_id: "00000000-0000-0000-0000-000000000007", // Arif Rahman (Lead)
         time_window: formatTimeWindow("2026-11-24T09:00:00Z", "2026-11-24T17:00:00Z"),
         checked_out_at: "2026-11-24T09:00:00Z",
         returned_at: null,
@@ -351,8 +416,8 @@ export function resetGearForTesting(options?: { withMockupSeed?: boolean }) {
         sd_card_ok: null,
         return_condition_note: null,
         created_at: "2026-11-24T09:00:00Z",
-        task_title: "The Art of Creation Practical Session Reel",
-        lead_name: "Tariqul Islam (Lead)",
+        task_title: "The Art of Creation (Reel)",
+        lead_name: "Arif Rahman",
         team_label: "Team A",
         gear_name: lens.name,
         serial_number: lens.serial_number,
@@ -418,13 +483,13 @@ export function getAllGearItems(user: UserProfile, filter?: { category?: string;
 
   // Active bookings map
   const activeBookingsByGearId = new Map<string, GearBooking>();
-  for (const b of inMemoryBookings) {
+  for (const b of getBookingsStore()) {
     if (!b.returned_at) {
       activeBookingsByGearId.set(b.gear_id, b);
     }
   }
 
-  let items = inMemoryGear.map((g) => {
+  let items = getGearStore().map((g) => {
     const booking = activeBookingsByGearId.get(g.id) || null;
     let assigned_to: string | null = null;
     if (booking) {
@@ -465,10 +530,10 @@ export function getGearItemById(id: string, user: UserProfile): GearItem | null 
   if (user.role === "coordinator") {
     throw new RlsForbiddenError("অননুমোদিত অ্যাক্সেস (Coordinators do not have access to gear inventory)");
   }
-  const item = inMemoryGear.find((g) => g.id === id);
+  const item = getGearStore().find((g) => g.id === id);
   if (!item) return null;
 
-  const activeBooking = inMemoryBookings.find((b) => b.gear_id === id && !b.returned_at) || null;
+  const activeBooking = getBookingsStore().find((b) => b.gear_id === id && !b.returned_at) || null;
   return {
     ...item,
     current_booking: activeBooking,
@@ -487,7 +552,7 @@ export function createGearItem(input: AddGearInput, user: UserProfile): GearItem
   }
 
   // Unique serial_number constraint
-  const existing = inMemoryGear.find(
+  const existing = getGearStore().find(
     (g) => g.serial_number.trim().toLowerCase() === input.serial_number.trim().toLowerCase()
   );
   if (existing) {
@@ -507,7 +572,7 @@ export function createGearItem(input: AddGearInput, user: UserProfile): GearItem
     updated_at: new Date().toISOString(),
   };
 
-  inMemoryGear.unshift(newItem);
+  getGearStore().unshift(newItem);
   return newItem;
 }
 
@@ -516,13 +581,14 @@ export function updateGearItem(id: string, input: UpdateGearInput, user: UserPro
     throw new RlsForbiddenError("শুধুমাত্র অ্যাডমিন সরঞ্জাম আপডেট করতে পারেন (Admin only)");
   }
 
-  const item = inMemoryGear.find((g) => g.id === id);
+  const gearList = getGearStore();
+  const item = gearList.find((g) => g.id === id);
   if (!item) {
     throw new Error("Gear item not found");
   }
 
   if (input.serial_number && input.serial_number !== item.serial_number) {
-    const existing = inMemoryGear.find(
+    const existing = gearList.find(
       (g) => g.id !== id && g.serial_number.trim().toLowerCase() === input.serial_number!.trim().toLowerCase()
     );
     if (existing) {
@@ -551,12 +617,16 @@ export function deleteGearItem(id: string, user: UserProfile): boolean {
     throw new RlsForbiddenError("শুধুমাত্র অ্যাডমিন সরঞ্জাম মুছে ফেলতে পারেন (Admin only)");
   }
 
-  const activeBooking = inMemoryBookings.find((b) => b.gear_id === id && !b.returned_at);
+  const activeBooking = getBookingsStore().find((b) => b.gear_id === id && !b.returned_at);
   if (activeBooking) {
     throw new Error("Cannot delete gear item with active shoot booking (ON DELETE RESTRICT)");
   }
 
-  inMemoryGear = inMemoryGear.filter((g) => g.id !== id);
+  const gearList = getGearStore();
+  const idx = gearList.findIndex((g) => g.id === id);
+  if (idx !== -1) {
+    gearList.splice(idx, 1);
+  }
   return true;
 }
 
@@ -573,7 +643,7 @@ export async function checkOutGear(
     throw new RlsForbiddenError("শুধুমাত্র মিডিয়া হেড (অ্যাডমিন) সরঞ্জাম চেক-আউট করতে পারেন (Admin only)");
   }
 
-  const gear = inMemoryGear.find((g) => g.id === input.gear_id);
+  const gear = getGearStore().find((g) => g.id === input.gear_id);
   if (!gear) {
     throw new Error(`সরঞ্জাম পাওয়া যায়নি (Gear item not found: ${input.gear_id})`);
   }
@@ -588,7 +658,7 @@ export async function checkOutGear(
 
   // 3. PostgreSQL EXCLUDE USING gist (gear_id WITH =, time_window WITH &&) WHERE (returned_at IS NULL)
   // Check for ANY active booking on this gear whose time_window overlaps
-  const conflictingBooking = inMemoryBookings.find(
+  const conflictingBooking = getBookingsStore().find(
     (b) => b.gear_id === input.gear_id && !b.returned_at && timeWindowsOverlap(b.time_window, requestedWindow)
   );
 
@@ -641,7 +711,7 @@ export async function checkOutGear(
     serial_number: gear.serial_number,
   };
 
-  inMemoryBookings.push(newBooking);
+  getBookingsStore().push(newBooking);
 
   // 5. Update gear item status
   gear.status = "in_use";
@@ -669,13 +739,13 @@ export async function checkInGear(
     throw new RlsForbiddenError("শুধুমাত্র অ্যাডমিন সরঞ্জাম চেক-ইন করতে পারেন (Admin only)");
   }
 
-  const gear = inMemoryGear.find((g) => g.id === input.gear_id);
+  const gear = getGearStore().find((g) => g.id === input.gear_id);
   if (!gear) {
     throw new Error(`সরঞ্জাম পাওয়া যায়নি (Gear item not found: ${input.gear_id})`);
   }
 
   // Find active booking
-  const activeBooking = inMemoryBookings.find(
+  const activeBooking = getBookingsStore().find(
     (b) => b.gear_id === input.gear_id && !b.returned_at
   );
 
@@ -740,7 +810,7 @@ export function markGearReady(gearId: string, user: UserProfile): GearItem {
     throw new RlsForbiddenError("শুধুমাত্র অ্যাডমিন সরঞ্জাম প্রস্তুত চিহ্নিত করতে পারেন (Admin only)");
   }
 
-  const gear = inMemoryGear.find((g) => g.id === gearId);
+  const gear = getGearStore().find((g) => g.id === gearId);
   if (!gear) {
     throw new Error(`Gear item not found: ${gearId}`);
   }
@@ -757,15 +827,15 @@ export function markGearReady(gearId: string, user: UserProfile): GearItem {
 }
 
 export function getAllBookings(): GearBooking[] {
-  return inMemoryBookings;
+  return getBookingsStore();
 }
 
 export function getAllGearItemsRaw(): GearItem[] {
-  return inMemoryGear;
+  return getGearStore();
 }
 
 export function getGearItemsByIds(ids: string[]): GearItem[] {
-  return inMemoryGear.filter((g) => ids.includes(g.id));
+  return getGearStore().filter((g) => ids.includes(g.id));
 }
 
 /**
@@ -786,8 +856,9 @@ export function bookGearBatchForTask(params: {
 
   // 1. Validate all gear items exist and none are in maintenance
   const selectedGear: GearItem[] = [];
+  const gearStore = getGearStore();
   for (const gid of gearIds) {
-    const item = inMemoryGear.find((g) => g.id === gid);
+    const item = gearStore.find((g) => g.id === gid);
     if (!item) {
       throw new Error(`সরঞ্জাম পাওয়া যায়নি (Gear item not found: ${gid})`);
     }
@@ -798,8 +869,9 @@ export function bookGearBatchForTask(params: {
   }
 
   // 2. Atomic check for double-booking conflicts across all requested items
+  const bookingsStore = getBookingsStore();
   for (const gear of selectedGear) {
-    const conflicting = inMemoryBookings.find(
+    const conflicting = bookingsStore.find(
       (b) => b.gear_id === gear.id && !b.returned_at && timeWindowsOverlap(b.time_window, timeWindow)
     );
     if (conflicting) {
@@ -846,7 +918,7 @@ export function bookGearBatchForTask(params: {
       gear_name: gear.name,
       serial_number: gear.serial_number,
     };
-    inMemoryBookings.push(booking);
+    bookingsStore.push(booking);
     gear.status = "in_use";
     gear.updated_at = now;
     createdBookings.push(booking);

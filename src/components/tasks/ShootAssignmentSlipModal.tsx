@@ -159,14 +159,18 @@ export function ShootAssignmentSlipModal({
                 <span>Assigned Gear</span>
               </div>
               <div className="space-y-1 text-right max-w-[65%]" id="slip-gear-list">
-                {slip.assigned_gear.map((gear, idx) => (
-                  <div key={idx} className="text-slate-800 font-medium text-xs">
-                    <span className="font-semibold">{gear.name}</span>{" "}
-                    <span className="text-slate-500 text-[11px] font-mono">
-                      ({gear.serial_number})
-                    </span>
-                  </div>
-                ))}
+                {slip.assigned_gear.length > 0 ? (
+                  slip.assigned_gear.map((gear, idx) => (
+                    <div key={idx} className="text-slate-800 font-medium text-xs">
+                      <span className="font-semibold">{gear.name}</span>{" "}
+                      <span className="text-slate-500 text-[11px] font-mono">
+                        ({gear.serial_number})
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <span className="text-slate-400 text-xs italic">কোনো গিয়ার বরাদ্দ নেই</span>
+                )}
               </div>
             </div>
           </div>

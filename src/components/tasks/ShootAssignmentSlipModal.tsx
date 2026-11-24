@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   X,
   Printer,
@@ -197,6 +198,16 @@ export function ShootAssignmentSlipModal({
 
         {/* Modal Actions (Hidden on Print) */}
         <div className="print:hidden p-4 bg-slate-50/80 border-t border-slate-100 flex flex-col sm:flex-row gap-2.5 sm:justify-end">
+          {/* Edit Gear Button */}
+          <Link
+            href="/admin/gear"
+            id="slip-edit-gear-btn"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-semibold border border-slate-200 transition-all shadow-xs"
+          >
+            <Camera className="w-4 h-4 text-slate-500" />
+            <span>Edit Gear</span>
+          </Link>
+
           {/* Download PDF / Print Button */}
           <button
             onClick={handlePrint}

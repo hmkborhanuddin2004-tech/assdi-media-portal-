@@ -330,19 +330,51 @@ export default function CoordinatorNewRequisitionPage() {
             </div>
 
             {/* Field 2: Program Type */}
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <label
                 htmlFor="program_type"
                 className="block text-xs font-semibold text-slate-700"
               >
                 Program Type
               </label>
+
+              {/* Selectable Chip Buttons */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {PROGRAM_TYPES.map((pt) => {
+                  const meta = PROGRAM_TYPE_LABELS[pt];
+                  const isSelected = programType === pt;
+                  return (
+                    <button
+                      type="button"
+                      key={pt}
+                      id={`chip-program-${pt}`}
+                      onClick={() => setProgramType(pt)}
+                      className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between ${
+                        isSelected
+                          ? "bg-[#0F766E] border-[#0F766E] text-white shadow-xs font-bold"
+                          : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium"
+                      }`}
+                    >
+                      <span className="text-xs leading-tight">{meta.en}</span>
+                      <span
+                        className={`text-[10px] mt-1 ${
+                          isSelected ? "text-emerald-100" : "text-slate-400"
+                        }`}
+                      >
+                        {meta.major ? "৭ দিন অগ্রিম" : "৩ দিন অগ্রিম"}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Accessible Synchronized Dropdown */}
               <select
                 id="program_type"
                 name="program_type"
                 value={programType}
                 onChange={(e) => setProgramType(e.target.value as ProgramType)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs sm:text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/20 focus:border-[#0F766E]"
+                className="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-slate-50/70 text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/20"
                 required
               >
                 {PROGRAM_TYPES.map((pt) => {
@@ -462,6 +494,9 @@ export default function CoordinatorNewRequisitionPage() {
                     required
                   />
                 </div>
+                <p className="text-[11px] text-slate-500 font-medium">
+                  Earliest available: <span className="font-semibold text-[#0F766E] font-mono">{earliestAllowedDate}</span> (Asia/Dhaka)
+                </p>
               </div>
 
               <div className="space-y-1.5">
@@ -714,8 +749,8 @@ export default function CoordinatorNewRequisitionPage() {
             </div>
 
             <div className="border-t border-slate-100 pt-3 flex items-center justify-between">
-              <span className="text-[10px] text-slate-400">
-                Other courses are hidden by security policy
+              <span className="text-[11px] font-semibold text-[#0F766E] bg-emerald-50 px-2.5 py-0.5 rounded-full">
+                {assignedCourse?.name || "Assigned Course"}
               </span>
               <Link
                 href="/coordinator/requests"

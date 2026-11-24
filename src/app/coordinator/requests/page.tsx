@@ -324,8 +324,8 @@ export default function CoordinatorRequestsPage() {
       </div>
 
       <div className="text-center pt-2">
-        <span className="text-[11px] text-slate-400">
-          Other courses are hidden by security policy
+        <span className="text-[11px] font-medium text-slate-400">
+          Viewing course requests for assigned scope
         </span>
       </div>
     </div>

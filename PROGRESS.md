@@ -16,9 +16,14 @@
   - Watchdog Hygiene: 0 `TODO` or `FIXME` comments, 0 `test.skip` or `test.only` directives, 0 mock fallback stubs or dummy constants in production code.
 - **Gate 3 (Visual Luxury Glassmorphism & Playwright E2E Suite):**
   - Automated browser screenshots captured across all 15 key views at Desktop (`1280x800`) and Mobile (`390x844`) stored in `docs/screenshots/`.
-  - Upgraded global CSS backdrop to calm natural emerald-sage-mist ambient gradient (`radial-gradient` tokens on `html, body`) and enriched frosted glass surfaces (`bg-white/78 backdrop-blur-md border border-white/85 shadow-[0_8px_32px_rgba(15,23,42,0.06)]`).
-  - Upgraded executive top navigation bar in `AppShell.tsx` featuring search bar, notification bell, and role profile badge matching reference designs.
-  - Implemented `tests-e2e/full-lifecycle.spec.ts` testing the complete cross-role workflow from start to finish.
+  - Upgraded global CSS backdrop to executive glassmorphism mesh with teal, cyan, and warm peach gradients (`bg-white/68 backdrop-blur-xl border border-white/85 shadow-[0_8px_32px_rgba(15,23,42,0.06)]`).
+  - Desktop sidebar: Clean brand text ONLY (`"ASSDI Media"` in `#0F172A` font-extrabold) without logo icon, grouped under `MAIN` and `OPERATIONS` categories for all 4 roles.
+  - Desktop top navigation bar: Role-scoped search placeholder (e.g. Coordinator searches requisitions; Staff searches tasks; Admin searches all) + notification bell with live unread badge (`3`).
+  - Mobile bottom navigation: Max 5 items with safe-area padding and slide-up drawer for overflow sections.
+  - `/coordinator/new`: Selectable interactive chips for Program Type + dynamic lead-time helper underneath date input (`Earliest available: YYYY-MM-DD`). Clean course badge without `"Other courses are hidden by security policy"` string.
+  - `/admin/dashboard`: 3 KPI cards with inline SVG sparklines; Approval queue table hides action buttons on approved items; Task Board progress features a 6-segment pipeline bar with exact counts.
+  - `/admin/calendar`: Tomorrow / 3 Days / 7 Days filters have `Calendar` icon; Shoot Assignment Slip modal includes "Download PDF", "Share on WhatsApp", and "Edit Gear" button.
+  - `/admin/reports`: Weekly velocity SVG chart; separate `Field Hrs` and `Edit Hrs` columns; neutral slate/teal role chips; download icon on Export CSV.
   - Full Playwright suite executed: 44 tests passed with exit code 0 (1.2m), 0 console errors, 0 network failures, 0 horizontal overflow.
 - **Gate 4 (Mockup Fidelity & Fresh Diff Audit):**
   - Audited against all 7 visual mockups in `docs/mockups/` (`dashboard.jpg`, `requisitions.jpg`, `gear.jpg`, `task-board.jpg`, `daily-logs.jpg`, `calendar-slip.jpg`, `reports-users.jpg`).

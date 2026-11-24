@@ -33,14 +33,24 @@ interface NavItem {
   badge?: string;
 }
 
-function getNavItemsForRole(role: UserRole | undefined | null): NavItem[] {
+interface NavSection {
+  title: string;
+  items: NavItem[];
+}
+
+function getGroupedNavItemsForRole(role: UserRole | undefined | null): NavSection[] {
   if (!role) {
     return [
       {
-        name: "Login",
-        bnName: "লগইন",
-        href: "/login",
-        icon: LogIn,
+        title: "MAIN",
+        items: [
+          {
+            name: "Login",
+            bnName: "লগইন",
+            href: "/login",
+            icon: LogIn,
+          },
+        ],
       },
     ];
   }
@@ -49,123 +59,165 @@ function getNavItemsForRole(role: UserRole | undefined | null): NavItem[] {
     case "coordinator":
       return [
         {
-          name: "New Requisition",
-          bnName: "নতুন রিকুইজিশন",
-          href: "/coordinator/new",
-          icon: FilePlus2,
-        },
-        {
-          name: "My Requests",
-          bnName: "আমার রিকুইজিশন",
-          href: "/coordinator/requests",
-          icon: LayoutDashboard,
+          title: "MAIN",
+          items: [
+            {
+              name: "New Requisition",
+              bnName: "নতুন রিকুইজিশন",
+              href: "/coordinator/new",
+              icon: FilePlus2,
+            },
+            {
+              name: "My Requests",
+              bnName: "আমার রিকুইজিশন",
+              href: "/coordinator/requests",
+              icon: LayoutDashboard,
+            },
+          ],
         },
       ];
     case "staff":
       return [
         {
-          name: "My Tasks",
-          bnName: "মাই টাস্ক",
-          href: "/staff/tasks",
-          icon: Kanban,
+          title: "MAIN",
+          items: [
+            {
+              name: "My Tasks",
+              bnName: "মাই টাস্ক",
+              href: "/staff/tasks",
+              icon: Kanban,
+            },
+            {
+              name: "Daily Logs",
+              bnName: "ডেইলি লগ",
+              href: "/staff/daily-log",
+              icon: Clock,
+            },
+          ],
         },
         {
-          name: "Daily Logs",
-          bnName: "ডেইলি লগ",
-          href: "/staff/daily-log",
-          icon: Clock,
-        },
-        {
-          name: "Intern Status",
-          bnName: "ইন্টার্ন ট্র্যাকিং",
-          href: "/staff/intern-status",
-          icon: Users,
+          title: "OPERATIONS",
+          items: [
+            {
+              name: "Intern Status",
+              bnName: "ইন্টার্ন ট্র্যাকিং",
+              href: "/staff/intern-status",
+              icon: Users,
+            },
+          ],
         },
       ];
     case "intern":
       return [
         {
-          name: "Schedule",
-          bnName: "শুটিং শিডিউল",
-          href: "/intern/schedule",
-          icon: Calendar,
+          title: "MAIN",
+          items: [
+            {
+              name: "Schedule",
+              bnName: "শুটিং শিডিউল",
+              href: "/intern/schedule",
+              icon: Calendar,
+            },
+            {
+              name: "Daily Logs",
+              bnName: "ডেইলি কাজের লগ",
+              href: "/intern/daily-log",
+              icon: Clock,
+            },
+            {
+              name: "Tasks",
+              bnName: "অ্যাসাইনমেন্ট",
+              href: "/intern/tasks",
+              icon: Kanban,
+            },
+          ],
         },
         {
-          name: "Daily Logs",
-          bnName: "ডেইলি কাজের লগ",
-          href: "/intern/daily-log",
-          icon: Clock,
-        },
-        {
-          name: "Tasks",
-          bnName: "অ্যাসাইনমেন্ট",
-          href: "/intern/tasks",
-          icon: Kanban,
-        },
-        {
-          name: "Profile",
-          bnName: "প্রোফাইল",
-          href: "/intern/profile",
-          icon: User,
+          title: "OPERATIONS",
+          items: [
+            {
+              name: "Profile",
+              bnName: "প্রোফাইল",
+              href: "/intern/profile",
+              icon: User,
+            },
+          ],
         },
       ];
     case "admin":
     default:
       return [
         {
-          name: "Dashboard",
-          bnName: "ড্যাশবোর্ড",
-          href: "/admin/dashboard",
-          icon: LayoutDashboard,
+          title: "MAIN",
+          items: [
+            {
+              name: "Dashboard",
+              bnName: "ড্যাশবোর্ড",
+              href: "/admin/dashboard",
+              icon: LayoutDashboard,
+            },
+            {
+              name: "Requisitions",
+              bnName: "রিকুইজিশন",
+              href: "/admin/requisitions",
+              icon: FilePlus2,
+            },
+            {
+              name: "Master Calendar",
+              bnName: "ক্যালেন্ডার",
+              href: "/admin/calendar",
+              icon: Calendar,
+            },
+            {
+              name: "Task Board",
+              bnName: "টাস্ক বোর্ড",
+              href: "/admin/tasks",
+              icon: Kanban,
+              badge: "6-Stage",
+            },
+          ],
         },
         {
-          name: "Requisitions",
-          bnName: "রিকুইজিশন",
-          href: "/admin/requisitions",
-          icon: FilePlus2,
-        },
-        {
-          name: "Task Board",
-          bnName: "টাস্ক বোর্ড",
-          href: "/admin/tasks",
-          icon: Kanban,
-          badge: "6-Stage",
-        },
-        {
-          name: "Gear Stock",
-          bnName: "গিয়ার স্টক",
-          href: "/admin/gear",
-          icon: Camera,
-        },
-        {
-          name: "Master Calendar",
-          bnName: "ক্যালেন্ডার",
-          href: "/admin/calendar",
-          icon: Calendar,
-        },
-        {
-          name: "Daily Logs",
-          bnName: "ডেইলি লগ",
-          href: "/admin/logs",
-          icon: Clock,
-        },
-        {
-          name: "Reports",
-          bnName: "রিপোর্ট",
-          href: "/admin/reports",
-          icon: ShieldCheck,
-        },
-        {
-          name: "User Management",
-          bnName: "ইউজার কন্ট্রোল",
-          href: "/admin/users",
-          icon: Users,
+          title: "OPERATIONS",
+          items: [
+            {
+              name: "Gear Stock",
+              bnName: "গিয়ার স্টক",
+              href: "/admin/gear",
+              icon: Camera,
+            },
+            {
+              name: "Daily Logs",
+              bnName: "ডেইলি লগ",
+              href: "/admin/logs",
+              icon: Clock,
+            },
+            {
+              name: "Reports",
+              bnName: "রিপোর্ট",
+              href: "/admin/reports",
+              icon: ShieldCheck,
+            },
+            {
+              name: "User Management",
+              bnName: "ইউজার কন্ট্রোল",
+              href: "/admin/users",
+              icon: Users,
+            },
+          ],
         },
       ];
   }
 }
 
-function getMobileNavItemsForRole(role: UserRole | undefined | null): NavItem[] {
+function getNavItemsForRole(role: UserRole | undefined | null): NavItem[] {
+  return getGroupedNavItemsForRole(role).flatMap((section) => section.items);
+}
+
+function getMobileNavItemsForRole(
+  role: UserRole | undefined | null,
+  pathname: string = ""
+): (NavItem & { onClick?: () => void })[] {
   if (!role) {
     return [
       {
@@ -187,7 +239,7 @@ function getMobileNavItemsForRole(role: UserRole | undefined | null): NavItem[] 
     case "coordinator":
       return [
         {
-          name: "New Requisition",
+          name: "New Request",
           bnName: "নতুন রিকুইজিশন",
           href: "/coordinator/new",
           icon: FilePlus2,
@@ -208,13 +260,13 @@ function getMobileNavItemsForRole(role: UserRole | undefined | null): NavItem[] 
           icon: Kanban,
         },
         {
-          name: "Daily Logs",
+          name: "Daily Log",
           bnName: "ডেইলি লগ",
           href: "/staff/daily-log",
           icon: Clock,
         },
         {
-          name: "Intern Status",
+          name: "Intern Logs",
           bnName: "ইন্টার্ন",
           href: "/staff/intern-status",
           icon: Users,
@@ -249,6 +301,40 @@ function getMobileNavItemsForRole(role: UserRole | undefined | null): NavItem[] 
       ];
     case "admin":
     default:
+      if (pathname.startsWith("/admin/gear")) {
+        return [
+          {
+            name: "Dashboard",
+            bnName: "ড্যাশবোর্ড",
+            href: "/admin/dashboard",
+            icon: LayoutDashboard,
+          },
+          {
+            name: "Requisitions",
+            bnName: "রিকুইজিশন",
+            href: "/admin/requisitions",
+            icon: FilePlus2,
+          },
+          {
+            name: "Gear",
+            bnName: "গিয়ার",
+            href: "/admin/gear",
+            icon: Camera,
+          },
+          {
+            name: "Tasks",
+            bnName: "টাস্ক",
+            href: "/admin/tasks",
+            icon: Kanban,
+          },
+          {
+            name: "More",
+            bnName: "আরও",
+            href: "#more",
+            icon: Menu,
+          },
+        ];
+      }
       return [
         {
           name: "Dashboard",
@@ -257,16 +343,16 @@ function getMobileNavItemsForRole(role: UserRole | undefined | null): NavItem[] 
           icon: LayoutDashboard,
         },
         {
-          name: "Request",
+          name: "Requisitions",
           bnName: "রিকুইজিশন",
           href: "/admin/requisitions",
           icon: FilePlus2,
         },
         {
-          name: "Gear",
-          bnName: "গিয়ার",
-          href: "/admin/gear",
-          icon: Camera,
+          name: "Calendar",
+          bnName: "ক্যালেন্ডার",
+          href: "/admin/calendar",
+          icon: Calendar,
         },
         {
           name: "Tasks",
@@ -275,10 +361,10 @@ function getMobileNavItemsForRole(role: UserRole | undefined | null): NavItem[] 
           icon: Kanban,
         },
         {
-          name: "Users",
-          bnName: "ইউজার",
-          href: "/admin/users",
-          icon: Users,
+          name: "More",
+          bnName: "আরও",
+          href: "#more",
+          icon: Menu,
         },
       ];
   }
@@ -299,8 +385,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<CurrentUserSession | null>(null);
 
+  const groupedNav = getGroupedNavItemsForRole(user?.role);
   const navItems = getNavItemsForRole(user?.role);
-  const mobileNav = getMobileNavItemsForRole(user?.role);
+  const mobileNav = getMobileNavItemsForRole(user?.role, pathname);
 
   useEffect(() => {
     // Check current auth status
@@ -332,76 +419,73 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         className="print:hidden hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0 z-40 bg-white/75 backdrop-blur-md border-r border-white/80 shadow-sm"
       >
         <div className="flex flex-col h-full">
-          {/* Brand Header */}
-          <div className="h-16 px-5 border-b border-slate-200/80 flex items-center gap-3 bg-gradient-to-r from-emerald-50/50 to-transparent">
-            <div className="w-10 h-10 rounded-xl bg-white p-1 border border-emerald-100 flex items-center justify-center shadow-sm shrink-0 overflow-hidden">
-              <Image
-                src="/images/assdi-logo.png"
-                alt="ASSDI Logo"
-                width={36}
-                height={36}
-                className="w-full h-full object-contain"
-                priority
-              />
-            </div>
+          {/* Brand Header: Text ONLY, No Logo Icon */}
+          <div className="h-16 px-5 border-b border-slate-200/80 flex items-center justify-between bg-gradient-to-r from-emerald-50/50 to-transparent">
             <div className="flex flex-col leading-tight">
-              <span className="font-bold text-slate-900 text-sm tracking-tight">
-                ASSDI Media Portal
+              <span className="font-extrabold text-[#0F172A] text-lg tracking-tight">
+                ASSDI Media
               </span>
-              <span className="text-[11px] font-medium text-[#0F766E]">
-                আছ-সুন্নাহ স্কিল ইনস্টিটিউট
+              <span className="text-[10px] font-semibold text-[#0F766E] uppercase tracking-wider">
+                {user ? `${ROLE_LABELS[user.role]?.en || user.role}` : "Central Portal"}
               </span>
             </div>
+            <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-[#0F766E] text-[10px] font-bold">
+              HQ
+            </span>
           </div>
 
-          {/* Navigation Links */}
-          <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto no-scrollbar">
-            <div className="px-3 pb-2 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
-              {user ? `${ROLE_LABELS[user.role]?.en} Menu` : "Portal Navigation"}
-            </div>
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  prefetch={false}
-                  className={`group flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium transition-all duration-150 ${
-                    isActive
-                      ? "bg-[#0F766E] text-white shadow-sm font-semibold"
-                      : "text-slate-700 hover:bg-emerald-50/70 hover:text-[#0F766E]"
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <Icon
-                      className={`w-4 h-4 transition-colors ${
+          {/* Navigation Links Grouped by MAIN & OPERATIONS */}
+          <nav className="flex-1 px-3 py-4 space-y-4 overflow-y-auto no-scrollbar">
+            {groupedNav.map((section) => (
+              <div key={section.title} className="space-y-1">
+                <div className="px-3 pb-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  {section.title}
+                </div>
+                {section.items.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = pathname === item.href;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      prefetch={false}
+                      className={`group flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all duration-150 ${
                         isActive
-                          ? "text-white"
-                          : "text-slate-500 group-hover:text-[#0F766E]"
-                      }`}
-                    />
-                    <div className="flex flex-col text-left">
-                      <span className="font-semibold">{item.name}</span>
-                      <span className={`text-[10px] ${isActive ? "text-emerald-100" : "text-slate-400"}`}>
-                        {item.bnName}
-                      </span>
-                    </div>
-                  </div>
-                  {item.badge && (
-                    <span
-                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
-                        isActive
-                          ? "bg-emerald-800/60 text-white"
-                          : "bg-emerald-100 text-[#0F766E]"
+                          ? "bg-[#0F766E] text-white shadow-sm font-semibold"
+                          : "text-slate-700 hover:bg-emerald-50/70 hover:text-[#0F766E]"
                       }`}
                     >
-                      {item.badge}
-                    </span>
-                  )}
-                </Link>
-              );
-            })}
+                      <div className="flex items-center gap-2.5">
+                        <Icon
+                          className={`w-4 h-4 transition-colors ${
+                            isActive
+                              ? "text-white"
+                              : "text-slate-500 group-hover:text-[#0F766E]"
+                          }`}
+                        />
+                        <div className="flex flex-col text-left">
+                          <span className="font-semibold text-xs leading-snug">{item.name}</span>
+                          <span className={`text-[10px] ${isActive ? "text-emerald-100" : "text-slate-400"}`}>
+                            {item.bnName}
+                          </span>
+                        </div>
+                      </div>
+                      {item.badge && (
+                        <span
+                          className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${
+                            isActive
+                              ? "bg-emerald-800/60 text-white"
+                              : "bg-emerald-100 text-[#0F766E]"
+                          }`}
+                        >
+                          {item.badge}
+                        </span>
+                      )}
+                    </Link>
+                  );
+                })}
+              </div>
+            ))}
           </nav>
 
           {/* User Footer Panel */}
@@ -567,7 +651,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
                     type="text"
-                    placeholder="Search requisitions, gear, staff..."
+                    placeholder={
+                      user.role === "coordinator"
+                        ? "Search my requests & courses..."
+                        : user.role === "staff"
+                        ? "Search my assigned tasks..."
+                        : user.role === "intern"
+                        ? "Search my shoots & tasks..."
+                        : "Search requisitions, gear, staff, tasks..."
+                    }
                     className="w-full pl-10 pr-4 py-2 text-xs rounded-xl glass-panel text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E] transition-all"
                     readOnly
                   />
@@ -582,7 +674,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   aria-label="Notifications"
                 >
                   <Bell className="w-4 h-4" />
-                  <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-[#0F766E] rounded-full ring-2 ring-white" />
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#0F766E] text-white text-[9px] font-extrabold rounded-full flex items-center justify-center ring-2 ring-white shadow-xs">
+                    3
+                  </span>
                 </button>
                 <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl glass-panel text-xs cursor-pointer hover:bg-white/90 transition-all">
                   <div className="w-7 h-7 rounded-full bg-emerald-100 text-[#0F766E] flex items-center justify-center font-bold text-xs shrink-0">
@@ -619,6 +713,21 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {mobileNav.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
+          if (item.href === "#more") {
+            return (
+              <button
+                type="button"
+                key="mobile-nav-more"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="flex flex-col items-center justify-center flex-1 py-1 min-w-[56px] text-[10px] font-medium text-slate-500 hover:text-[#0F766E] transition-colors"
+              >
+                <div className="w-9 h-7 rounded-full flex items-center justify-center">
+                  <Icon className="w-4 h-4" />
+                </div>
+                <span className="truncate max-w-[64px]">{item.name}</span>
+              </button>
+            );
+          }
           return (
             <Link
               key={item.href}

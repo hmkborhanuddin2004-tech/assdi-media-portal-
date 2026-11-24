@@ -207,16 +207,21 @@ export default function AdminDashboardPage() {
             </div>
           </div>
           <div>
-            <div className="flex items-baseline gap-2">
-              <span
-                id="kpi-pending-count"
-                className="text-2xl sm:text-3xl font-extrabold text-slate-900"
-              >
-                {data?.pending_requisitions_count || 0}টি
-              </span>
-              <span className="text-[11px] font-semibold text-amber-600">
-                রিভিউ আবশ্যক
-              </span>
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-baseline gap-2">
+                <span
+                  id="kpi-pending-count"
+                  className="text-2xl sm:text-3xl font-extrabold text-slate-900"
+                >
+                  {data?.pending_requisitions_count || 0}টি
+                </span>
+                <span className="text-[11px] font-semibold text-amber-600">
+                  রিভিউ আবশ্যক
+                </span>
+              </div>
+              <svg className="w-16 h-7 text-amber-500 shrink-0 opacity-80" viewBox="0 0 64 24" fill="none">
+                <path d="M2 18L14 12L26 16L38 8L50 14L62 4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </div>
             <p className="text-[11px] text-slate-400 mt-1">
               অনুমোদনের অপেক্ষায় থাকা কোর্স শুট রিকুইজিশন
@@ -239,16 +244,21 @@ export default function AdminDashboardPage() {
             </div>
           </div>
           <div>
-            <div className="flex items-baseline gap-2">
-              <span
-                id="kpi-active-tasks-count"
-                className="text-2xl sm:text-3xl font-extrabold text-slate-900"
-              >
-                {data?.active_tasks_count || 0}টি
-              </span>
-              <span className="text-[11px] font-semibold text-emerald-600">
-                চলমান পাইপলাইন
-              </span>
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-baseline gap-2">
+                <span
+                  id="kpi-active-tasks-count"
+                  className="text-2xl sm:text-3xl font-extrabold text-slate-900"
+                >
+                  {data?.active_tasks_count || 0}টি
+                </span>
+                <span className="text-[11px] font-semibold text-emerald-600">
+                  চলমান পাইপলাইন
+                </span>
+              </div>
+              <svg className="w-16 h-7 text-[#0F766E] shrink-0 opacity-80" viewBox="0 0 64 24" fill="none">
+                <path d="M2 20L16 16L30 18L44 8L58 4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </div>
             <p className="text-[11px] text-slate-400 mt-1">
               মাঠে শুটিং, ফুটেজ আপলোড ও ভিডিও এডিটিং চলমান
@@ -271,20 +281,25 @@ export default function AdminDashboardPage() {
             </div>
           </div>
           <div>
-            <div className="flex items-baseline gap-2">
-              <span
-                id="kpi-gear-inuse-count"
-                className="text-xl sm:text-2xl font-extrabold text-slate-900"
-              >
-                {kpis.in_use}টি ইন ইউজ
-              </span>
-              <span className="text-slate-300">•</span>
-              <span
-                id="kpi-gear-maint-count"
-                className="text-xs sm:text-sm font-bold text-amber-600"
-              >
-                {kpis.maintenance}টি মেইনটেন্যান্স
-              </span>
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-baseline gap-2">
+                <span
+                  id="kpi-gear-inuse-count"
+                  className="text-xl sm:text-2xl font-extrabold text-slate-900"
+                >
+                  {kpis.in_use}টি ইন ইউজ
+                </span>
+                <span className="text-slate-300">•</span>
+                <span
+                  id="kpi-gear-maint-count"
+                  className="text-xs sm:text-sm font-bold text-amber-600"
+                >
+                  {kpis.maintenance}টি মেইনটেন্যান্স
+                </span>
+              </div>
+              <svg className="w-16 h-7 text-blue-500 shrink-0 opacity-80" viewBox="0 0 64 24" fill="none">
+                <path d="M2 12L15 14L28 10L42 16L56 8L62 10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </div>
             <p className="text-[11px] text-slate-400 mt-1">
               {kpis.available}টি ব্যবহারযোগ্য (মোট {kpis.total}টি ক্যামেরা ও গিয়ার)
@@ -396,29 +411,38 @@ export default function AdminDashboardPage() {
 
                     {/* Actions: Approve & Assign / Reject */}
                     <div className="flex items-center gap-2 shrink-0 pt-2 md:pt-0">
-                      <button
-                        type="button"
-                        id={`dashboard-approve-btn-${req.id}`}
-                        onClick={() => setApprovingReq(req)}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0F766E] hover:bg-[#115E59] text-white text-xs font-semibold shadow-xs transition-all"
-                      >
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                        <span>Approve & Assign</span>
-                      </button>
+                      {req.status === "approved" ? (
+                        <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-100 text-[#0F766E] text-xs font-bold border border-emerald-200 shadow-2xs">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>Approved</span>
+                        </span>
+                      ) : (
+                        <>
+                          <button
+                            type="button"
+                            id={`dashboard-approve-btn-${req.id}`}
+                            onClick={() => setApprovingReq(req)}
+                            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0F766E] hover:bg-[#115E59] text-white text-xs font-semibold shadow-xs transition-all"
+                          >
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            <span>Approve & Assign</span>
+                          </button>
 
-                      <button
-                        type="button"
-                        id={`dashboard-reject-btn-${req.id}`}
-                        onClick={() => {
-                          setRejectingReq(req);
-                          setRejectionReason("");
-                          setRejectionError(null);
-                        }}
-                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-red-50 text-red-600 hover:text-red-700 text-xs font-semibold border border-red-200 transition-all"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                        <span>Reject</span>
-                      </button>
+                          <button
+                            type="button"
+                            id={`dashboard-reject-btn-${req.id}`}
+                            onClick={() => {
+                              setRejectingReq(req);
+                              setRejectionReason("");
+                              setRejectionError(null);
+                            }}
+                            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-red-50 text-red-600 hover:text-red-700 text-xs font-semibold border border-red-200 transition-all"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                            <span>Reject</span>
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -444,6 +468,36 @@ export default function AdminDashboardPage() {
                 >
                   বোর্ডে যান
                 </Link>
+              </div>
+
+              {/* 6-Segment Horizontal Task Pipeline Bar */}
+              <div className="space-y-1.5 pt-1">
+                <div className="flex items-center justify-between text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
+                  <span>6-Stage Pipeline</span>
+                  <span>{progress.total} Active</span>
+                </div>
+                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden flex shadow-inner">
+                  <div
+                    style={{ width: `${progress.total ? Math.max(12, (progress.assigned / progress.total) * 100) : 25}%` }}
+                    className="bg-blue-500 h-full transition-all"
+                    title={`Assigned: ${progress.assigned}`}
+                  />
+                  <div
+                    style={{ width: `${progress.total ? Math.max(12, (progress.editing / progress.total) * 100) : 25}%` }}
+                    className="bg-teal-500 h-full transition-all"
+                    title={`Editing: ${progress.editing}`}
+                  />
+                  <div
+                    style={{ width: `${progress.total ? Math.max(12, (progress.review / progress.total) * 100) : 25}%` }}
+                    className="bg-purple-500 h-full transition-all"
+                    title={`Review: ${progress.review}`}
+                  />
+                  <div
+                    style={{ width: `${progress.total ? Math.max(12, (progress.completed / progress.total) * 100) : 25}%` }}
+                    className="bg-emerald-500 h-full transition-all"
+                    title={`Completed: ${progress.completed}`}
+                  />
+                </div>
               </div>
 
               {/* Stage Progress Pills */}

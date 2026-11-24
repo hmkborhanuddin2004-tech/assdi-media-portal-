@@ -144,6 +144,7 @@ export default function AdminMasterCalendarPage() {
                     : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
                 }`}
               >
+                <Calendar className={`w-3.5 h-3.5 shrink-0 ${isActive ? "text-white" : "text-slate-400"}`} />
                 <span>{meta.en}</span>
                 <span className="hidden sm:inline text-[11px] opacity-80">
                   ({meta.bn})

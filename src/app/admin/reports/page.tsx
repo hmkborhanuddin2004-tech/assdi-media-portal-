@@ -5,7 +5,7 @@ import Link from "next/link";
 import {
   UserPlus,
   Loader2,
-  FileSpreadsheet,
+  Download,
 } from "lucide-react";
 import type { WorkHistoryReportData } from "@/lib/reports/analytics";
 import { DEMO_USERS } from "@/lib/auth/demo-users";
@@ -157,7 +157,7 @@ export default function AdminReportsPage() {
             {exporting ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
-              <FileSpreadsheet className="w-4 h-4" />
+              <Download className="w-4 h-4" />
             )}
             <span>Export CSV</span>
           </button>
@@ -215,8 +215,8 @@ export default function AdminReportsPage() {
 
           {/* Main 2-Column Content Layout matching mockup */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-            {/* Left 8 Cols: Team Performance Report Table */}
-            <div className="lg:col-span-8 glass-panel p-5 rounded-2xl border border-slate-200/80 bg-white shadow-2xs space-y-4">
+            {/* Left 8 Cols: Team Performance Report Table & SVG Velocity Chart */}
+            <div className="lg:col-span-8 glass-panel p-5 rounded-2xl border border-slate-200/80 bg-white shadow-2xs space-y-5">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                 <h2 className="text-base font-bold text-slate-900">
                   Team Performance Report
@@ -226,6 +226,36 @@ export default function AdminReportsPage() {
                 </span>
               </div>
 
+              {/* Monthly Velocity & Workload Distribution SVG Chart */}
+              <div className="p-4 rounded-xl bg-slate-50/70 border border-slate-200/60 space-y-2">
+                <div className="flex items-center justify-between text-xs font-bold text-slate-800">
+                  <span>Weekly Output &amp; Completion Velocity</span>
+                  <span className="text-[11px] text-[#0F766E] font-semibold">100% Target Met</span>
+                </div>
+                <div className="h-24 w-full flex items-end gap-3 pt-3 px-2">
+                  <div className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+                    <span className="text-[10px] font-bold text-slate-500">42h</span>
+                    <div className="w-full bg-[#0F766E]/20 hover:bg-[#0F766E]/30 rounded-t-md h-3/5 transition-all" />
+                    <span className="text-[10px] text-slate-400">W1</span>
+                  </div>
+                  <div className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+                    <span className="text-[10px] font-bold text-slate-500">58h</span>
+                    <div className="w-full bg-[#0F766E]/40 hover:bg-[#0F766E]/50 rounded-t-md h-4/5 transition-all" />
+                    <span className="text-[10px] text-slate-400">W2</span>
+                  </div>
+                  <div className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+                    <span className="text-[10px] font-bold text-slate-500">65h</span>
+                    <div className="w-full bg-[#0F766E]/70 hover:bg-[#0F766E]/80 rounded-t-md h-5/6 transition-all" />
+                    <span className="text-[10px] text-slate-400">W3</span>
+                  </div>
+                  <div className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
+                    <span className="text-[10px] font-bold text-[#0F766E]">74h</span>
+                    <div className="w-full bg-[#0F766E] rounded-t-md h-full transition-all shadow-xs" />
+                    <span className="text-[10px] font-bold text-[#0F766E]">W4</span>
+                  </div>
+                </div>
+              </div>
+
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs" id="team-performance-table">
                   <thead className="bg-slate-50 text-slate-600 font-bold border-b border-slate-200/60">
@@ -233,7 +263,8 @@ export default function AdminReportsPage() {
                       <th className="py-3 px-3">Member</th>
                       <th className="py-3 px-3">Role</th>
                       <th className="py-3 px-3 text-center">Projects</th>
-                      <th className="py-3 px-3 text-center">Field / Edit Hrs</th>
+                      <th className="py-3 px-3 text-center">Field Hrs</th>
+                      <th className="py-3 px-3 text-center">Edit Hrs</th>
                       <th className="py-3 px-3 text-right">Deadline</th>
                     </tr>
                   </thead>
@@ -258,7 +289,10 @@ export default function AdminReportsPage() {
                           {m.projects_count}
                         </td>
                         <td className="py-3 px-3 text-center text-slate-700 whitespace-nowrap font-medium">
-                          {m.field_hours}h / {m.edit_hours}h
+                          {m.field_hours}h
+                        </td>
+                        <td className="py-3 px-3 text-center text-slate-700 whitespace-nowrap font-medium">
+                          {m.edit_hours}h
                         </td>
                         <td className="py-3 px-3 text-right font-bold text-slate-900 whitespace-nowrap">
                           <span
@@ -289,7 +323,7 @@ export default function AdminReportsPage() {
                 </span>
               </div>
 
-              {/* Role Pills from mockup */}
+              {/* Neutral Role Pills from mockup */}
               <div className="flex flex-wrap gap-2">
                 <span className="px-3 py-1 rounded-full bg-emerald-100/80 text-emerald-900 text-xs font-semibold">
                   Media Head
@@ -297,10 +331,10 @@ export default function AdminReportsPage() {
                 <span className="px-3 py-1 rounded-full bg-teal-100/80 text-teal-900 text-xs font-semibold">
                   Coordinator
                 </span>
-                <span className="px-3 py-1 rounded-full bg-rose-100/80 text-rose-900 text-xs font-semibold">
+                <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-xs font-semibold">
                   Staff
                 </span>
-                <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-xs font-semibold">
+                <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-semibold">
                   Intern
                 </span>
               </div>

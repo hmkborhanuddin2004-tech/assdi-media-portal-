@@ -403,26 +403,19 @@ export default function InternDailyLogPage() {
             </div>
           </div>
 
-          {/* Raw Footage Uploaded to Drive: YES / Switch Toggle */}
+          {/* Raw Footage Uploaded to Drive: Switch Toggle */}
           <div
             id="intern-footage-toggle-container"
             className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3"
           >
             <div className="space-y-0.5">
               <span className="text-xs font-bold text-slate-800 block">
-                Raw Footage Uploaded to Drive:{" "}
-                <span
-                  className={
-                    footageUploaded ? "text-emerald-700 font-black" : "text-slate-500"
-                  }
-                >
-                  {footageUploaded ? "YES" : "NO"}
-                </span>
+                Raw Footage Uploaded to Drive
               </span>
               <span className="text-[11px] text-slate-500 block">
                 {footageUploaded
                   ? "✓ সাবমিট করলে টাস্ক বোর্ডে 'Raw Uploaded' ব্যাজ সক্রিয় হবে"
-                  : "ড্রাইভে ফুটেজ কপি করার পর টিক দিন"}
+                  : "ড্রাইভে ফুটেজ কপি করার পর সুইচ অন করুন"}
               </span>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">

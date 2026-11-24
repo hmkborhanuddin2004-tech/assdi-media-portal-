@@ -406,19 +406,19 @@ test.describe("S9-01: Final Full 4-Role Lifecycle E2E & Security Audit", () => {
       ? page.locator('[data-testid="mobile-status-badge-SN-FX3-01"]')
       : page.locator('[data-testid="status-badge-SN-FX3-01"]');
 
-    if (await checkinBtn.isVisible()) {
-      await checkinBtn.click();
-      await expect(page.getByText("সরঞ্জাম রিটার্ন ও কন্ডিশন চেক-ইন (Return Check-In)")).toBeVisible();
+    // Wait for Check-In button to be visible and perform return
+    await expect(checkinBtn).toBeVisible({ timeout: 10000 });
+    await checkinBtn.click();
+    await expect(page.getByText("সরঞ্জাম রিটার্ন ও কন্ডিশন চেক-ইন (Return Check-In)")).toBeVisible();
 
-      // Fill return condition note
-      await page.locator('[data-testid="checkin-condition-note"]').fill(
-        "Returned in good working condition, battery and SD card checked."
-      );
-      await page.locator('[data-testid="checkin-submit-btn"]').click();
-      await expect(page.getByText("সরঞ্জাম রিটার্ন ও কন্ডিশন চেক-ইন (Return Check-In)")).toBeHidden({
-        timeout: 5000,
-      });
-    }
+    // Fill return condition note
+    await page.locator('[data-testid="checkin-condition-note"]').fill(
+      "Returned in good working condition, battery and SD card checked."
+    );
+    await page.locator('[data-testid="checkin-submit-btn"]').click();
+    await expect(page.getByText("সরঞ্জাম রিটার্ন ও কন্ডিশন চেক-ইন (Return Check-In)")).toBeHidden({
+      timeout: 5000,
+    });
 
     // Verify status is Available (green pill)
     await expect(statusBadge).toHaveText(/Available/i);

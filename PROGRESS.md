@@ -1,9 +1,46 @@
 # ASSDI Media Portal — Session Progress Log
 
 ## Current Status
-- **Active Step:** Step 6 Completed (Verified across all 4 gates, ready for Step 7)
-- **Completed Features:** 14 / 19 (S1-01, S2-01, S2-02, S3-01, S3-02, S4-01, S4-02, S4-03, S5-01, S5-02, S6-01, S6-02, S6-03, S6-04)
-- **Last Verified Step:** Step 6 (S6-01, S6-02, S6-03, S6-04 — Central Task Board, 6-Stage Kanban Pipeline, Shoot Assignment Slip with WhatsApp share, Staff Lead Controls, and Coordinator Status Mapping)
+- **Active Step:** Step 7 Completed (Verified across all 4 gates, ready for Step 8)
+- **Completed Features:** 15 / 19 (S1-01, S2-01, S2-02, S3-01, S3-02, S4-01, S4-02, S4-03, S5-01, S5-02, S6-01, S6-02, S6-03, S6-04, S7-01)
+- **Last Verified Step:** Step 7 (S7-01 — Master Calendar `/admin/calendar` with Tomorrow, Next 3 Days & Next 7 Days Chronological Schedule, Live Shoot Slip with 1-Click PDF & WhatsApp Share, and Central Live Admin Dashboard `/admin/dashboard`)
+
+## Step 7 (S7-01) Verification Summary
+- **Gate 1 (Static):**
+  - `pnpm typecheck` passed with 0 TypeScript errors.
+  - `pnpm lint` passed with `✔ No ESLint warnings or errors`.
+  - `pnpm build` passed generating all 32 static/dynamic routes and middleware (96.5 kB).
+- **Gate 2 (Date-Window & KPI Aggregation Unit/Integration Tests):**
+  - Automated Vitest test suite executed 154 tests (including 15 targeted tests in `src/lib/supabase/calendar-dashboard.test.ts`):
+    - Verified `Asia/Dhaka` timezone date calculations and date format `YYYY-MM-DD` boundary handling (`getDhakaDateString`).
+    - Verified 12-hour AM/PM and 24-hour call time parser (`parseCallTimeToMinutes`): 08:30 AM < 09:00 AM < 11:30 AM < 12:00 PM < 02:00 PM < 04:30 PM.
+    - Verified multi-day and same-day chronological shoot sorting (`compareShootChronological`): strictly orders by `shoot_date` ascending first, then by `call_time` ascending.
+    - Verified `Tomorrow` window: strictly matches shoots scheduled on tomorrow's date in `Asia/Dhaka` (`today + 1`).
+    - Verified `Next 3 Days` window: matches current shoots and shoots through `today + 3 days`.
+    - Verified `Next 7 Days` window: matches current shoots and shoots through `today + 7 days`.
+    - Verified Zero Dummy Code: every KPI number (`pending_requisitions_count`, `active_tasks_count`, `gear_kpi`, `task_board_progress`) is aggregated from live PostgreSQL table stores.
+    - Verified approval queue prioritizes Emergency Overrides with mandatory reason.
+    - Verified state transitions update live KPIs immediately: approving a requisition decrements pending count, books gear, and adds to calendar; rejecting with mandatory reason decrements pending count and cleans queue.
+    - Verified RLS isolation: Course Coordinator only sees calendar shoots matching their own `course_id`.
+- **Gate 3 (Live Browser E2E):**
+  - Playwright tested across Desktop (1280x800) and Mobile (390x844) viewports:
+    - 40 tests passed with exit code 0 (43.9s).
+    - 0 console errors.
+    - 0 failed network requests.
+    - 0 horizontal overflow across desktop and mobile.
+    - Verified `/admin/dashboard` top 3 live KPI cards (`Pending Requisitions`, `Active Tasks`, `Gear Status In Use / Maint.`).
+    - Verified Middle Approval Queue table with Emergency Override badges and Reject modal enforcing mandatory rejection reason.
+    - Verified Bottom 2 cards: Task Board Progress (Assigned, Editing, Review, Completed) and Gear Stock Live (real `gear_items` rows).
+    - Verified Right column Master Calendar (Next 7 Days) preview with quick `PDF Slip` modal and direct `WhatsApp` share actions.
+    - Verified creating same-day shoots across different courses/times on `2026-11-25` (Electrical at 09:00 AM, Mobile Servicing at 11:30 AM, Motorcycle Servicing at 02:00 PM).
+    - Verified `/admin/calendar` strictly orders same-day shoots chronologically (09:00 AM < 11:30 AM < 02:00 PM).
+    - Verified clicking any shoot card displays its live Automated Shoot Assignment Slip in the right panel on desktop with 1-click `Download PDF` and `Share on WhatsApp` (`wa.me/?text=...`).
+    - Verified mobile modal interaction for shoot slips on 390px screens.
+    - Verified Filter Tabs (`Tomorrow`, `Next 3 Days`, `Next 7 Days`).
+- **Gate 4 (Adversarial Audit & Fresh Diff):**
+  - Matched `docs/mockups/calendar-slip.jpg` and `docs/mockups/dashboard.jpg`.
+  - Zero placeholder numbers, zero mock stubs, zero `TODO`s.
+  - Full server-side authentication and role guarding on `/api/calendar` and `/api/admin/dashboard`.
 
 ## Step 6 (S6-01, S6-02, S6-03, S6-04) Verification Summary
 - **Gate 1 (Static):**

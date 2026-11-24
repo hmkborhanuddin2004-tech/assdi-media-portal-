@@ -91,7 +91,7 @@
       "id": "S7-01",
       "step": 7,
       "name": "Master Calendar (/admin/calendar) with Tomorrow, Next 3 Days & Next 7 Days chronological shoot schedule",
-      "passes": false
+      "passes": true
     },
     {
       "id": "S8-01",

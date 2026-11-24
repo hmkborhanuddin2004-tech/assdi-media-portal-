@@ -1,9 +1,43 @@
 # ASSDI Media Portal — Session Progress Log
 
 ## Current Status
-- **Active Step:** Step 3 Completed (Verified across all 4 gates, ready for Step 4)
-- **Completed Features:** 5 / 19 (S1-01, S2-01, S2-02, S3-01, S3-02)
-- **Last Verified Step:** S3-01 & S3-02 (Supabase Auth SSR Login, Role-Guard Middleware, Admin User Management & Service-Role Security)
+- **Active Step:** Step 4 Completed (Verified across all 4 gates, ready for Step 5)
+- **Completed Features:** 8 / 19 (S1-01, S2-01, S2-02, S3-01, S3-02, S4-01, S4-02, S4-03)
+- **Last Verified Step:** S4-01, S4-02 & S4-03 (Course Coordinator Requisition Form, Asia/Dhaka Lead-Time Rules, Admin Approval Queue & Emergency Override)
+
+## Step 4 (S4-01, S4-02 & S4-03) Verification Summary
+- **Gate 1 (Static):**
+  - `pnpm typecheck` passed with 0 TypeScript errors.
+  - `pnpm lint` passed with `✔ No ESLint warnings or errors`.
+  - `pnpm build` passed generating all 19 static/dynamic routes and middleware (96.4 kB).
+- **Gate 2 (Live API, PostgreSQL Trigger & Adversarial Bypass Tests):**
+  - Automated Vitest test suite executed 80 tests (including 19 targeted adversarial bypass tests in `src/lib/supabase/requisitions-adversarial.test.ts`):
+    - Verified `trg_enforce_requisition_lead_time` trigger logic: Coordinator attempting to insert tomorrow's date (< 3 days routine, < 7 days major events in Asia/Dhaka) is strictly rejected with SQLSTATE `P0001`.
+    - Verified compliant lead times (+4 days for routine, +8 days for major events) succeed cleanly.
+    - Verified Media Head Admin can execute Emergency Override (`is_emergency = true`) with mandatory `emergency_override_reason`.
+    - Verified Admin attempting Emergency Override with empty/whitespace reason is rejected by DB CHECK constraint.
+    - Verified non-admin (Coordinator) attempting Emergency Override is rejected with permission exception.
+    - Verified Rejection requires non-empty `rejection_reason` (enforcing `chk_rejected_requisition_has_reason`).
+    - Verified atomic task creation upon Media Head approval: creates task in `tasks` with status `pending`, inherits course/title/date, and updates requisition to `approved`.
+    - Verified strict Course Isolation: Coordinator cannot view or query requisitions belonging to another course.
+    - Verified all 9 official ASSDI trade/dawah courses and 3 venues load from master PostgreSQL records.
+    - Verified strict Zod validation schemas for program types, framing types, formats, dates, and phone numbers.
+- **Gate 3 (Live Browser E2E):**
+  - Playwright tested across Desktop (1280x800) and Mobile (390x844) viewports:
+    - 30 tests passed with exit code 0 (24.0s).
+    - 0 console errors.
+    - 0 failed network requests.
+    - 0 horizontal overflow across desktop and mobile.
+    - Verified `/coordinator/new` form locks course to coordinator's assigned course (`Refrigeration & Air Conditioning`).
+    - Verified dynamic lead-time rule banners update live in Asia/Dhaka time.
+    - Verified Coordinator submission blocked on tomorrow's date (< 3 days), succeeds on +8 days.
+    - Verified `/admin/requisitions` approval queue: Media Head rejects with mandatory reason; coordinator requests page displays exact rejection reason in dedicated rejection box.
+    - Verified Admin creates Emergency Override with mandatory reason, renders `Emergency Override` badge, and persists cleanly.
+    - Verified Coordinator sidebar on desktop and mobile navigation has strictly ONLY `New Requisition` and `My Requests`.
+- **Gate 4 (Adversarial Audit & Fresh Diff):**
+  - Matched `docs/mockups/requisitions.jpg` visual layout with 2-column desktop split, status badges, format pills, and mobile responsive design.
+  - Zero placeholder stubs, zero `TODO`s, zero mock-only bypasses.
+  - No secret keys leaked; all admin actions authenticated server-side.
 
 ## Step 3 (S3-01 & S3-02) Verification Summary
 - **Gate 1 (Static):**

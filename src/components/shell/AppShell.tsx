@@ -44,15 +44,15 @@ function getNavItemsForRole(role: UserRole | undefined | null): NavItem[] {
     case "coordinator":
       return [
         {
-          name: "Requisitions",
-          bnName: "রিকুইজিশন তালিকা",
-          href: "/coordinator/requests",
+          name: "New Requisition",
+          bnName: "নতুন রিকুইজিশন",
+          href: "/coordinator/new",
           icon: FilePlus2,
         },
         {
-          name: "New Request",
-          bnName: "নতুন রিকুইজিশন",
-          href: "/coordinator/new",
+          name: "My Requests",
+          bnName: "আমার রিকুইজিশন",
+          href: "/coordinator/requests",
           icon: LayoutDashboard,
         },
       ];
@@ -104,7 +104,7 @@ function getNavItemsForRole(role: UserRole | undefined | null): NavItem[] {
         {
           name: "Requisitions",
           bnName: "রিকুইজিশন",
-          href: "/coordinator/requests",
+          href: "/admin/requisitions",
           icon: FilePlus2,
         },
         {
@@ -164,15 +164,15 @@ function getMobileNavItemsForRole(role: UserRole | undefined | null): NavItem[] 
     case "coordinator":
       return [
         {
-          name: "Requests",
-          bnName: "রিকুইজিশন",
-          href: "/coordinator/requests",
+          name: "New Requisition",
+          bnName: "নতুন রিকুইজিশন",
+          href: "/coordinator/new",
           icon: FilePlus2,
         },
         {
-          name: "New",
-          bnName: "নতুন আবেদন",
-          href: "/coordinator/new",
+          name: "My Requests",
+          bnName: "আমার রিকুইজিশন",
+          href: "/coordinator/requests",
           icon: LayoutDashboard,
         },
       ];
@@ -224,7 +224,7 @@ function getMobileNavItemsForRole(role: UserRole | undefined | null): NavItem[] 
         {
           name: "Request",
           bnName: "রিকুইজিশন",
-          href: "/coordinator/requests",
+          href: "/admin/requisitions",
           icon: FilePlus2,
         },
         {
@@ -318,6 +318,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <Link
                   key={item.href}
                   href={item.href}
+                  prefetch={false}
                   className={`group flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium transition-all duration-150 ${
                     isActive
                       ? "bg-[#0F766E] text-white shadow-sm font-semibold"
@@ -332,7 +333,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                           : "text-slate-500 group-hover:text-[#0F766E]"
                       }`}
                     />
-                    <span>{item.bnName}</span>
+                    <div className="flex flex-col text-left">
+                      <span className="font-semibold">{item.name}</span>
+                      <span className={`text-[10px] ${isActive ? "text-emerald-100" : "text-slate-400"}`}>
+                        {item.bnName}
+                      </span>
+                    </div>
                   </div>
                   {item.badge && (
                     <span
@@ -458,6 +464,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <Link
                   key={item.href}
                   href={item.href}
+                  prefetch={false}
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm ${
                     isActive
@@ -514,6 +521,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <Link
               key={item.href}
               href={item.href}
+              prefetch={false}
               className={`flex flex-col items-center justify-center flex-1 py-1 min-w-[56px] text-[10px] font-medium transition-colors ${
                 isActive
                   ? "text-[#0F766E] font-semibold"
@@ -527,7 +535,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               >
                 <Icon className="w-4 h-4" />
               </div>
-              <span className="truncate max-w-[64px]">{item.bnName}</span>
+              <span className="truncate max-w-[64px]">{item.name}</span>
             </Link>
           );
         })}

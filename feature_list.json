@@ -37,19 +37,19 @@
       "id": "S4-01",
       "step": 4,
       "name": "Course Coordinator Requisition Form (/coordinator/new) with all 9+ courses, program types, framing, venue, call time, phone",
-      "passes": false
+      "passes": true
     },
     {
       "id": "S4-02",
       "step": 4,
       "name": "3-day (routine) / 7-day (major event) Lead-Time Rule enforced in BOTH Zod & PostgreSQL Trigger (verified via direct supabase-js bypass test)",
-      "passes": false
+      "passes": true
     },
     {
       "id": "S4-03",
       "step": 4,
       "name": "Admin-only Emergency Override (with mandatory reason) & Requisition Rejection with mandatory rejection_reason shown to Coordinator",
-      "passes": false
+      "passes": true
     },
     {
       "id": "S5-01",

@@ -1,9 +1,51 @@
 # ASSDI Media Portal — Session Progress Log
 
 ## Current Status
-- **Active Step:** Step 7 Completed (Verified across all 4 gates, ready for Step 8)
-- **Completed Features:** 15 / 19 (S1-01, S2-01, S2-02, S3-01, S3-02, S4-01, S4-02, S4-03, S5-01, S5-02, S6-01, S6-02, S6-03, S6-04, S7-01)
-- **Last Verified Step:** Step 7 (S7-01 — Master Calendar `/admin/calendar` with Tomorrow, Next 3 Days & Next 7 Days Chronological Schedule, Live Shoot Slip with 1-Click PDF & WhatsApp Share, and Central Live Admin Dashboard `/admin/dashboard`)
+- **Active Step:** Step 8 Completed (Verified across all 4 gates, ready for Step 9)
+- **Completed Features:** 18 / 19 (S1-01, S2-01, S2-02, S3-01, S3-02, S4-01, S4-02, S4-03, S5-01, S5-02, S6-01, S6-02, S6-03, S6-04, S7-01, S8-01, S8-02, S8-03)
+- **Last Verified Step:** Step 8 (S8-01, S8-02, S8-03 — Staff Daily Worklog `/staff/daily-log`, Intern Mobile-First Daily Worklog `/intern/daily-log` with All 4 Mobile Tabs, Footage Upload DB Trigger Sync `trg_sync_raw_footage_to_task`, Server-Side Paginated All-Team Logs `/admin/logs`, and Work History Analytics Reports `/admin/reports` with UTF-8 BOM CSV Export)
+
+## Step 8 (S8-01, S8-02, S8-03) Verification Summary
+- **Gate 1 (Static):**
+  - `pnpm typecheck` passed with 0 TypeScript errors.
+  - `pnpm lint` passed with `✔ No ESLint warnings or errors`.
+  - `pnpm build` passed generating all 40 static/dynamic routes and middleware (96.5 kB).
+- **Gate 2 (DB Trigger, Constraints, RLS & Aggregation Unit Tests):**
+  - Automated Vitest test suite executed 176 tests (including 17 targeted tests in `src/lib/supabase/daily-logs-reports.test.ts`):
+    - Verified `001_init.sql` schema: `daily_logs` definition, columns, foreign keys, triggers, and RLS policies.
+    - Verified DB Trigger `trg_sync_raw_footage_to_task` (a): Intern submitting `raw_footage_uploaded = true` automatically updates parent `tasks.raw_footage_uploaded = true`.
+    - Verified `raw_footage_uploaded = false` leaves task status unaffected.
+    - Verified DB CHECK constraint `chk_staff_log_fields` (b1): Staff log missing `work_category` is strictly rejected with Postgres code `23514`.
+    - Verified DB CHECK constraint `chk_intern_log_fields` (b2): Intern log missing `shoot_location_type` or `raw_footage_uploaded` is strictly rejected with Postgres code `23514`.
+    - Verified `hours_spent` range constraint (b3): `<= 0` and `> 24` hours are rejected with code `23514`.
+    - Verified non-empty `notes` constraint (b4).
+    - Verified RLS Policy `daily_logs_insert_self` (c1-c3): A user cannot forge a log with another user's `user_id` or wrong `log_role` (blocked with code `42501`); non-staff/non-interns (e.g. Coordinators) are blocked from inserting logs.
+    - Verified RLS Policy `daily_logs_select` (c4): Interns only read their own logs; Staff reads their own logs plus intern logs on tasks where they are lead; Admin reads all team logs.
+    - Verified Report aggregations match raw mathematical sums (d1): Total hours, field vs editing hours, completed projects count, and on-time deadline percentage strictly equal live SQL table sums.
+    - Verified Admin-only access to work history analytics (d2).
+    - Verified CSV export security (d3): prepends UTF-8 Byte Order Mark (`\uFEFF`) and escapes formula injection characters (`=`, `+`, `-`, `@`) with a leading `'`.
+- **Gate 3 (Live Browser E2E):**
+  - Playwright tested across Desktop (1280x800) and Mobile (390x844) viewports:
+    - 42 tests passed with exit code 0 (55.3s).
+    - 0 console errors.
+    - 0 failed network requests.
+    - 0 horizontal overflow across desktop and mobile.
+    - Verified Staff Project Lead (Arif Rahman) logs in, visits `/staff/daily-log` matching `docs/mockups/daily-logs.jpg` with 3-item sidebar (`My Tasks`, `Daily Logs`, `Intern Status`).
+    - Verified Staff tests all 5 category pills (`Daily Cinematography`, `Video Editing`, `Book Review`, `Script Research`, `Content Management`), sets 6.5 hours, submits log, and sees it persist in the recent logs table.
+    - Verified Intern (Hasan Ali) logs in on Mobile (390x844), navigates ALL 4 bottom-nav tabs (`/intern/schedule`, `/intern/daily-log`, `/intern/tasks`, `/intern/profile`) with zero 404s.
+    - Verified `/intern/schedule` renders Today's Shoot card (The Art of Creation, 09:00 AM, 50 Katha Campus) and upcoming assigned shoots.
+    - Verified `/intern/daily-log` mobile form with hours input, Indoor / Outdoor toggle, Raw Footage Uploaded switch, LocalStorage draft auto-save for weak outdoor networks.
+    - Verified Intern marks Raw Footage YES and submits → triggers `trg_sync_raw_footage_to_task` → Admin checks `/admin/tasks` and confirms Task 1 card displays `Raw Uploaded` badge.
+    - Verified Media Head Admin visits `/admin/reports` matching `docs/mockups/reports-users.jpg`:
+      - 3 KPI cards display live metrics: `Completed Projects`, `Total Field & Editing Hours`, and `On-Time Deadlines %`.
+      - Team Performance Report table lists all members with real projects, field/edit hours, and on-time compliance.
+      - Period filter changes to Monthly (Nov 2026) dynamically.
+      - 1-click `Export CSV` downloads UTF-8 BOM CSV with sanitized formula cells.
+    - Verified Media Head visits `/admin/logs` with server-side paginated all-team logs and role/member filters.
+- **Gate 4 (Fresh Diff Audit):**
+  - Matched `docs/mockups/daily-logs.jpg` and `docs/mockups/reports-users.jpg`.
+  - Zero dummy code, zero fake KPI numbers, zero mock CSV strings.
+  - Full PostgreSQL table stores, verified RLS, and atomic database constraints.
 
 ## Step 7 (S7-01) Verification Summary
 - **Gate 1 (Static):**

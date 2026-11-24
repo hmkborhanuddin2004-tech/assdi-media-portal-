@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { resetRequisitionsForTesting } from "@/lib/requisitions/store";
 import { resetGearForTesting } from "@/lib/gear/store";
 import { resetTasksForTesting } from "@/lib/tasks/store";
+import { resetDailyLogsForTesting } from "@/lib/daily-logs/store";
 
 export async function GET(request: NextRequest) {
   const resetParam = request.nextUrl.searchParams.get("reset");
@@ -10,6 +11,7 @@ export async function GET(request: NextRequest) {
     resetRequisitionsForTesting();
     resetGearForTesting({ withMockupSeed: true });
     resetTasksForTesting();
+    resetDailyLogsForTesting();
     return NextResponse.json({
       status: "reset_ok",
       timestamp: new Date().toISOString(),

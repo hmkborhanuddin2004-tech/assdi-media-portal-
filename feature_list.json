@@ -97,19 +97,19 @@
       "id": "S8-01",
       "step": 8,
       "name": "Permanent Staff Daily Worklog (/staff/daily-log) with 5 categories, hours & summary",
-      "passes": false
+      "passes": true
     },
     {
       "id": "S8-02",
       "step": 8,
       "name": "Intern Mobile-First Daily Worklog (/intern/daily-log) with hours, indoor/outdoor, raw footage auto-sync to task card & LocalStorage draft",
-      "passes": false
+      "passes": true
     },
     {
       "id": "S8-03",
       "step": 8,
       "name": "Work History & Analytics Reports (/admin/reports) with Name/Role/Date filters, completed count, field/edit hours, deadline % & CSV export",
-      "passes": false
+      "passes": true
     },
     {
       "id": "S9-01",

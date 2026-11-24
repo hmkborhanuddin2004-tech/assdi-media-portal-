@@ -17,6 +17,8 @@ import {
   X,
   LogOut,
   LogIn,
+  Home,
+  User,
 } from "lucide-react";
 import { ROLE_LABELS, type UserRole } from "@/lib/types/auth";
 
@@ -59,10 +61,16 @@ function getNavItemsForRole(role: UserRole | undefined | null): NavItem[] {
     case "staff":
       return [
         {
-          name: "Tasks",
-          bnName: "টাস্ক তালিকা",
+          name: "My Tasks",
+          bnName: "মাই টাস্ক",
           href: "/staff/tasks",
           icon: Kanban,
+        },
+        {
+          name: "Daily Logs",
+          bnName: "ডেইলি লগ",
+          href: "/staff/daily-log",
+          icon: Clock,
         },
         {
           name: "Intern Status",
@@ -70,21 +78,9 @@ function getNavItemsForRole(role: UserRole | undefined | null): NavItem[] {
           href: "/staff/intern-status",
           icon: Users,
         },
-        {
-          name: "Daily Worklog",
-          bnName: "ডেইলি কাজের লগ",
-          href: "/staff/daily-log",
-          icon: Clock,
-        },
       ];
     case "intern":
       return [
-        {
-          name: "Daily Log",
-          bnName: "ডেইলি কাজের লগ",
-          href: "/intern/daily-log",
-          icon: Clock,
-        },
         {
           name: "Schedule",
           bnName: "শুটিং শিডিউল",
@@ -92,10 +88,22 @@ function getNavItemsForRole(role: UserRole | undefined | null): NavItem[] {
           icon: Calendar,
         },
         {
+          name: "Daily Logs",
+          bnName: "ডেইলি কাজের লগ",
+          href: "/intern/daily-log",
+          icon: Clock,
+        },
+        {
           name: "Tasks",
           bnName: "অ্যাসাইনমেন্ট",
           href: "/intern/tasks",
           icon: Kanban,
+        },
+        {
+          name: "Profile",
+          bnName: "প্রোফাইল",
+          href: "/intern/profile",
+          icon: User,
         },
       ];
     case "admin":
@@ -191,43 +199,49 @@ function getMobileNavItemsForRole(role: UserRole | undefined | null): NavItem[] 
     case "staff":
       return [
         {
-          name: "Tasks",
+          name: "My Tasks",
           bnName: "টাস্ক",
           href: "/staff/tasks",
           icon: Kanban,
         },
         {
-          name: "Interns",
-          bnName: "ইন্টার্ন",
-          href: "/staff/intern-status",
-          icon: Users,
-        },
-        {
-          name: "Worklog",
+          name: "Daily Logs",
           bnName: "ডেইলি লগ",
           href: "/staff/daily-log",
           icon: Clock,
+        },
+        {
+          name: "Intern Status",
+          bnName: "ইন্টার্ন",
+          href: "/staff/intern-status",
+          icon: Users,
         },
       ];
     case "intern":
       return [
         {
-          name: "Daily Log",
-          bnName: "ডেইলি লগ",
-          href: "/intern/daily-log",
-          icon: Clock,
+          name: "Home",
+          bnName: "হোম",
+          href: "/intern/schedule",
+          icon: Home,
         },
         {
-          name: "Schedule",
-          bnName: "শিডিউল",
-          href: "/intern/schedule",
-          icon: Calendar,
+          name: "Logs",
+          bnName: "লগ",
+          href: "/intern/daily-log",
+          icon: Clock,
         },
         {
           name: "Tasks",
           bnName: "টাস্ক",
           href: "/intern/tasks",
           icon: Kanban,
+        },
+        {
+          name: "Profile",
+          bnName: "প্রোফাইল",
+          href: "/intern/profile",
+          icon: User,
         },
       ];
     case "admin":

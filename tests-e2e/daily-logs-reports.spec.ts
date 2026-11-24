@@ -212,11 +212,21 @@ test.describe("Step 8 (S8-01, S8-02, S8-03): Staff & Intern Daily Worklogs, Mobi
     }
     expect(await switchCheckbox.isChecked()).toBe(true);
 
-    // Fill notes
-    await page.fill(
-      "#intern-notes-input",
-      "Some B-roll of the main courtyard, interviewed 3 student groups. Uploaded all RAW footage."
-    );
+    // Fill draft notes
+    const internNoteText =
+      "Some B-roll of the main courtyard, interviewed 3 student groups. Uploaded all RAW footage.";
+    await page.fill("#intern-notes-input", internNoteText);
+    await page.waitForTimeout(300);
+
+    // Verify LocalStorage Draft auto-save resilience: navigate away & back
+    await page.goto("/intern/schedule");
+    await page.waitForLoadState("domcontentloaded");
+    await page.goto("/intern/daily-log");
+    await page.waitForLoadState("domcontentloaded");
+
+    // Expect draft restored banner and restored notes
+    await expect(page.locator("text=অফলাইন ড্রাফট রিস্টোর করা হয়েছে")).toBeVisible();
+    expect(await page.inputValue("#intern-notes-input")).toBe(internNoteText);
 
     // Submit
     await page.click("#intern-submit-log-btn");

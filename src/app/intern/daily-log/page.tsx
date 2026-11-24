@@ -46,7 +46,7 @@ export default function InternDailyLogPage() {
       const [meRes, tasksRes, logsRes] = await Promise.all([
         fetch("/api/auth/me"),
         fetch("/api/tasks"),
-        fetch("/api/daily-logs?limit=10"),
+        fetch("/api/daily-logs?period=all&limit=10"),
       ]);
 
       if (meRes.ok) {
@@ -75,13 +75,17 @@ export default function InternDailyLogPage() {
         const savedDraftStr = localStorage.getItem(LOCAL_STORAGE_DRAFT_KEY);
         if (savedDraftStr) {
           const draft = JSON.parse(savedDraftStr);
-          if (draft.hours) setHours(draft.hours);
-          if (draft.locationType) setLocationType(draft.locationType);
-          if (draft.footageUploaded !== undefined)
-            setFootageUploaded(draft.footageUploaded);
-          if (draft.taskId) setSelectedTaskId(draft.taskId);
-          if (draft.notes) setNotes(draft.notes);
-          setDraftRestored(true);
+          if (draft.notes && draft.notes.trim().length > 0) {
+            if (draft.hours) setHours(draft.hours);
+            if (draft.locationType) setLocationType(draft.locationType);
+            if (draft.footageUploaded !== undefined)
+              setFootageUploaded(draft.footageUploaded);
+            if (draft.taskId) setSelectedTaskId(draft.taskId);
+            setNotes(draft.notes);
+            setDraftRestored(true);
+          } else if (activeTasks.length > 0) {
+            setSelectedTaskId(activeTasks[0].id);
+          }
         } else if (activeTasks.length > 0) {
           // Preselect today's first assigned task if no draft
           setSelectedTaskId(activeTasks[0].id);
@@ -104,15 +108,19 @@ export default function InternDailyLogPage() {
   useEffect(() => {
     if (loading) return;
     try {
-      const draft = {
-        hours,
-        locationType,
-        footageUploaded,
-        taskId: selectedTaskId,
-        notes,
-        updatedAt: new Date().toISOString(),
-      };
-      localStorage.setItem(LOCAL_STORAGE_DRAFT_KEY, JSON.stringify(draft));
+      if (notes.trim().length > 0) {
+        const draft = {
+          hours,
+          locationType,
+          footageUploaded,
+          taskId: selectedTaskId,
+          notes,
+          updatedAt: new Date().toISOString(),
+        };
+        localStorage.setItem(LOCAL_STORAGE_DRAFT_KEY, JSON.stringify(draft));
+      } else {
+        localStorage.removeItem(LOCAL_STORAGE_DRAFT_KEY);
+      }
     } catch {
       // Ignore storage quota errors
     }
@@ -188,7 +196,7 @@ export default function InternDailyLogPage() {
       setDraftRestored(false);
 
       // Refresh recent logs
-      const refreshed = await fetch("/api/daily-logs?limit=10");
+      const refreshed = await fetch("/api/daily-logs?period=all&limit=10");
       if (refreshed.ok) {
         const refreshedData = await refreshed.json();
         if (refreshedData.logs) {

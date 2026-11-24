@@ -59,8 +59,12 @@ export function calculateWorkHistoryReport(
   const allTasks = getTasksStore();
   const allAssignees = getAssigneesStore();
 
-  const refDateStr = filter.refDate || getDhakaDateString();
-  const refDate = parseISO(refDateStr);
+  const rawRefDate = filter.refDate || getDhakaDateString();
+  const parsedDate = parseISO(rawRefDate);
+  const refDate = isNaN(parsedDate.getTime())
+    ? parseISO(getDhakaDateString())
+    : parsedDate;
+  const refDateStr = format(refDate, "yyyy-MM-dd");
 
   // 1. Filter Logs by Period
   let periodLogs = [...allLogs];
@@ -91,6 +95,9 @@ export function calculateWorkHistoryReport(
       const taskDate = t.completed_at ? t.completed_at.substring(0, 10) : "";
       return taskDate >= weekStartStr && taskDate <= weekEndStr;
     });
+  } else if (filter.period === "all") {
+    periodLabel = "All Time";
+    // Retain all periodLogs and periodTasks
   } else if (filter.period === "monthly" || !filter.period) {
     const yearMonth = refDateStr.substring(0, 7);
     periodLabel = `Monthly (${format(refDate, "MMM yyyy")})`;
@@ -104,6 +111,19 @@ export function calculateWorkHistoryReport(
   // 2. Filter by Role & Member
   if (filter.role && filter.role !== "all") {
     periodLogs = periodLogs.filter((log) => log.log_role === filter.role);
+    const roleUserIds = new Set(
+      Object.values(DEMO_USERS)
+        .filter((u) => u.role === filter.role)
+        .map((u) => u.id)
+    );
+    periodTasks = periodTasks.filter((t) => {
+      if (filter.role === "staff" && t.lead_staff_id && roleUserIds.has(t.lead_staff_id)) {
+        return true;
+      }
+      return allAssignees.some(
+        (a) => a.task_id === t.id && roleUserIds.has(a.user_id)
+      );
+    });
   }
   if (filter.user_id && filter.user_id !== "all") {
     periodLogs = periodLogs.filter((log) => log.user_id === filter.user_id);
@@ -222,9 +242,7 @@ export function calculateWorkHistoryReport(
     const mDeadlinePct =
       completedMemberTasks.length > 0
         ? Math.round((mOnTime / completedMemberTasks.length) * 100)
-        : member.role === "staff"
-        ? 95
-        : 90;
+        : 100;
 
     teamPerformance.push({
       member_id: member.id,
@@ -273,8 +291,8 @@ export function sanitizeCsvCell(value: unknown): string {
   }
   let str = String(value);
 
-  // Formula Injection Guard: prepend single quote if starting with =, +, -, or @
-  if (/^[=+\-@]/.test(str)) {
+  // Formula Injection Guard: prepend single quote if starting with =, +, -, @, \t, \r (including leading spaces)
+  if (/^[\s]*[=+\-@\t\r]|^[=+\-@\t\r]/.test(str)) {
     str = `'${str}`;
   }
 

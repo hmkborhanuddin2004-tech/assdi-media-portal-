@@ -2,8 +2,10 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getCurrentUser } from "@/lib/auth/session";
 import {
   createDailyLog,
+  updateDailyLog,
   getDailyLogs,
   PostgresCheckConstraintError,
+  PostgresForeignKeyViolationError,
   RlsForbiddenError,
 } from "@/lib/daily-logs/store";
 import type { StaffWorkCategory, ShootLocationType } from "@/lib/types/database";
@@ -23,8 +25,12 @@ export async function GET(request: NextRequest) {
   }
 
   const { searchParams } = new URL(request.url);
+  const rawUserId = searchParams.get("user_id");
+  const targetUserId =
+    rawUserId === "me" ? currentUser.id : rawUserId || undefined;
+
   const parsedQuery = dailyLogQuerySchema.safeParse({
-    user_id: searchParams.get("user_id") || undefined,
+    user_id: targetUserId,
     role: searchParams.get("role") || undefined,
     period: searchParams.get("period") || undefined,
     refDate: searchParams.get("refDate") || undefined,
@@ -172,6 +178,17 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+    if (err instanceof PostgresForeignKeyViolationError) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: err.message,
+          code: err.code,
+          constraint: err.constraint,
+        },
+        { status: 400 }
+      );
+    }
     if (err instanceof RlsForbiddenError) {
       return NextResponse.json(
         { success: false, error: err.message, code: err.code },
@@ -186,5 +203,94 @@ export async function POST(request: NextRequest) {
       { success: false, error: message },
       { status: 500 }
     );
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  const currentUser = await getCurrentUser(request);
+  if (!currentUser) {
+    return NextResponse.json(
+      { success: false, error: "অননুমোদিত অ্যাক্সেস। অনুগ্রহ করে লগইন করুন।" },
+      { status: 401 }
+    );
+  }
+
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json(
+      { success: false, error: "অবৈধ JSON রিকোয়েস্ট বডি।" },
+      { status: 400 }
+    );
+  }
+
+  const logId = typeof body.id === "string" ? body.id : "";
+  if (!logId) {
+    return NextResponse.json(
+      { success: false, error: "লগ আইডি আবশ্যক।" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const updated = updateDailyLog(
+      {
+        id: logId,
+        hours_spent:
+          body.hours_spent !== undefined ? Number(body.hours_spent) : undefined,
+        work_category: body.work_category as StaffWorkCategory | undefined,
+        shoot_location_type:
+          body.shoot_location_type as ShootLocationType | undefined,
+        raw_footage_uploaded:
+          body.raw_footage_uploaded !== undefined
+            ? Boolean(body.raw_footage_uploaded)
+            : undefined,
+        task_id:
+          body.task_id !== undefined
+            ? typeof body.task_id === "string"
+              ? body.task_id
+              : null
+            : undefined,
+        notes: body.notes !== undefined ? String(body.notes) : undefined,
+      },
+      currentUser
+    );
+
+    return NextResponse.json({ success: true, log: updated });
+  } catch (err: unknown) {
+    if (err instanceof PostgresCheckConstraintError) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: err.message,
+          code: err.code,
+          constraint: err.constraint,
+        },
+        { status: 400 }
+      );
+    }
+    if (err instanceof PostgresForeignKeyViolationError) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: err.message,
+          code: err.code,
+          constraint: err.constraint,
+        },
+        { status: 400 }
+      );
+    }
+    if (err instanceof RlsForbiddenError) {
+      return NextResponse.json(
+        { success: false, error: err.message, code: err.code },
+        { status: 403 }
+      );
+    }
+    const message =
+      err instanceof Error
+        ? err.message
+        : "দৈনিক লগ আপডেট করতে ব্যর্থ হয়েছে।";
+    return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
 }

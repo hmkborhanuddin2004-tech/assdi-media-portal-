@@ -22,6 +22,17 @@ export class PostgresCheckConstraintError extends Error {
   }
 }
 
+export class PostgresForeignKeyViolationError extends Error {
+  code = "23503";
+  constraint: string;
+
+  constructor(message: string, constraint: string = "daily_logs_task_id_fkey") {
+    super(message);
+    this.name = "PostgresForeignKeyViolationError";
+    this.constraint = constraint;
+  }
+}
+
 export class RlsForbiddenError extends Error {
   code = "42501";
 
@@ -184,14 +195,26 @@ export function createDailyLog(
     }
   }
 
-  // 5. Build canonical record
+  // 5. Foreign Key Check: task_id REFERENCES public.tasks(id)
+  const cleanedTaskId = params.task_id?.trim() ? params.task_id.trim() : null;
+  if (cleanedTaskId) {
+    const taskExists = getTasksStore().some((t) => t.id === cleanedTaskId);
+    if (!taskExists) {
+      throw new PostgresForeignKeyViolationError(
+        `Foreign key violation: task_id "${cleanedTaskId}" does not exist in public.tasks (daily_logs_task_id_fkey).`,
+        "daily_logs_task_id_fkey"
+      );
+    }
+  }
+
+  // 6. Build canonical record
   const logDate = params.log_date || getDhakaDateString();
   const newLog: DailyLogItem = {
     id: `log-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
     user_id: caller.id,
     log_role: caller.role,
     log_date: logDate,
-    task_id: params.task_id || null,
+    task_id: cleanedTaskId,
     work_category: caller.role === "staff" ? params.work_category || null : null,
     hours_spent: Math.round(hours * 100) / 100,
     shoot_location_type:
@@ -202,7 +225,7 @@ export function createDailyLog(
     created_at: new Date().toISOString(),
   };
 
-  // 6. DB Trigger: trg_sync_raw_footage_to_task
+  // 7. DB Trigger: trg_sync_raw_footage_to_task
   if (
     newLog.log_role === "intern" &&
     newLog.raw_footage_uploaded === true &&
@@ -211,11 +234,116 @@ export function createDailyLog(
     syncInternFootageUpload(newLog.task_id);
   }
 
-  // 7. Persist to store
+  // 8. Persist to store
   const store = getDailyLogsStore();
   store.unshift(newLog);
 
   return enrichDailyLog(newLog);
+}
+
+export interface UpdateDailyLogParams {
+  id: string;
+  hours_spent?: number;
+  work_category?: StaffWorkCategory | null;
+  shoot_location_type?: ShootLocationType | null;
+  raw_footage_uploaded?: boolean | null;
+  task_id?: string | null;
+  notes?: string;
+}
+
+export function updateDailyLog(
+  params: UpdateDailyLogParams,
+  caller: UserProfile
+): EnrichedDailyLog {
+  const store = getDailyLogsStore();
+  const existingLog = store.find((l) => l.id === params.id);
+  if (!existingLog) {
+    throw new Error(`Daily log "${params.id}" not found.`);
+  }
+
+  // RLS Policy Enforcement: daily_logs_update_self
+  if (caller.role !== "admin" && existingLog.user_id !== caller.id) {
+    throw new RlsForbiddenError(
+      "RLS Policy Violation: You can only update your own daily logs (daily_logs_update_self)."
+    );
+  }
+
+  if (params.hours_spent !== undefined) {
+    const hours = Number(params.hours_spent);
+    if (isNaN(hours) || hours <= 0 || hours > 24) {
+      throw new PostgresCheckConstraintError(
+        `CHECK constraint violation: hours_spent must be greater than 0 and less than or equal to 24 (received ${params.hours_spent}).`,
+        "chk_hours_spent"
+      );
+    }
+    existingLog.hours_spent = Math.round(hours * 100) / 100;
+  }
+
+  if (params.notes !== undefined) {
+    if (!params.notes || params.notes.trim().length === 0) {
+      throw new PostgresCheckConstraintError(
+        "CHECK constraint violation: notes cannot be empty.",
+        "chk_notes_not_empty"
+      );
+    }
+    existingLog.notes = params.notes.trim();
+  }
+
+  if (params.task_id !== undefined) {
+    const cleanedTaskId = params.task_id?.trim() ? params.task_id.trim() : null;
+    if (cleanedTaskId) {
+      const taskExists = getTasksStore().some((t) => t.id === cleanedTaskId);
+      if (!taskExists) {
+        throw new PostgresForeignKeyViolationError(
+          `Foreign key violation: task_id "${cleanedTaskId}" does not exist in public.tasks (daily_logs_task_id_fkey).`,
+          "daily_logs_task_id_fkey"
+        );
+      }
+    }
+    existingLog.task_id = cleanedTaskId;
+  }
+
+  if (existingLog.log_role === "staff") {
+    if (params.work_category !== undefined) {
+      if (!params.work_category) {
+        throw new PostgresCheckConstraintError(
+          "CHECK constraint violation: Staff daily logs require a work_category (chk_staff_log_fields).",
+          "chk_staff_log_fields"
+        );
+      }
+      existingLog.work_category = params.work_category;
+    }
+  } else if (existingLog.log_role === "intern") {
+    if (params.shoot_location_type !== undefined) {
+      if (!params.shoot_location_type) {
+        throw new PostgresCheckConstraintError(
+          "CHECK constraint violation: Intern daily logs require shoot_location_type (chk_intern_log_fields).",
+          "chk_intern_log_fields"
+        );
+      }
+      existingLog.shoot_location_type = params.shoot_location_type;
+    }
+    if (params.raw_footage_uploaded !== undefined) {
+      if (params.raw_footage_uploaded === null) {
+        throw new PostgresCheckConstraintError(
+          "CHECK constraint violation: Intern daily logs require raw_footage_uploaded (chk_intern_log_fields).",
+          "chk_intern_log_fields"
+        );
+      }
+      existingLog.raw_footage_uploaded = params.raw_footage_uploaded;
+    }
+  }
+
+  // Trigger: trg_sync_raw_footage_to_task
+  if (
+    existingLog.log_role === "intern" &&
+    existingLog.raw_footage_uploaded === true &&
+    existingLog.task_id
+  ) {
+    syncInternFootageUpload(existingLog.task_id);
+  }
+
+  return enrichDailyLog(existingLog);
 }
 
 export interface GetDailyLogsFilter {
@@ -285,8 +413,12 @@ export function getDailyLogs(
   }
 
   // 4. Query Filters: period in Asia/Dhaka
-  const refDateStr = filter.refDate || getDhakaDateString();
-  const refDate = parseISO(refDateStr);
+  const rawRefDate = filter.refDate || getDhakaDateString();
+  const parsedDate = parseISO(rawRefDate);
+  const refDate = isNaN(parsedDate.getTime())
+    ? parseISO(getDhakaDateString())
+    : parsedDate;
+  const refDateStr = format(refDate, "yyyy-MM-dd");
 
   if (filter.period === "daily") {
     list = list.filter((log) => log.log_date === refDateStr);

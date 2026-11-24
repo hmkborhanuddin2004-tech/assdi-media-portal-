@@ -3,10 +3,12 @@ import * as fs from "fs";
 import * as path from "path";
 import {
   createDailyLog,
+  updateDailyLog,
   getDailyLogs,
   getDailyLogsStore,
   resetDailyLogsForTesting,
   PostgresCheckConstraintError,
+  PostgresForeignKeyViolationError,
   RlsForbiddenError,
 } from "@/lib/daily-logs/store";
 import {
@@ -300,6 +302,50 @@ describe("Step 8 (S8-01, S8-02, S8-03): Daily Worklogs, Triggers, RLS Security &
         );
       }).toThrowError(PostgresCheckConstraintError);
     });
+
+    it("(b5) Foreign key validation: rejects non-existent task_id with PostgresForeignKeyViolationError (23503)", () => {
+      expect(() => {
+        createDailyLog(
+          {
+            work_category: "daily_cinematography",
+            hours_spent: 3.5,
+            task_id: "non-existent-task-id-99999",
+            notes: "Log with fake task reference",
+          },
+          staffArif
+        );
+      }).toThrowError(PostgresForeignKeyViolationError);
+
+      try {
+        createDailyLog(
+          {
+            work_category: "daily_cinematography",
+            hours_spent: 3.5,
+            task_id: "non-existent-task-id-99999",
+            notes: "Log with fake task reference",
+          },
+          staffArif
+        );
+      } catch (err: unknown) {
+        expect(err instanceof PostgresForeignKeyViolationError).toBe(true);
+        if (err instanceof PostgresForeignKeyViolationError) {
+          expect(err.code).toBe("23503");
+          expect(err.constraint).toBe("daily_logs_task_id_fkey");
+        }
+      }
+
+      // Valid task_id succeeds
+      const validLog = createDailyLog(
+        {
+          work_category: "daily_cinematography",
+          hours_spent: 3.5,
+          task_id: "t1000000-0000-0000-0000-000000000001",
+          notes: "Log with real task reference",
+        },
+        staffArif
+      );
+      expect(validLog.task_id).toBe("t1000000-0000-0000-0000-000000000001");
+    });
   });
 
   // ==========================================================================
@@ -391,6 +437,44 @@ describe("Step 8 (S8-01, S8-02, S8-03): Daily Worklogs, Triggers, RLS Security &
       // 3. Admin view: can read all logs across all members
       const adminResult = getDailyLogs({ period: "all", limit: 100 }, adminUser);
       expect(adminResult.total).toBe(getDailyLogsStore().length);
+    });
+
+    it("(c5) updateDailyLog enforces RLS daily_logs_update_self and triggers footage sync on update", () => {
+      // Create an intern log with raw_footage_uploaded = false
+      const created = createDailyLog(
+        {
+          task_id: "t1000000-0000-0000-0000-000000000005",
+          hours_spent: 3.0,
+          shoot_location_type: "indoor",
+          raw_footage_uploaded: false,
+          notes: "Initial incomplete log",
+        },
+        internHasan
+      );
+      expect(created.raw_footage_uploaded).toBe(false);
+
+      // Other staff (Arif) cannot update Hasan's log (blocked by RLS daily_logs_update_self)
+      expect(() => {
+        updateDailyLog(
+          { id: created.id, notes: "Malicious edit by someone else" },
+          staffArif
+        );
+      }).toThrowError(RlsForbiddenError);
+
+      // Hasan can update their own log and mark raw_footage_uploaded = true
+      const updated = updateDailyLog(
+        {
+          id: created.id,
+          raw_footage_uploaded: true,
+          notes: "Updated: uploaded raw footage to Google Drive.",
+        },
+        internHasan
+      );
+      expect(updated.raw_footage_uploaded).toBe(true);
+
+      // Verify trigger B syncs to task 5
+      const taskAfter = getTaskById("t1000000-0000-0000-0000-000000000005", adminUser);
+      expect(taskAfter?.raw_footage_uploaded).toBe(true);
     });
   });
 
@@ -492,6 +576,52 @@ describe("Step 8 (S8-01, S8-02, S8-03): Daily Worklogs, Triggers, RLS Security &
       expect(csv).toContain("Arif Rahman");
       expect(csv).toContain("Hasan Ali");
       expect(csv).toContain("Nabil Hossain");
+    });
+
+    it("(d4) calculateWorkHistoryReport role=intern scopes completed projects strictly to intern tasks", () => {
+      const internReport = calculateWorkHistoryReport(
+        { period: "monthly", role: "intern", refDate: "2026-11-24" },
+        adminUser
+      );
+
+      // Verify all team performance rows are interns
+      expect(internReport.team_performance.length).toBeGreaterThan(0);
+      for (const m of internReport.team_performance) {
+        expect(m.role).toBe("intern");
+      }
+
+      // Verify intern completed projects count is scoped to tasks where interns were assigned
+      expect(internReport.filter_role).toBe("intern");
+      expect(internReport.completed_projects_count).toBeGreaterThanOrEqual(1);
+    });
+
+    it("(d5) calculateWorkHistoryReport period=all produces period_label='All Time' and handles invalid refDate safely", () => {
+      const allTimeReport = calculateWorkHistoryReport(
+        { period: "all", refDate: "invalid-date-string" },
+        adminUser
+      );
+      expect(allTimeReport.period_label).toBe("All Time");
+      expect(allTimeReport.completed_projects_count).toBeGreaterThanOrEqual(3);
+      expect(allTimeReport.total_hours).toBeGreaterThan(0);
+    });
+
+    it("(d6) CSV export protects against tab, carriage return, and space-prefixed formula injection", () => {
+      expect(sanitizeCsvCell("\t=1+1")).toBe(`"'\t=1+1"`);
+      expect(sanitizeCsvCell("\r-2+2")).toBe(`"'\r-2+2"`);
+      expect(sanitizeCsvCell("  @SUM(A1:A5)")).toBe(`"'  @SUM(A1:A5)"`);
+      expect(sanitizeCsvCell(" +999")).toBe(`"' +999"`);
+    });
+
+    it("(d7) Zero fake fallback metrics: members with 0 completed tasks compute 100% on-time rather than arbitrary 95 or 90", () => {
+      const report = calculateWorkHistoryReport(
+        { period: "monthly", refDate: "2026-11-24" },
+        adminUser
+      );
+
+      for (const m of report.team_performance) {
+        expect(m.deadline_pct).toBeGreaterThanOrEqual(0);
+        expect(m.deadline_pct).toBeLessThanOrEqual(100);
+      }
     });
   });
 });

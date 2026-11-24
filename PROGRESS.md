@@ -11,7 +11,7 @@
   - `pnpm lint` passed with `✔ No ESLint warnings or errors`.
   - `pnpm build` passed generating all 40 static/dynamic routes and middleware (96.5 kB).
 - **Gate 2 (DB Trigger, Constraints, RLS & Aggregation Unit Tests):**
-  - Automated Vitest test suite executed 176 tests (including 17 targeted tests in `src/lib/supabase/daily-logs-reports.test.ts`):
+  - Automated Vitest test suite executed 182 tests (including 23 targeted tests in `src/lib/supabase/daily-logs-reports.test.ts`):
     - Verified `001_init.sql` schema: `daily_logs` definition, columns, foreign keys, triggers, and RLS policies.
     - Verified DB Trigger `trg_sync_raw_footage_to_task` (a): Intern submitting `raw_footage_uploaded = true` automatically updates parent `tasks.raw_footage_uploaded = true`.
     - Verified `raw_footage_uploaded = false` leaves task status unaffected.
@@ -19,14 +19,19 @@
     - Verified DB CHECK constraint `chk_intern_log_fields` (b2): Intern log missing `shoot_location_type` or `raw_footage_uploaded` is strictly rejected with Postgres code `23514`.
     - Verified `hours_spent` range constraint (b3): `<= 0` and `> 24` hours are rejected with code `23514`.
     - Verified non-empty `notes` constraint (b4).
+    - Verified DB Foreign Key constraint (b5): Submitting log with non-existent `task_id` is rejected with Postgres code `23503` (`daily_logs_task_id_fkey`).
     - Verified RLS Policy `daily_logs_insert_self` (c1-c3): A user cannot forge a log with another user's `user_id` or wrong `log_role` (blocked with code `42501`); non-staff/non-interns (e.g. Coordinators) are blocked from inserting logs.
     - Verified RLS Policy `daily_logs_select` (c4): Interns only read their own logs; Staff reads their own logs plus intern logs on tasks where they are lead; Admin reads all team logs.
+    - Verified RLS Policy `daily_logs_update_self` and trigger sync on update (c5): Users can update only their own logs (blocked with code `42501` for other users); updating `raw_footage_uploaded = true` fires trigger `trg_sync_raw_footage_to_task`.
     - Verified Report aggregations match raw mathematical sums (d1): Total hours, field vs editing hours, completed projects count, and on-time deadline percentage strictly equal live SQL table sums.
     - Verified Admin-only access to work history analytics (d2).
-    - Verified CSV export security (d3): prepends UTF-8 Byte Order Mark (`\uFEFF`) and escapes formula injection characters (`=`, `+`, `-`, `@`) with a leading `'`.
+    - Verified CSV export security (d3 & d6): prepends UTF-8 Byte Order Mark (`\uFEFF`) and escapes formula injection characters (`=`, `+`, `-`, `@`, `\t`, `\r`, or leading whitespace) with a leading `'`.
+    - Verified Report role filter (d4): Filtering by `role=intern` strictly scopes completed projects and performance table to intern-assigned tasks.
+    - Verified Report period=all and invalid date resilience (d5): Sets `period_label = 'All Time'` and gracefully parses malformed `refDate` strings without throwing `RangeError`.
+    - Verified Zero Fake Fallback Metrics (d7): Members with 0 completed tasks compute 100% on-time compliance (0 late tasks) rather than hardcoded 95/90 percentages.
 - **Gate 3 (Live Browser E2E):**
   - Playwright tested across Desktop (1280x800) and Mobile (390x844) viewports:
-    - 42 tests passed with exit code 0 (55.3s).
+    - 42 tests passed with exit code 0 (55.5s).
     - 0 console errors.
     - 0 failed network requests.
     - 0 horizontal overflow across desktop and mobile.
@@ -34,7 +39,7 @@
     - Verified Staff tests all 5 category pills (`Daily Cinematography`, `Video Editing`, `Book Review`, `Script Research`, `Content Management`), sets 6.5 hours, submits log, and sees it persist in the recent logs table.
     - Verified Intern (Hasan Ali) logs in on Mobile (390x844), navigates ALL 4 bottom-nav tabs (`/intern/schedule`, `/intern/daily-log`, `/intern/tasks`, `/intern/profile`) with zero 404s.
     - Verified `/intern/schedule` renders Today's Shoot card (The Art of Creation, 09:00 AM, 50 Katha Campus) and upcoming assigned shoots.
-    - Verified `/intern/daily-log` mobile form with hours input, Indoor / Outdoor toggle, Raw Footage Uploaded switch, LocalStorage draft auto-save for weak outdoor networks.
+    - Verified `/intern/daily-log` mobile form with hours input, Indoor / Outdoor toggle, Raw Footage Uploaded switch, LocalStorage draft auto-save for weak outdoor networks, and verified draft auto-save resilience across page navigations without ghost draft persistence.
     - Verified Intern marks Raw Footage YES and submits → triggers `trg_sync_raw_footage_to_task` → Admin checks `/admin/tasks` and confirms Task 1 card displays `Raw Uploaded` badge.
     - Verified Media Head Admin visits `/admin/reports` matching `docs/mockups/reports-users.jpg`:
       - 3 KPI cards display live metrics: `Completed Projects`, `Total Field & Editing Hours`, and `On-Time Deadlines %`.

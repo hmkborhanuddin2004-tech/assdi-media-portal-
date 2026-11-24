@@ -60,7 +60,7 @@ export const hoursSpentSchema = z.coerce
   .number({
     invalid_type_error: "কাজের ঘণ্টা একটি সংখ্যা হতে হবে।",
   })
-  .min(0.1, "কাজের ঘণ্টা কমপক্ষে ০.১ হতে হবে। (Violates hours_spent > 0)")
+  .positive("কাজের ঘণ্টা ০ এর বেশি হতে হবে। (Violates hours_spent > 0)")
   .max(24, "কাজের ঘণ্টা সর্বোচ্চ ২৪ হতে পারে। (Violates hours_spent <= 24)");
 
 /**

@@ -50,7 +50,7 @@ export default function StaffDailyLogPage() {
       const [meRes, tasksRes, logsRes] = await Promise.all([
         fetch("/api/auth/me"),
         fetch("/api/tasks"),
-        fetch("/api/daily-logs?limit=15"),
+        fetch("/api/daily-logs?user_id=me&period=all&limit=15"),
       ]);
 
       if (meRes.ok) {
@@ -129,7 +129,7 @@ export default function StaffDailyLogPage() {
       setSelectedTaskId("");
 
       // Refresh recent logs
-      const refreshed = await fetch("/api/daily-logs?limit=15");
+      const refreshed = await fetch("/api/daily-logs?user_id=me&period=all&limit=15");
       if (refreshed.ok) {
         const refreshedData = await refreshed.json();
         if (refreshedData.logs) {

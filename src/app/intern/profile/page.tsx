@@ -26,7 +26,7 @@ export default function InternProfilePage() {
     try {
       const [meRes, logsRes] = await Promise.all([
         fetch("/api/auth/me"),
-        fetch("/api/daily-logs?limit=50"),
+        fetch("/api/daily-logs?period=all&limit=50"),
       ]);
 
       if (meRes.ok) {

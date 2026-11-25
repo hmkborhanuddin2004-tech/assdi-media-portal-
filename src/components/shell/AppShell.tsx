@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -20,10 +20,9 @@ import {
   Home,
   User,
   Search,
-  Bell,
   ChevronDown,
 } from "lucide-react";
-import { ROLE_LABELS, type UserRole } from "@/lib/types/auth";
+import { ROLE_HOME_ROUTES, ROLE_LABELS, type UserRole } from "@/lib/types/auth";
 
 interface NavItem {
   name: string;
@@ -383,11 +382,17 @@ interface CurrentUserSession {
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  const [navigatingTo, setNavigatingTo] = useState<string | null>(null);
   const [user, setUser] = useState<CurrentUserSession | null>(null);
+  const profileMenuRef = useRef<HTMLDivElement>(null);
+  const profileTriggerRef = useRef<HTMLButtonElement>(null);
 
   const groupedNav = getGroupedNavItemsForRole(user?.role);
   const navItems = getNavItemsForRole(user?.role);
   const mobileNav = getMobileNavItemsForRole(user?.role, pathname);
+  const homeHref = user ? ROLE_HOME_ROUTES[user.role] || "/" : "/";
 
   const pageTitle = (() => {
     const matched = navItems.find((n) => pathname.startsWith(n.href));
@@ -397,6 +402,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   })();
 
   useEffect(() => {
+    // Reset transient overlays and progress bar when route completes
+    setNavigatingTo(null);
+    setProfileMenuOpen(false);
+    setMobileMenuOpen(false);
+
     // Check current auth status
     const checkAuth = async () => {
       try {
@@ -414,13 +424,83 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     checkAuth();
   }, [pathname]);
 
-  const handleSignOut = () => {
-    window.location.href = "/api/auth/signout";
+  useEffect(() => {
+    if (!navigatingTo) return;
+    const timer = setTimeout(() => setNavigatingTo(null), 5000);
+    return () => clearTimeout(timer);
+  }, [navigatingTo]);
+
+  useEffect(() => {
+    if (!profileMenuOpen && !mobileMenuOpen) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (
+        profileMenuOpen &&
+        profileMenuRef.current &&
+        !profileMenuRef.current.contains(event.target as Node)
+      ) {
+        setProfileMenuOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        if (profileMenuOpen) {
+          setProfileMenuOpen(false);
+          profileTriggerRef.current?.focus();
+        }
+        if (mobileMenuOpen) {
+          setMobileMenuOpen(false);
+        }
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [profileMenuOpen, mobileMenuOpen]);
+
+  const handleNavigateStart = (href: string) => {
+    if (href && !href.startsWith("#") && href !== pathname) {
+      setNavigatingTo(href);
+    }
+  };
+
+  const handleSignOut = async () => {
+    if (signingOut) return;
+    setSigningOut(true);
+    setProfileMenuOpen(false);
+    setMobileMenuOpen(false);
+    try {
+      const res = await fetch("/api/auth/signout", { method: "POST" });
+      if (res.ok) {
+        setUser(null);
+        window.location.assign("/login");
+        return;
+      }
+    } catch {
+      // Fallback to GET signout endpoint
+    }
+    window.location.assign("/api/auth/signout");
   };
 
   return (
     <>
-      {/* Vivid Blurred 3D Ambient Backdrop (design-reference.html) */}
+      {/* Subtle Top Route-Transition Progress Bar */}
+      {navigatingTo && (
+        <div
+          id="route-transition-progress"
+          aria-hidden="true"
+          className="fixed top-0 left-0 right-0 z-[70] h-[3px] bg-transparent pointer-events-none overflow-hidden print:hidden"
+        >
+          <div className="h-full w-1/2 bg-gradient-to-r from-[#14b8a6] via-[#0f766e] to-[#22d3ee] rounded-r-full route-progress-bar shadow-[0_0_10px_rgba(15,118,110,0.45)]" />
+        </div>
+      )}
+
+      {/* Soft Airy 3D Ambient Backdrop */}
       <div className="bg print:hidden" aria-hidden="true">
         <div className="shape s-teal" />
         <div className="shape s-cyan" />
@@ -458,15 +538,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   {section.items.map((item) => {
                     const Icon = item.icon;
                     const isActive = pathname === item.href;
+                    const isPending = navigatingTo === item.href;
                     return (
                       <Link
                         key={item.href}
                         href={item.href}
-                        prefetch={false}
-                        className={`group flex items-center justify-between px-2.5 py-2 rounded-[11px] text-[12.5px] font-medium transition-all duration-150 ${
+                        prefetch={true}
+                        onClick={() => handleNavigateStart(item.href)}
+                        className={`group flex items-center justify-between px-2.5 py-2 rounded-[11px] text-[12.5px] font-medium transition-all duration-200 ease-out active:scale-[0.98] ${
                           isActive
-                            ? "bg-[#0F766E] text-white shadow-[0_8px_18px_rgba(15,118,110,0.35)] font-semibold"
-                            : "text-[#33475f] hover:bg-white/45 hover:text-[#0b1f3a]"
+                            ? "bg-[#0F766E] text-white shadow-[0_8px_18px_rgba(15,118,110,0.32)] font-semibold"
+                            : isPending
+                            ? "bg-[#0f766e]/12 text-[#0b1f3a] border border-[#0f766e]/25 font-semibold"
+                            : "text-[#33475f] hover:bg-white/55 hover:text-[#0b1f3a]"
                         }`}
                       >
                         <div className="flex items-center gap-2.5 min-w-0">
@@ -520,15 +604,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     </div>
                   </div>
                   <button
+                    type="button"
                     onClick={handleSignOut}
+                    disabled={signingOut}
                     title="লগআউট"
-                    className="p-1.5 rounded-md text-[#33475f] hover:text-red-600 hover:bg-white/60 transition-colors"
+                    className="p-1.5 rounded-md text-[#33475f] hover:text-red-600 hover:bg-white/65 disabled:opacity-60 transition-all duration-200 ease-out active:scale-[0.98]"
                   >
                     <LogOut className="w-4 h-4" />
                   </button>
                 </div>
               ) : (
-                <div className="flex items-center justify-between gap-2 px-2.5 py-2 rounded-xl bg-white/45 border border-white/75">
+                <div className="flex items-center justify-between gap-2 px-2.5 py-2 rounded-xl bg-white/55 border border-white/80">
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="w-4 h-4 text-[#0F766E]" />
                     <div className="flex flex-col text-[11px] leading-tight">
@@ -538,7 +624,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   </div>
                   <Link
                     href="/login"
-                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0F766E] hover:underline"
+                    prefetch={true}
+                    onClick={() => handleNavigateStart("/login")}
+                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0F766E] hover:underline transition-all duration-200 ease-out active:scale-[0.98]"
                   >
                     <LogIn className="w-3.5 h-3.5" />
                     <span>লগইন</span>
@@ -552,10 +640,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {/* Mobile Top Header (390px optimized) */}
         <header
           id="mobile-header"
-          className="print:hidden md:hidden sticky top-0 z-30 h-14 w-full bg-white/55 backdrop-blur-xl border-b border-white/75 flex items-center justify-between px-4 shadow-sm"
+          className="print:hidden md:hidden sticky top-0 z-30 h-14 w-full bg-white/65 backdrop-blur-2xl border-b border-white/85 flex items-center justify-between px-4 shadow-[0_6px_20px_rgba(15,35,50,0.06)]"
         >
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-white/70 p-0.5 border border-white/80 flex items-center justify-center shadow-xs shrink-0 overflow-hidden">
+            <div className="w-8 h-8 rounded-lg bg-white/75 p-0.5 border border-white/85 flex items-center justify-center shadow-xs shrink-0 overflow-hidden">
               <Image
                 src="/images/assdi-logo.png"
                 alt="ASSDI Logo"
@@ -578,8 +666,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-2">
             {user ? (
               <button
+                type="button"
                 onClick={handleSignOut}
-                className="p-1.5 rounded-md text-[#33475f] hover:text-red-600 hover:bg-white/60"
+                disabled={signingOut}
+                className="p-1.5 rounded-md text-[#33475f] hover:text-red-600 hover:bg-white/65 disabled:opacity-60 transition-all duration-200 ease-out active:scale-[0.98]"
                 aria-label="লগআউট"
               >
                 <LogOut className="w-4 h-4" />
@@ -587,16 +677,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             ) : (
               <Link
                 href="/login"
-                className="p-1.5 rounded-md text-[#0F766E] hover:bg-white/60 text-xs font-semibold"
+                prefetch={true}
+                onClick={() => handleNavigateStart("/login")}
+                className="p-1.5 rounded-md text-[#0F766E] hover:bg-white/65 text-xs font-semibold transition-all duration-200 ease-out active:scale-[0.98]"
               >
                 লগইন
               </Link>
             )}
 
             <button
+              type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-1.5 rounded-md text-[#0b1f3a] hover:bg-white/60"
+              className="p-1.5 rounded-md text-[#0b1f3a] hover:bg-white/65 transition-all duration-200 ease-out active:scale-[0.98]"
               aria-label="Toggle menu"
+              aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -605,8 +699,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         {/* Mobile Drawer (When hamburger or More toggled) */}
         {mobileMenuOpen && (
-          <div className="md:hidden fixed inset-0 top-14 z-30 bg-[#0b1f3a]/30 backdrop-blur-sm">
-            <div className="glass m-3 p-4 space-y-2 max-h-[75vh] overflow-y-auto">
+          <div
+            onClick={() => setMobileMenuOpen(false)}
+            className="md:hidden fixed inset-0 top-14 z-30 bg-[#0b1f3a]/25 backdrop-blur-sm transition-opacity duration-200 ease-out"
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="glass-popover m-3 p-4 space-y-2 max-h-[75vh] overflow-y-auto animate-drawer-in"
+            >
               <div className="text-[10px] font-bold text-[#33475f] uppercase tracking-wider mb-2">
                 সকল মেনু (All Sections)
               </div>
@@ -617,12 +717,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    prefetch={false}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-sm ${
+                    prefetch={true}
+                    onClick={() => {
+                      handleNavigateStart(item.href);
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-sm transition-all duration-200 ease-out active:scale-[0.98] ${
                       isActive
                         ? "bg-[#0F766E] text-white font-semibold shadow-sm"
-                        : "text-[#0b1f3a] hover:bg-white/50 hover:text-[#0F766E]"
+                        : "text-[#0b1f3a] hover:bg-white/60 hover:text-[#0F766E]"
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -639,8 +742,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     লগইন: {user.full_name}
                   </span>
                   <button
+                    type="button"
                     onClick={handleSignOut}
-                    className="text-xs text-red-600 hover:underline font-semibold flex items-center gap-1"
+                    disabled={signingOut}
+                    className="text-xs text-red-600 hover:underline font-semibold flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-red-500/10 transition-all duration-200 ease-out active:scale-[0.98]"
                   >
                     <LogOut className="w-3.5 h-3.5" />
                     <span>লগআউট</span>
@@ -658,7 +763,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         >
           {/* Floating Glass Topbar Card (Hidden on Login, Mobile & Print) */}
           {pathname !== "/login" && user && (
-            <header className="hidden md:flex items-center gap-3.5 px-4 py-3 glass print:hidden">
+            <header className="relative z-30 hidden md:flex items-center gap-3.5 px-4 py-3 glass print:hidden">
               <div className="min-w-0">
                 <div className="text-[17px] font-bold text-[#0b1f3a] tracking-tight leading-tight truncate">
                   {pageTitle}
@@ -682,7 +787,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                         ? "Search my shoots & tasks..."
                         : "Search courses, gear, tasks…"
                     }
-                    className="w-full h-9 pl-9 pr-3 text-[12.5px] rounded-[11px] border border-white/80 bg-white/55 text-[#0b1f3a] placeholder-[#475569] focus:outline-none focus:bg-white/75 focus:border-[#0f766e] focus:ring-2 focus:ring-[#0f766e]/20 transition-all"
+                    className="w-full h-9 pl-9 pr-3 text-[12.5px] rounded-[11px] border border-white/85 bg-white/60 text-[#0b1f3a] placeholder-[#475569] focus:outline-none focus:bg-white/80 focus:border-[#0f766e] focus:ring-2 focus:ring-[#0f766e]/20 transition-all duration-200 ease-out"
                     readOnly
                   />
                 </div>
@@ -690,19 +795,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <div className="ml-auto" />
               )}
 
-              <div className="flex items-center gap-3">
+              <div className="relative" ref={profileMenuRef}>
                 <button
+                  ref={profileTriggerRef}
+                  id="topbar-profile-trigger"
                   type="button"
-                  className="w-[38px] h-[38px] rounded-[11px] border border-white/80 bg-white/55 hover:bg-white/80 flex items-center justify-center text-[#33475f] transition-colors relative"
-                  aria-label="Notifications"
+                  aria-haspopup="menu"
+                  aria-expanded={profileMenuOpen}
+                  aria-controls="topbar-profile-menu"
+                  onClick={() => setProfileMenuOpen((prev) => !prev)}
+                  className="flex items-center gap-2.5 px-2 py-1 rounded-xl hover:bg-white/60 transition-all duration-200 ease-out active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0f766e]/40"
                 >
-                  <Bell className="w-[17px] h-[17px]" />
-                  <span className="absolute -top-1.5 -right-1.5 min-w-[17px] h-[17px] px-1 bg-[#dc2626] text-white text-[10px] font-bold rounded-full flex items-center justify-center border-2 border-white/90">
-                    3
-                  </span>
-                </button>
-                <div className="flex items-center gap-2.5 pl-1 cursor-pointer">
-                  <div className="w-[38px] h-[38px] rounded-full bg-gradient-to-br from-[#14b8a6] to-[#0f766e] text-white flex items-center justify-center font-bold text-[12.5px] shrink-0 border-2 border-white/85 shadow-[0_6px_14px_rgba(15,118,110,0.3)]">
+                  <div className="w-[38px] h-[38px] rounded-full bg-gradient-to-br from-[#14b8a6] to-[#0f766e] text-white flex items-center justify-center font-bold text-[12.5px] shrink-0 border-2 border-white/85 shadow-[0_6px_14px_rgba(15,118,110,0.28)]">
                     {user.full_name
                       ? user.full_name
                           .split(" ")
@@ -718,7 +822,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     </span>
                     <span className="text-[10px] font-semibold tracking-[0.1em] uppercase text-[#33475f] whitespace-nowrap">
                       {user.role === "admin"
-                        ? "Media Manager"
+                        ? "Media Head"
                         : user.role === "coordinator"
                         ? user.course_name || "Coordinator"
                         : user.role === "staff"
@@ -726,8 +830,74 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                         : "Trainee Intern"}
                     </span>
                   </div>
-                  <ChevronDown className="w-3.5 h-3.5 text-[#33475f] ml-0.5" />
-                </div>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-[#33475f] ml-0.5 transition-transform duration-200 ease-out ${
+                      profileMenuOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {profileMenuOpen && (
+                  <div
+                    id="topbar-profile-menu"
+                    role="menu"
+                    aria-labelledby="topbar-profile-trigger"
+                    className="glass-popover animate-popover-in absolute right-0 top-[calc(100%+10px)] w-[272px] p-3 z-50 space-y-2.5"
+                  >
+                    <div className="px-2 py-1 space-y-1.5">
+                      <div className="font-bold text-[13px] text-[#0b1f3a] leading-tight truncate">
+                        {user.full_name}
+                      </div>
+                      <div className="text-[11.5px] font-medium text-[#33475f] truncate">
+                        {user.email}
+                      </div>
+                      <div>
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10.5px] font-semibold bg-[#0f766e]/12 text-[#0b5a54] border border-[#0f766e]/20">
+                          {ROLE_LABELS[user.role]?.en || user.role}
+                        </span>
+                      </div>
+                      {user.role === "coordinator" && (
+                        <div className="text-[11px] font-medium text-[#33475f] bg-slate-900/[0.04] rounded-lg px-2 py-1 border border-white/80 truncate">
+                          Course:{" "}
+                          <span className="font-semibold text-[#0b1f3a]">
+                            {user.course_name || "Assigned Course"}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="border-t border-slate-200/75" />
+
+                    <div className="space-y-1">
+                      <Link
+                        id="topbar-profile-home-link"
+                        href={homeHref}
+                        prefetch={true}
+                        role="menuitem"
+                        onClick={() => {
+                          handleNavigateStart(homeHref);
+                          setProfileMenuOpen(false);
+                        }}
+                        className="flex items-center gap-2.5 w-full px-2.5 py-2 rounded-xl text-[12.5px] font-semibold text-[#0b1f3a] hover:bg-white/75 hover:text-[#0f766e] transition-all duration-200 ease-out active:scale-[0.98]"
+                      >
+                        <LayoutDashboard className="w-4 h-4 text-[#0f766e] shrink-0" />
+                        <span>Dashboard / হোম</span>
+                      </Link>
+
+                      <button
+                        id="topbar-profile-signout-btn"
+                        type="button"
+                        role="menuitem"
+                        disabled={signingOut}
+                        onClick={handleSignOut}
+                        className="flex items-center gap-2.5 w-full px-2.5 py-2 rounded-xl text-[12.5px] font-semibold text-red-700 hover:bg-red-500/10 hover:text-red-800 disabled:opacity-60 transition-all duration-200 ease-out active:scale-[0.98]"
+                      >
+                        <LogOut className="w-4 h-4 shrink-0" />
+                        <span>{signingOut ? "Signing out..." : "Sign Out / লগআউট"}</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </header>
           )}
@@ -738,7 +908,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <nav
           id="mobile-bottom-nav"
           aria-label="Mobile Navigation"
-          className="print:hidden md:hidden fixed bottom-0 left-0 right-0 z-40 h-16 bg-white/60 backdrop-blur-xl border-t border-white/80 shadow-[0_-4px_20px_rgba(11,50,60,0.08)] px-1 flex items-center justify-around"
+          className="print:hidden md:hidden fixed bottom-0 left-0 right-0 z-40 h-16 bg-white/65 backdrop-blur-2xl border-t border-white/85 shadow-[0_-4px_20px_rgba(15,35,50,0.06)] px-1 flex items-center justify-around"
         >
           {mobileNav.map((item) => {
             const Icon = item.icon;
@@ -749,9 +919,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   type="button"
                   key="mobile-nav-more"
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="flex flex-col items-center justify-center flex-1 py-1 min-w-[56px] text-[10px] font-medium text-[#33475f] hover:text-[#0F766E] transition-colors"
+                  aria-expanded={mobileMenuOpen}
+                  className="flex flex-col items-center justify-center flex-1 py-1 min-w-[56px] text-[10px] font-medium text-[#33475f] hover:text-[#0F766E] transition-all duration-200 ease-out active:scale-[0.98]"
                 >
-                  <div className="w-9 h-7 rounded-full flex items-center justify-center">
+                  <div
+                    className={`w-9 h-7 rounded-full flex items-center justify-center transition-all duration-200 ease-out ${
+                      mobileMenuOpen ? "bg-[#0f766e]/15 text-[#0F766E]" : ""
+                    }`}
+                  >
                     <Icon className="w-4 h-4" />
                   </div>
                   <span className="truncate max-w-[64px]">{item.name}</span>
@@ -762,16 +937,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <Link
                 key={item.href}
                 href={item.href}
-                prefetch={false}
-                className={`flex flex-col items-center justify-center flex-1 py-1 min-w-[56px] text-[10px] font-medium transition-colors ${
+                prefetch={true}
+                onClick={() => handleNavigateStart(item.href)}
+                className={`flex flex-col items-center justify-center flex-1 py-1 min-w-[56px] text-[10px] font-medium transition-all duration-200 ease-out active:scale-[0.98] ${
                   isActive
                     ? "text-[#0F766E] font-semibold"
                     : "text-[#33475f] hover:text-[#0F766E]"
                 }`}
               >
                 <div
-                  className={`w-9 h-7 rounded-full flex items-center justify-center transition-all ${
-                    isActive ? "bg-[#0f766e]/15 text-[#0F766E]" : ""
+                  className={`w-9 h-7 rounded-full flex items-center justify-center transition-all duration-200 ease-out ${
+                    isActive ? "bg-[#0f766e]/15 text-[#0F766E] scale-100" : "scale-95"
                   }`}
                 >
                   <Icon className="w-4 h-4" />

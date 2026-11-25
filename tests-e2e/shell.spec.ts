@@ -66,4 +66,78 @@ test.describe("S1-01 Responsive Application Shell & Design Tokens", () => {
     // Verify Brand title is rendered
     await expect(page.getByText("আছ-সুন্নাহ স্কিল ডেভেলপমেন্ট ইনস্টিটিউট")).toBeVisible();
   });
+
+  test("notification bell is removed and top-right profile dropdown opens, closes on Escape/outside click, and signs out cleanly", async ({
+    page,
+  }, testInfo) => {
+    const isMobile = testInfo.project.name.includes("Mobile");
+    const consoleErrors: string[] = [];
+
+    page.on("console", (msg) => {
+      if (msg.type() === "error" && !msg.text().includes("favicon")) {
+        consoleErrors.push(msg.text());
+      }
+    });
+
+    // Sign in as Coordinator to verify full profile details including assigned course
+    await page.goto("/login");
+    await page.waitForLoadState("domcontentloaded");
+    await page.fill("#login-email", "coordinator@assdi.org");
+    await page.fill("#login-password", "assdi123");
+    await page.click("#login-submit-button");
+    await page.waitForURL("**/coordinator/requests", { timeout: 10000 });
+
+    // Confirm dead Notification Bell and hardcoded '3' badge are completely gone
+    await expect(page.locator('button[aria-label="Notifications"]')).toHaveCount(0);
+
+    if (isMobile) {
+      // Mobile: verify drawer opens, backdrop click closes, and signout redirects cleanly to /login
+      await page.click('#mobile-header button[aria-label="Toggle menu"]');
+      await expect(page.getByText("সকল মেনু (All Sections)")).toBeVisible();
+      await page.keyboard.press("Escape");
+      await expect(page.getByText("সকল মেনু (All Sections)")).toHaveCount(0);
+
+      await page.click('#mobile-header button[aria-label="লগআউট"]');
+      await page.waitForURL("**/login", { timeout: 10000 });
+      expect(page.url()).toContain("/login");
+    } else {
+      const trigger = page.locator("#topbar-profile-trigger");
+      const menu = page.locator("#topbar-profile-menu");
+
+      await expect(trigger).toBeVisible();
+      await expect(menu).toHaveCount(0);
+
+      // 1. Open dropdown
+      await trigger.click();
+      await expect(menu).toBeVisible();
+      await expect(menu).toContainText("Muhammad Abdullah");
+      await expect(menu).toContainText("coordinator@assdi.org");
+      await expect(menu).toContainText("Course Coordinator");
+      await expect(menu).toContainText("Refrigeration & Air Conditioning (RAC)");
+      await expect(page.locator("#topbar-profile-home-link")).toBeVisible();
+      await expect(page.locator("#topbar-profile-signout-btn")).toBeVisible();
+
+      // 2. Close with Escape key
+      await page.keyboard.press("Escape");
+      await expect(menu).toHaveCount(0);
+
+      // 3. Re-open and close on outside click
+      await trigger.click();
+      await expect(menu).toBeVisible();
+      await page.locator("#main-content header > div").first().click();
+      await expect(menu).toHaveCount(0);
+
+      // 4. Re-open and click Sign Out
+      await trigger.click();
+      await expect(menu).toBeVisible();
+      await page.click("#topbar-profile-signout-btn");
+      await page.waitForURL("**/login", { timeout: 10000 });
+      expect(page.url()).toContain("/login");
+    }
+
+    const meRes = await page.request.get("/api/auth/me");
+    const meData = await meRes.json();
+    expect(meData.authenticated).toBe(false);
+    expect(consoleErrors).toEqual([]);
+  });
 });

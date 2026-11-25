@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   Calendar,
   Clock,
@@ -387,104 +388,162 @@ export default function AdminMasterCalendarPage() {
             {selectedShoot ? (
               <div
                 id="calendar-shoot-slip-panel"
-                className="glass-strong p-6 space-y-5 relative overflow-hidden print:p-8 print:m-0 print:border-none print:shadow-none print:w-full print:bg-white"
+                className="bg-white/60 backdrop-blur-2xl border border-white/85 rounded-2xl shadow-[0_16px_40px_rgba(11,50,60,0.10)] overflow-hidden relative print:p-8 print:m-0 print:border-none print:shadow-none print:w-full print:bg-white"
               >
-                {/* Slip Header Badge */}
-                <div className="flex flex-col items-center text-center pb-2 border-b border-slate-100">
-                  <div className="w-12 h-12 mb-2 flex items-center justify-center">
-                    <Image
-                      src="/images/assdi-logo.png"
-                      alt="ASSDI Logo"
-                      width={48}
-                      height={48}
-                      className="w-full h-full object-contain"
-                    />
+                {/* Premium Executive Header Band */}
+                <div className="bg-gradient-to-r from-[#0f766e] to-[#0b5a54] text-white px-5 py-4 flex items-center justify-between print:text-black print:bg-none print:border-b print:border-slate-300">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-9 h-9 rounded-xl bg-white/95 p-1.5 shadow-sm shrink-0 flex items-center justify-center">
+                      <Image
+                        src="/images/assdi-logo.png"
+                        alt="ASSDI Logo"
+                        width={28}
+                        height={28}
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <div className="flex flex-col leading-tight min-w-0">
+                      <span className="font-extrabold text-[15px] tracking-tight text-white print:text-black">
+                        ASSDI <span className="text-emerald-200 print:text-slate-800">Media</span>
+                      </span>
+                      <span className="text-[10.5px] text-white/85 print:text-slate-600 font-medium truncate">
+                        As-Sunnah Skill Development Institute • Media Dept.
+                      </span>
+                    </div>
                   </div>
-                  <div className="inline-block border-2 border-dashed border-slate-800/80 px-4 py-1.5 rounded-lg bg-slate-50">
-                    <span
-                      id="calendar-slip-number-badge"
-                      className="text-xs sm:text-sm font-extrabold tracking-widest uppercase text-slate-900"
-                    >
-                      ASSDI MEDIA • SHOOT SLIP {selectedShoot.slip.slip_number}
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-slate-500 mt-1.5 font-medium">
-                    As-Sunnah Skill Development Institute • Media Department
-                  </p>
+                  <span
+                    id="calendar-slip-number-badge"
+                    className="font-mono text-xs font-bold tracking-wider px-3 py-1 rounded-full bg-white/15 border border-white/25 backdrop-blur-md text-white shadow-xs shrink-0 print:text-black print:border-black print:bg-white"
+                  >
+                    <span className="sr-only">ASSDI MEDIA • SHOOT </span>SLIP {selectedShoot.slip.slip_number}
+                  </span>
                 </div>
 
-                {/* Slip Attributes */}
-                <div className="space-y-3 divide-y divide-slate-100 text-xs sm:text-sm">
-                  {/* Course */}
-                  <div className="flex items-start justify-between pt-1 gap-3">
-                    <span className="text-slate-500 font-medium shrink-0 flex items-center gap-1.5">
-                      <FileText className="w-3.5 h-3.5 text-[#0F766E]" />
-                      Course
-                    </span>
-                    <span
-                      id="calendar-slip-course"
-                      className="font-bold text-slate-900 text-right"
-                    >
-                      {selectedShoot.slip.course_title}
-                    </span>
+                {/* Structured Luxury Body */}
+                <div className="p-4 sm:p-5 space-y-3.5 print:p-6 print:m-0">
+                  {/* Highlighted Top Summary Strip */}
+                  <div className="bg-white/55 border border-white/75 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs print:bg-slate-50 print:border-slate-200">
+                    <div className="min-w-0">
+                      <div className="text-[10px] font-bold text-[#33475f] uppercase tracking-wider mb-0.5">
+                        Course & Program Format
+                      </div>
+                      <div
+                        id="calendar-slip-course"
+                        className="font-extrabold text-xs sm:text-sm text-[#0b1f3a] leading-tight"
+                      >
+                        {selectedShoot.slip.course_title}
+                      </div>
+                    </div>
+                    <div className="sm:text-right shrink-0">
+                      <div className="text-[10px] font-bold text-[#33475f] uppercase tracking-wider mb-0.5">
+                        Call Time + Date
+                      </div>
+                      <div
+                        id="calendar-slip-calltime"
+                        className="font-extrabold text-xs sm:text-sm text-[#0f766e] leading-tight font-mono"
+                      >
+                        {selectedShoot.slip.call_time_formatted}
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Venue */}
-                  <div className="flex items-start justify-between pt-2.5 gap-3">
-                    <span className="text-slate-500 font-medium shrink-0 flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-[#0F766E]" />
-                      Venue
-                    </span>
-                    <span
-                      id="calendar-slip-venue"
-                      className="font-semibold text-slate-800 text-right"
-                    >
-                      {selectedShoot.slip.venue_name}
-                    </span>
-                  </div>
+                  {/* Clean 2-Column Metadata Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {/* Venue */}
+                    <div className="p-3 rounded-xl bg-white/50 border border-white/75 shadow-xs flex flex-col justify-between print:bg-white print:border-slate-200">
+                      <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#33475f] uppercase tracking-wider mb-1">
+                        <span className="p-1 rounded-md bg-[#0f766e]/12 text-[#0f766e]">
+                          <MapPin className="w-3.5 h-3.5" />
+                        </span>
+                        <span>Venue / ভেন্যু</span>
+                      </div>
+                      <div
+                        id="calendar-slip-venue"
+                        className="font-bold text-xs text-[#0b1f3a] leading-snug"
+                      >
+                        {selectedShoot.slip.venue_name}
+                      </div>
+                    </div>
 
-                  {/* Call Time */}
-                  <div className="flex items-start justify-between pt-2.5 gap-3">
-                    <span className="text-slate-500 font-medium shrink-0 flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-[#0F766E]" />
-                      Call Time
-                    </span>
-                    <span
-                      id="calendar-slip-calltime"
-                      className="font-bold text-[#0F766E] text-right font-mono"
-                    >
-                      {selectedShoot.slip.call_time_formatted}
-                    </span>
-                  </div>
-
-                  {/* Team & Phones */}
-                  <div className="flex items-start justify-between pt-2.5 gap-3">
-                    <span className="text-slate-500 font-medium shrink-0 flex items-center gap-1.5">
-                      <Users className="w-3.5 h-3.5 text-[#0F766E]" />
-                      Team & Phones
-                    </span>
-                    <div
-                      className="space-y-1 text-right"
-                      id="calendar-slip-team-list"
-                    >
-                      {selectedShoot.slip.team_members.length > 0 ? (
-                        selectedShoot.slip.team_members.map((m, idx) => (
-                          <div
-                            key={idx}
-                            className="flex items-center justify-end gap-1.5 text-xs text-slate-800 font-medium"
-                          >
-                            <span>{m.name}</span>
-                            {m.is_lead && (
-                              <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-emerald-100 text-[#0F766E]">
-                                Lead
+                    {/* Assigned Gear */}
+                    <div className="p-3 rounded-xl bg-white/50 border border-white/75 shadow-xs flex flex-col justify-between print:bg-white print:border-slate-200">
+                      <div className="flex items-center justify-between gap-1.5 mb-1">
+                        <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#33475f] uppercase tracking-wider">
+                          <span className="p-1 rounded-md bg-[#0f766e]/12 text-[#0f766e]">
+                            <Camera className="w-3.5 h-3.5" />
+                          </span>
+                          <span>Assigned Gear / গিয়ার</span>
+                        </div>
+                        <Link
+                          href="/admin/gear"
+                          className="print:hidden text-[10.5px] font-semibold text-[#0f766e] hover:underline"
+                        >
+                          Edit Gear
+                        </Link>
+                      </div>
+                      <div id="calendar-slip-gear-list" className="space-y-1">
+                        {selectedShoot.slip.assigned_gear.length > 0 ? (
+                          <div className="flex flex-wrap gap-1">
+                            {selectedShoot.slip.assigned_gear.map((g, idx) => (
+                              <span
+                                key={idx}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-900/[0.05] border border-slate-900/10 text-[11px] font-semibold text-[#0b1f3a]"
+                              >
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#0f766e]" />
+                                <span>{g.name}</span>
+                                <span className="font-mono text-[10px] text-[#33475f]">({g.serial_number})</span>
                               </span>
-                            )}
-                            <span className="text-slate-400">•</span>
-                            <span className="font-mono text-slate-600 font-semibold">
-                              {m.phone}
-                            </span>
+                            ))}
                           </div>
-                        ))
+                        ) : (
+                          <span className="text-slate-400 text-xs italic">কোনো গিয়ার বরাদ্দ নেই</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Assigned Team & Phones */}
+                  <div className="p-3 rounded-xl bg-white/50 border border-white/75 shadow-xs space-y-2 print:bg-white print:border-slate-200">
+                    <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#33475f] uppercase tracking-wider">
+                      <span className="p-1 rounded-md bg-[#0f766e]/12 text-[#0f766e]">
+                        <Users className="w-3.5 h-3.5" />
+                      </span>
+                      <span>Assigned Team & Phones / শুট টিম</span>
+                    </div>
+                    <div id="calendar-slip-team-list" className="space-y-1.5">
+                      {selectedShoot.slip.team_members.length > 0 ? (
+                        selectedShoot.slip.team_members.map((m, idx) => {
+                          const initials = m.name
+                            .split(" ")
+                            .map((w) => w[0])
+                            .join("")
+                            .slice(0, 2)
+                            .toUpperCase();
+                          return (
+                            <div
+                              key={idx}
+                              className="flex items-center justify-between gap-2 p-1.5 rounded-lg bg-white/70 border border-white/85 text-xs text-[#0b1f3a] font-medium"
+                            >
+                              <div className="flex items-center gap-1.5 min-w-0">
+                                <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#14b8a6] to-[#0f766e] text-white flex items-center justify-center font-bold text-[9px] shrink-0">
+                                  {initials}
+                                </div>
+                                <span className="truncate">{m.name}</span>
+                                {m.is_lead && (
+                                  <span className="px-1.5 py-0.2 rounded text-[9.5px] font-bold bg-[#0f766e]/15 text-[#0b5a54] border border-[#0f766e]/25">
+                                    Lead
+                                  </span>
+                                )}
+                              </div>
+                              <a
+                                href={`tel:${m.phone.replace(/[^0-9+]/g, "")}`}
+                                className="font-mono text-[11px] font-semibold text-[#0f766e] hover:underline shrink-0"
+                              >
+                                {m.phone}
+                              </a>
+                            </div>
+                          );
+                        })
                       ) : (
                         <span className="text-slate-400 italic text-xs">
                           {selectedShoot.lead_name !== "Unassigned"
@@ -495,67 +554,44 @@ export default function AdminMasterCalendarPage() {
                     </div>
                   </div>
 
-                  {/* Assigned Gear */}
-                  <div className="flex items-start justify-between pt-2.5 gap-3">
-                    <span className="text-slate-500 font-medium shrink-0 flex items-center gap-1.5">
-                      <Camera className="w-3.5 h-3.5 text-[#0F766E]" />
-                      Assigned Gear
+                  {/* Important Notice */}
+                  <div className="p-3 rounded-xl bg-[#0f766e]/10 border border-[#0f766e]/20 text-xs text-[#0b5a54] flex items-center gap-2 font-medium">
+                    <CheckCircle2 className="w-4 h-4 text-[#0f766e] shrink-0" />
+                    <span>
+                      শুটিং শুরুর অন্তত ১৫ মিনিট আগে ভেন্যুতে উপস্থিত হয়ে গিয়ার চেক-আউট ও ব্যাটারি/কার্ড যাচাই নিশ্চিত করুন।
                     </span>
-                    <div
-                      className="space-y-1 text-right max-w-[60%]"
-                      id="calendar-slip-gear-list"
-                    >
-                      {selectedShoot.slip.assigned_gear.length > 0 ? (
-                        selectedShoot.slip.assigned_gear.map((g, idx) => (
-                          <div
-                            key={idx}
-                            className="text-slate-800 font-medium text-xs"
-                          >
-                            <span className="font-semibold">{g.name}</span>{" "}
-                            <span className="text-slate-500 text-[11px] font-mono">
-                              ({g.serial_number})
-                            </span>
-                          </div>
-                        ))
-                      ) : (
-                        <span className="text-slate-400 text-xs italic">
-                          কোনো গিয়ার বরাদ্দ নেই
-                        </span>
-                      )}
-                    </div>
                   </div>
-                </div>
 
-                {/* Important Notice */}
-                <div className="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100 text-[11px] text-[#0F766E] flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>
-                    শুটিং শুরুর অন্তত ১৫ মিনিট আগে ভেন্যুতে উপস্থিত হয়ে গিয়ার
-                    চেক-ইন নিশ্চিত করুন।
-                  </span>
-                </div>
+                  {/* 1-Click Action Buttons */}
+                  <div className="print:hidden pt-2 flex flex-col sm:flex-row gap-2.5">
+                    <Link
+                      href="/admin/gear"
+                      id="calendar-edit-gear-btn"
+                      className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white/70 hover:bg-white text-[#33475f] hover:text-[#0b1f3a] text-xs font-semibold border border-white/80 transition-all shadow-xs"
+                    >
+                      <Camera className="w-3.5 h-3.5 text-[#0f766e]" />
+                      <span>Edit Gear</span>
+                    </Link>
+                    <button
+                      onClick={handlePrintSlip}
+                      id="calendar-download-pdf-btn"
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl bg-[#0b1f3a] hover:bg-[#152a4a] text-white text-xs font-semibold shadow-xs transition-all active:scale-[0.98]"
+                    >
+                      <Printer className="w-4 h-4" />
+                      <span>Download PDF</span>
+                    </button>
 
-                {/* 1-Click Action Buttons matching Step 6 */}
-                <div className="print:hidden pt-2 flex flex-col sm:flex-row gap-2.5">
-                  <button
-                    onClick={handlePrintSlip}
-                    id="calendar-download-pdf-btn"
-                    className="flex-1 inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-xs transition-all"
-                  >
-                    <Printer className="w-4 h-4" />
-                    <span>Download PDF</span>
-                  </button>
-
-                  <a
-                    href={selectedShoot.slip.whatsapp_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    id="calendar-share-whatsapp-btn"
-                    className="flex-1 inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl bg-[#0F766E] hover:bg-[#115E59] text-white text-xs font-semibold shadow-xs transition-all"
-                  >
-                    <Share2 className="w-4 h-4" />
-                    <span>Share on WhatsApp</span>
-                  </a>
+                    <a
+                      href={selectedShoot.slip.whatsapp_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      id="calendar-share-whatsapp-btn"
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl bg-[#0f766e] hover:bg-[#0b5a54] text-white text-xs font-semibold shadow-xs transition-all active:scale-[0.98]"
+                    >
+                      <Share2 className="w-4 h-4" />
+                      <span>Share on WhatsApp</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             ) : (

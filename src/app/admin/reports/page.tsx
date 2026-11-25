@@ -7,6 +7,8 @@ import {
   Loader2,
   Download,
 } from "lucide-react";
+import { motion } from "framer-motion";
+import { SILKY_EASE, CARD_STAGGER_DELAY } from "@/lib/motion";
 import type { WorkHistoryReportData } from "@/lib/reports/analytics";
 import { DEMO_USERS } from "@/lib/auth/demo-users";
 
@@ -174,7 +176,12 @@ export default function AdminReportsPage() {
           {/* Top 3 KPI Cards matching mockup */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4" id="report-kpi-cards">
             {/* Card 1: Completed Projects */}
-            <div className="glass-panel p-5 space-y-1">
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0, ease: SILKY_EASE }}
+              className="glass-panel p-5 space-y-1"
+            >
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#33475f] block">
                 Completed Projects
               </span>
@@ -184,10 +191,15 @@ export default function AdminReportsPage() {
               >
                 {report.completed_projects_count}
               </div>
-            </div>
+            </motion.div>
 
             {/* Card 2: Total Field & Editing Hours */}
-            <div className="glass-panel p-5 space-y-1">
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: CARD_STAGGER_DELAY, ease: SILKY_EASE }}
+              className="glass-panel p-5 space-y-1"
+            >
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#33475f] block">
                 Total Field &amp; Editing Hours
               </span>
@@ -197,10 +209,15 @@ export default function AdminReportsPage() {
               >
                 {report.total_field_and_edit_hours} <span className="text-lg font-bold text-[#33475f]">hrs</span>
               </div>
-            </div>
+            </motion.div>
 
             {/* Card 3: On-Time Deadlines */}
-            <div className="glass-panel p-5 space-y-1">
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: CARD_STAGGER_DELAY * 2, ease: SILKY_EASE }}
+              className="glass-panel p-5 space-y-1"
+            >
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#33475f] block">
                 On-Time Deadlines
               </span>
@@ -210,7 +227,7 @@ export default function AdminReportsPage() {
               >
                 {report.on_time_deadlines_pct}%
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Main 2-Column Content Layout matching mockup */}

@@ -11,6 +11,8 @@ import {
   Check,
   Crown,
 } from "lucide-react";
+import { motion } from "framer-motion";
+import { MODAL_TRANSITION } from "@/lib/motion";
 import type { RequisitionItem } from "@/lib/requisitions/store";
 import type { EnrichedTask, ShootSlipData } from "@/lib/tasks/store";
 import type { GearItem } from "@/lib/gear/store";
@@ -243,7 +245,10 @@ export function ApproveAndAssignModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div
+      <motion.div
+        initial={{ opacity: 0, scale: 0.985 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={MODAL_TRANSITION}
         className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh]"
         id="approve-assign-modal-card"
       >
@@ -502,7 +507,7 @@ export function ApproveAndAssignModal({
             </button>
           </div>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 }

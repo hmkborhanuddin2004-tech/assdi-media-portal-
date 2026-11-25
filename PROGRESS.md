@@ -3,7 +3,24 @@
 ## Current Status
 - **Active Step:** All Steps (Step 1 through Step 9) Completed & 100% Verified
 - **Completed Features:** 19 / 19 (S1-01, S2-01, S2-02, S3-01, S3-02, S4-01, S4-02, S4-03, S5-01, S5-02, S6-01, S6-02, S6-03, S6-04, S7-01, S8-01, S8-02, S8-03, S9-01)
-- **UX & Motion Upgrade:** Buttery-Smooth 60fps Spring Navigation (`framer-motion`) across Desktop Sidebar, Mobile Nav, Calendar Filters & Popovers (100% Verified)
+- **UX & Motion Upgrade:** Silky Zero-Bounce "Glassy Dashboard V31" Transitions, Optimistic Active Pill & Zero Layout Shift (100% Verified)
+
+## Zero-Bounce "Glassy Dashboard V31" Motion & Zero Layout Shift Upgrade
+- **Persistent Shell & Optimistic `pendingPath`:**
+  - Verified zero per-page `<AppShell>` remounting; `AppShell` stays mounted persistently across all routes and prevents redundant `setUser` state churn on navigation.
+  - Added immediate `pendingPath` state on link click in `AppShell.tsx` so the active pill and topbar title respond at `0ms` before route completion.
+- **Frosted-Glass Loading Skeletons:**
+  - Added `src/components/shell/FrostedSkeleton.tsx` and `loading.tsx` inside `src/app/{admin,coordinator,staff,intern}/` plus dashboard initial-fetch skeleton rendering to eliminate vertical height collapse.
+- **Critically-Damped Silky Easing (`[0.22, 1, 0.36, 1]`):**
+  - Centralized shared motion presets in `src/lib/motion.ts` (`PILL_TRANSITION`, `HOVER_PILL_TRANSITION`, `PAGE_TRANSITION`, `MODAL_TRANSITION`, `CARD_STAGGER_DELAY`).
+  - Removed spring overshoot across sidebar active/hover pills, collapsible width toggle, mobile nav pill, calendar filter tabs, and modals (`scale: 0.985 -> 1`).
+  - Added subtle `0.03s` staggered card entrances on `/admin/dashboard` KPI cards, `/admin/reports` KPI cards, and `/admin/tasks` Kanban columns.
+- **Scrollbar Layout Shift Eliminated:**
+  - Added `scrollbar-gutter: stable;` to `html` in `src/app/globals.css` and replaced competing CSS grid/JS width animations with unified flex layout + `PILL_TRANSITION`.
+- **Verification Gates (100% Green):**
+  - Gate 1: `pnpm typecheck && pnpm lint && pnpm build` exit 0.
+  - Gate 2: `pnpm test` (182 unit & DB tests pass in 1.87s).
+  - Gate 3: `pnpm test:e2e` (50 Playwright E2E tests pass in 2.5m across Desktop `1280px` & Mobile `390px`, asserting `#desktop-sidebar` DOM identity & zero horizontal layout shift across `/admin/dashboard` → `/admin/requisitions` → `/admin/calendar` → `/admin/tasks` → `/admin/gear` → `/admin/reports` → `/admin/users` with 0 console errors).
 
 ## Motion & Fluid Interaction Upgrade (framer-motion 60fps Spring Physics)
 - **Persistent Shell & Role Layouts:**

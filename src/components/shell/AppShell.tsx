@@ -26,6 +26,12 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence, LayoutGroup, MotionConfig } from "framer-motion";
 import { ROLE_HOME_ROUTES, ROLE_LABELS, type UserRole } from "@/lib/types/auth";
+import {
+  PILL_TRANSITION,
+  HOVER_PILL_TRANSITION,
+  PAGE_TRANSITION,
+  MODAL_TRANSITION,
+} from "@/lib/motion";
 
 interface NavItem {
   name: string;
@@ -387,6 +393,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
+  const [pendingPath, setPendingPath] = useState<string | null>(null);
   const [navigatingTo, setNavigatingTo] = useState<string | null>(null);
   const [user, setUser] = useState<CurrentUserSession | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -394,15 +401,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const profileTriggerRef = useRef<HTMLButtonElement>(null);
 
+  const activePath = pendingPath || pathname;
   const groupedNav = getGroupedNavItemsForRole(user?.role);
   const navItems = getNavItemsForRole(user?.role);
-  const mobileNav = getMobileNavItemsForRole(user?.role, pathname);
+  const mobileNav = getMobileNavItemsForRole(user?.role, activePath);
   const homeHref = user ? ROLE_HOME_ROUTES[user.role] || "/" : "/";
 
   const pageTitle = (() => {
-    const matched = navItems.find((n) => pathname.startsWith(n.href));
+    const matched = navItems.find((n) => activePath.startsWith(n.href));
     if (matched) return matched.name;
-    if (pathname === "/") return "ASSDI Media Portal";
+    if (activePath === "/") return "ASSDI Media Portal";
     return "Production Suite";
   })();
 
@@ -426,33 +434,45 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
-    // Reset transient overlays and progress bar when route completes
+    // Reset transient overlays, optimistic active path, and progress bar when route completes
+    setPendingPath(null);
     setNavigatingTo(null);
     setProfileMenuOpen(false);
     setMobileMenuOpen(false);
 
-    // Check current auth status
+    // Check current auth status without unnecessary state churn when unchanged
     const checkAuth = async () => {
       try {
         const res = await fetch("/api/auth/me");
         const data = await res.json();
         if (data.authenticated && data.user) {
-          setUser(data.user);
+          setUser((prev) =>
+            prev &&
+            prev.id === data.user.id &&
+            prev.role === data.user.role &&
+            prev.full_name === data.user.full_name &&
+            prev.course_name === data.user.course_name
+              ? prev
+              : data.user
+          );
         } else {
           setUser(null);
         }
       } catch {
-        setUser(null);
+        setUser((prev) => prev);
       }
     };
     checkAuth();
   }, [pathname]);
 
   useEffect(() => {
-    if (!navigatingTo) return;
-    const timer = setTimeout(() => setNavigatingTo(null), 5000);
+    if (!navigatingTo && !pendingPath) return;
+    const timer = setTimeout(() => {
+      setNavigatingTo(null);
+      setPendingPath(null);
+    }, 5000);
     return () => clearTimeout(timer);
-  }, [navigatingTo]);
+  }, [navigatingTo, pendingPath]);
 
   useEffect(() => {
     if (!profileMenuOpen && !mobileMenuOpen) return;
@@ -489,6 +509,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   const handleNavigateStart = (href: string) => {
     if (href && !href.startsWith("#") && href !== pathname) {
+      setPendingPath(href);
       setNavigatingTo(href);
     }
   };
@@ -536,18 +557,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </div>
 
       <div
-        className={`relative z-[1] max-w-[1560px] mx-auto md:p-4 md:grid ${
-          sidebarCollapsed
-            ? "md:grid-cols-[76px_minmax(0,1fr)]"
-            : "md:grid-cols-[224px_minmax(0,1fr)]"
-        } md:gap-4 min-h-screen antialiased transition-[grid-template-columns] duration-300 ease-out`}
+        className="relative z-[1] max-w-[1560px] mx-auto md:p-4 flex flex-col md:flex-row md:items-start md:gap-4 min-h-screen antialiased"
       >
         {/* Desktop Floating Glass Sidebar */}
         <motion.aside
           id="desktop-sidebar"
+          initial={false}
           animate={{ width: sidebarCollapsed ? 76 : 224 }}
-          transition={{ type: "spring", stiffness: 320, damping: 30 }}
-          className="print:hidden hidden md:flex md:flex-col glass sticky top-4 h-[calc(100vh-32px)] p-3 z-40 relative"
+          transition={PILL_TRANSITION}
+          className="print:hidden hidden md:flex md:flex-col shrink-0 glass sticky top-4 h-[calc(100vh-32px)] p-3 z-40 relative"
         >
           {/* Floating Circular Collapse Toggle Button */}
           <button
@@ -556,7 +574,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             onClick={toggleSidebarCollapsed}
             aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            className="absolute -right-3 top-5 z-50 w-6 h-6 rounded-full bg-white/95 border border-white/85 shadow-[0_2px_8px_rgba(15,35,50,0.14)] flex items-center justify-center text-[#33475f] hover:text-[#0f766e] hover:bg-white transition-all duration-150 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0f766e]/40 cursor-pointer"
+            className="absolute -right-3 top-5 z-50 w-6 h-6 rounded-full bg-white/95 border border-white/85 shadow-[0_2px_8px_rgba(15,35,50,0.14)] flex items-center justify-center text-[#33475f] hover:text-[#0f766e] hover:bg-white transition-all duration-150 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0f766e]/40 cursor-pointer"
           >
             {sidebarCollapsed ? (
               <ChevronRight className="w-3.5 h-3.5" />
@@ -568,14 +586,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="flex flex-col h-full overflow-hidden">
             {/* Brand Header */}
             <div className="px-1 pt-0.5 pb-3 border-b border-white/60 overflow-hidden">
-              <AnimatePresence mode="wait">
+              <AnimatePresence initial={false} mode="wait">
                 {!sidebarCollapsed ? (
                   <motion.div
                     key="brand-expanded"
                     initial={{ opacity: 0, x: -6 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -6 }}
-                    transition={{ duration: 0.15 }}
+                    transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <div className="text-[19px] font-extrabold text-[#0b1f3a] tracking-tight leading-tight truncate">
                       ASSDI <span className="text-[#0f766e]">Media</span>
@@ -587,10 +605,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 ) : (
                   <motion.div
                     key="brand-collapsed"
-                    initial={{ opacity: 0, scale: 0.8 }}
+                    initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ duration: 0.15 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
                     className="flex items-center justify-center py-0.5"
                   >
                     <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#14b8a6] to-[#0f766e] text-white flex items-center justify-center font-extrabold text-xs shadow-xs border border-white/80">
@@ -601,7 +619,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </AnimatePresence>
             </div>
 
-            {/* Navigation Links Grouped by MAIN & OPERATIONS with Gliding Active & Hover Pill */}
+            {/* Navigation Links Grouped by MAIN & OPERATIONS with Zero-Bounce Gliding Active & Hover Pill */}
             <nav
               onMouseLeave={() => setHoveredNav(null)}
               className="flex-1 pt-2 pb-2 space-y-2 overflow-y-auto no-scrollbar"
@@ -609,13 +627,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               <LayoutGroup id="assdi-sidebar">
                 {groupedNav.map((section) => (
                   <div key={section.title} className="space-y-1">
-                    <AnimatePresence>
+                    <AnimatePresence initial={false}>
                       {!sidebarCollapsed && (
                         <motion.div
                           initial={{ opacity: 0, height: 0 }}
                           animate={{ opacity: 1, height: "auto" }}
                           exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.15 }}
+                          transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
                           className="px-2.5 pt-2 pb-1 text-[10px] font-bold text-[#33475f] uppercase tracking-[0.16em] truncate"
                         >
                           {section.title}
@@ -625,7 +643,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     {sidebarCollapsed && <div className="my-1.5 border-t border-white/40" />}
                     {section.items.map((item) => {
                       const Icon = item.icon;
-                      const isActive = pathname === item.href;
+                      const isActive = activePath === item.href;
                       const isHovered = hoveredNav === item.href;
                       return (
                         <Link
@@ -644,7 +662,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                           {isActive && (
                             <motion.div
                               layoutId="sidebar-active-pill"
-                              transition={{ type: "spring", stiffness: 380, damping: 32, mass: 0.8 }}
+                              transition={PILL_TRANSITION}
                               className="absolute inset-0 rounded-[11px] bg-[#0F766E] shadow-[0_8px_18px_rgba(15,118,110,0.32)]"
                             />
                           )}
@@ -653,7 +671,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                           {!isActive && isHovered && (
                             <motion.div
                               layoutId="sidebar-hover-pill"
-                              transition={{ type: "spring", stiffness: 420, damping: 35 }}
+                              transition={HOVER_PILL_TRANSITION}
                               className="absolute inset-0 rounded-[11px] bg-white/55 border border-white/75"
                             />
                           )}
@@ -852,63 +870,74 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </header>
 
         {/* Mobile Drawer (When hamburger or More toggled) */}
-        {mobileMenuOpen && (
-          <div
-            onClick={() => setMobileMenuOpen(false)}
-            className="md:hidden fixed inset-0 top-14 z-30 bg-[#0b1f3a]/25 backdrop-blur-sm transition-opacity duration-200 ease-out"
-          >
-            <div
-              onClick={(e) => e.stopPropagation()}
-              className="glass-popover m-3 p-4 space-y-2 max-h-[75vh] overflow-y-auto animate-drawer-in"
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              key="mobile-drawer-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={MODAL_TRANSITION}
+              onClick={() => setMobileMenuOpen(false)}
+              className="md:hidden fixed inset-0 top-14 z-30 bg-[#0b1f3a]/25 backdrop-blur-sm"
             >
-              <div className="text-[10px] font-bold text-[#33475f] uppercase tracking-wider mb-2">
-                সকল মেনু (All Sections)
-              </div>
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = pathname === item.href;
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    prefetch={true}
-                    onClick={() => {
-                      handleNavigateStart(item.href);
-                      setMobileMenuOpen(false);
-                    }}
-                    className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-sm transition-all duration-200 ease-out active:scale-[0.98] ${
-                      isActive
-                        ? "bg-[#0F766E] text-white font-semibold shadow-sm"
-                        : "text-[#0b1f3a] hover:bg-white/60 hover:text-[#0F766E]"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <Icon className="w-4 h-4" />
-                      <span>{item.bnName} ({item.name})</span>
-                    </div>
-                  </Link>
-                );
-              })}
-
-              {user && (
-                <div className="pt-3 border-t border-white/60 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-[#0b1f3a]">
-                    লগইন: {user.full_name}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={handleSignOut}
-                    disabled={signingOut}
-                    className="text-xs text-red-600 hover:underline font-semibold flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-red-500/10 transition-all duration-200 ease-out active:scale-[0.98]"
-                  >
-                    <LogOut className="w-3.5 h-3.5" />
-                    <span>লগআউট</span>
-                  </button>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.985, y: 6 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.985, y: 6 }}
+                transition={MODAL_TRANSITION}
+                onClick={(e) => e.stopPropagation()}
+                className="glass-popover m-3 p-4 space-y-2 max-h-[75vh] overflow-y-auto"
+              >
+                <div className="text-[10px] font-bold text-[#33475f] uppercase tracking-wider mb-2">
+                  সকল মেনু (All Sections)
                 </div>
-              )}
-            </div>
-          </div>
-        )}
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = activePath === item.href;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      prefetch={true}
+                      onClick={() => {
+                        handleNavigateStart(item.href);
+                        setMobileMenuOpen(false);
+                      }}
+                      className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-sm transition-all duration-200 ease-out active:scale-[0.98] ${
+                        isActive
+                          ? "bg-[#0F766E] text-white font-semibold shadow-sm"
+                          : "text-[#0b1f3a] hover:bg-white/60 hover:text-[#0F766E]"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Icon className="w-4 h-4" />
+                        <span>{item.bnName} ({item.name})</span>
+                      </div>
+                    </Link>
+                  );
+                })}
+
+                {user && (
+                  <div className="pt-3 border-t border-white/60 flex items-center justify-between">
+                    <span className="text-xs font-semibold text-[#0b1f3a]">
+                      লগইন: {user.full_name}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleSignOut}
+                      disabled={signingOut}
+                      className="text-xs text-red-600 hover:underline font-semibold flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-red-500/10 transition-all duration-200 ease-out active:scale-[0.98]"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                      <span>লগআউট</span>
+                    </button>
+                  </div>
+                )}
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Main Content Area */}
         <main
@@ -927,7 +956,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 </div>
               </div>
 
-              {pathname !== "/admin/tasks" && pathname !== "/admin/gear" ? (
+              {activePath !== "/admin/tasks" && activePath !== "/admin/gear" ? (
                 <div className="relative ml-auto flex-1 max-w-[300px]">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-[15px] h-[15px] text-[#33475f] pointer-events-none" />
                   <input
@@ -995,10 +1024,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   {profileMenuOpen && (
                     <motion.div
                       key="topbar-profile-menu-motion"
-                      initial={{ opacity: 0, scale: 0.95, y: -6 }}
+                      initial={{ opacity: 0, scale: 0.985, y: -4 }}
                       animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.95, y: -6 }}
-                      transition={{ duration: 0.18, ease: "easeOut" }}
+                      exit={{ opacity: 0, scale: 0.985, y: -4 }}
+                      transition={MODAL_TRANSITION}
                       id="topbar-profile-menu"
                       role="menu"
                       aria-labelledby="topbar-profile-trigger"
@@ -1064,9 +1093,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           )}
           <motion.div
             key={pathname}
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            transition={PAGE_TRANSITION}
             className="w-full min-w-0 space-y-4"
           >
             {children}
@@ -1082,7 +1111,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <LayoutGroup id="assdi-mobile-nav">
             {mobileNav.map((item) => {
               const Icon = item.icon;
-              const isActive = pathname === item.href;
+              const isActive = activePath === item.href;
               if (item.href === "#more") {
                 return (
                   <button
@@ -1119,7 +1148,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     {isActive && (
                       <motion.div
                         layoutId="mobile-nav-active-pill"
-                        transition={{ type: "spring", stiffness: 380, damping: 32, mass: 0.8 }}
+                        transition={PILL_TRANSITION}
                         className="absolute inset-0 rounded-full bg-[#0f766e]/15 border border-[#0f766e]/20"
                       />
                     )}

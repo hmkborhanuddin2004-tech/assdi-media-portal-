@@ -11,6 +11,8 @@ import {
   Search,
   Filter,
 } from "lucide-react";
+import { motion } from "framer-motion";
+import { MODAL_TRANSITION } from "@/lib/motion";
 import { ROLE_LABELS, type UserRole } from "@/lib/types/auth";
 
 interface UserItem {
@@ -478,7 +480,12 @@ export default function AdminUsersPage() {
       {/* Add User Modal Dialog */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-900/50 backdrop-blur-xs">
-          <div className="bg-white rounded-2xl p-5 sm:p-6 w-full max-w-lg border border-slate-200 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.985 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={MODAL_TRANSITION}
+            className="bg-white rounded-2xl p-5 sm:p-6 w-full max-w-lg border border-slate-200 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto"
+          >
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
                 <UserPlus className="w-5 h-5 text-[#0F766E]" />
@@ -645,7 +652,7 @@ export default function AdminUsersPage() {
                 </button>
               </div>
             </form>
-          </div>
+          </motion.div>
         </div>
       )}
     </div>

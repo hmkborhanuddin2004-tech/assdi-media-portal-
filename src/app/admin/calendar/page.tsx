@@ -23,6 +23,7 @@ import { CALENDAR_WINDOW_LABELS } from "@/lib/validations/calendar";
 import type { CalendarShootItem } from "@/lib/calendar/store";
 import { ShootAssignmentSlipModal } from "@/components/tasks/ShootAssignmentSlipModal";
 import { motion, LayoutGroup } from "framer-motion";
+import { PILL_TRANSITION } from "@/lib/motion";
 
 export default function AdminMasterCalendarPage() {
   const [activeWindow, setActiveWindow] = useState<CalendarWindow>("tomorrow");
@@ -146,7 +147,7 @@ export default function AdminMasterCalendarPage() {
                   {isActive && (
                     <motion.div
                       layoutId="calendar-tab-active-pill"
-                      transition={{ type: "spring", stiffness: 380, damping: 32, mass: 0.8 }}
+                      transition={PILL_TRANSITION}
                       className="absolute inset-0 rounded-[10px] bg-[#0F766E] shadow-[0_5px_12px_rgba(15,118,110,0.3)]"
                     />
                   )}

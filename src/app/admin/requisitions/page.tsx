@@ -10,6 +10,8 @@ import {
   Search,
   FileText,
 } from "lucide-react";
+import { motion } from "framer-motion";
+import { MODAL_TRANSITION } from "@/lib/motion";
 import type { RequisitionItem } from "@/lib/requisitions/store";
 import type { ProgramType, FramingType } from "@/lib/types/database";
 import {
@@ -557,7 +559,12 @@ export default function AdminRequisitionsPage() {
       {/* Emergency Requisition Modal */}
       {showEmergencyModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl border border-slate-200 p-5 sm:p-6 space-y-4 my-8 animate-fadeIn">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.985 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={MODAL_TRANSITION}
+            className="w-full max-w-lg bg-white rounded-2xl shadow-xl border border-slate-200 p-5 sm:p-6 space-y-4 my-8"
+          >
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
                 <ShieldAlert className="w-5 h-5 text-amber-600" />
@@ -753,7 +760,7 @@ export default function AdminRequisitionsPage() {
                 </button>
               </div>
             </form>
-          </div>
+          </motion.div>
         </div>
       )}
 

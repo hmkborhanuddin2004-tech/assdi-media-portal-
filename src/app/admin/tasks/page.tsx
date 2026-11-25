@@ -15,6 +15,8 @@ import {
   Loader2,
   X,
 } from "lucide-react";
+import { motion } from "framer-motion";
+import { SILKY_EASE, MODAL_TRANSITION, CARD_STAGGER_DELAY } from "@/lib/motion";
 import type { TaskStage } from "@/lib/types/database";
 import type { EnrichedTask, ShootSlipData } from "@/lib/tasks/store";
 import { TASK_STAGES, GOOGLE_DRIVE_URL_REGEX } from "@/lib/validations/tasks";
@@ -290,7 +292,7 @@ export default function AdminTasksKanbanPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5 items-start overflow-x-auto pb-4">
-          {TASK_STAGES.map((stageKey) => {
+          {TASK_STAGES.map((stageKey, stageIdx) => {
             // Mobile filtering visibility check
             if (selectedMobileStage !== "all" && selectedMobileStage !== stageKey) {
               return null;
@@ -300,9 +302,12 @@ export default function AdminTasksKanbanPage() {
             const columnTasks = filteredTasks.filter((t) => t.stage === stageKey);
 
             return (
-              <div
+              <motion.div
                 key={stageKey}
                 id={`kanban-column-${stageKey}`}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, delay: stageIdx * CARD_STAGGER_DELAY, ease: SILKY_EASE }}
                 className="bg-slate-50/70 border border-slate-200/70 rounded-2xl p-3 flex flex-col min-h-[480px] shadow-2xs"
               >
                 {/* Column Top Accent & Header matching mockup */}
@@ -488,7 +493,7 @@ export default function AdminTasksKanbanPage() {
                     })
                   )}
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
@@ -502,7 +507,12 @@ export default function AdminTasksKanbanPage() {
             if (e.target === e.currentTarget) setCompletingTaskId(null);
           }}
         >
-          <div className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-200 p-5 space-y-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.985 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={MODAL_TRANSITION}
+            className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-200 p-5 space-y-4"
+          >
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
                 <Video className="w-4 h-4 text-[#0F766E]" />
@@ -572,7 +582,7 @@ export default function AdminTasksKanbanPage() {
                 টাস্ক সম্পন্ন করুন
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 

@@ -24,6 +24,9 @@ import type { RequisitionItem } from "@/lib/requisitions/store";
 import type { DashboardKpiData, CalendarShootItem } from "@/lib/calendar/store";
 import { ApproveAndAssignModal } from "@/components/tasks/ApproveAndAssignModal";
 import { ShootAssignmentSlipModal } from "@/components/tasks/ShootAssignmentSlipModal";
+import { motion } from "framer-motion";
+import { SILKY_EASE, MODAL_TRANSITION, CARD_STAGGER_DELAY } from "@/lib/motion";
+import { FrostedPageSkeleton } from "@/components/shell/FrostedSkeleton";
 import type { EnrichedTask, ShootSlipData } from "@/lib/tasks/store";
 
 export default function AdminDashboardPage() {
@@ -118,14 +121,7 @@ export default function AdminDashboardPage() {
   };
 
   if (loading && !data) {
-    return (
-      <div className="flex flex-col items-center justify-center p-16 space-y-3">
-        <Loader2 className="w-8 h-8 animate-spin text-[#0F766E]" />
-        <p className="text-xs text-slate-500 font-medium">
-          লাইভ ড্যাশবোর্ড ডাটা লোড হচ্ছে...
-        </p>
-      </div>
-    );
+    return <FrostedPageSkeleton />;
   }
 
   const kpis = data?.gear_kpi || { total: 0, available: 0, in_use: 0, maintenance: 0 };
@@ -193,11 +189,16 @@ export default function AdminDashboardPage() {
       {/* 2. Top 3 Live KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
         {/* KPI 1: Pending Requisitions */}
-        <Link
-          href="/admin/requisitions"
-          id="kpi-card-pending-requisitions"
-          className="glass-panel p-4 sm:p-5 flex flex-col justify-between group"
+        <motion.div
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, delay: 0, ease: SILKY_EASE }}
         >
+          <Link
+            href="/admin/requisitions"
+            id="kpi-card-pending-requisitions"
+            className="glass-panel p-4 sm:p-5 flex flex-col justify-between group h-full"
+          >
           <div className="flex items-center justify-between mb-3">
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#33475f]">
               পেন্ডিং রিকুইজিশন • Pending
@@ -228,14 +229,20 @@ export default function AdminDashboardPage() {
               অনুমোদনের অপেক্ষায় থাকা কোর্স শুট রিকুইজিশন
             </p>
           </div>
-        </Link>
+          </Link>
+        </motion.div>
 
         {/* KPI 2: Active Tasks */}
-        <Link
-          href="/admin/tasks"
-          id="kpi-card-active-tasks"
-          className="glass-panel p-4 sm:p-5 flex flex-col justify-between group"
+        <motion.div
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, delay: CARD_STAGGER_DELAY, ease: SILKY_EASE }}
         >
+          <Link
+            href="/admin/tasks"
+            id="kpi-card-active-tasks"
+            className="glass-panel p-4 sm:p-5 flex flex-col justify-between group h-full"
+          >
           <div className="flex items-center justify-between mb-3">
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#33475f]">
               সক্রিয় টাস্ক • Active Tasks
@@ -266,14 +273,21 @@ export default function AdminDashboardPage() {
               মাঠে শুটিং, ফুটেজ আপলোড ও ভিডিও এডিটিং চলমান
             </p>
           </div>
-        </Link>
+          </Link>
+        </motion.div>
 
         {/* KPI 3: Gear Status (In Use / Maint.) */}
-        <Link
-          href="/admin/gear"
-          id="kpi-card-gear-status"
-          className="glass-panel p-4 sm:p-5 flex flex-col justify-between group sm:col-span-2 lg:col-span-1"
+        <motion.div
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, delay: CARD_STAGGER_DELAY * 2, ease: SILKY_EASE }}
+          className="sm:col-span-2 lg:col-span-1"
         >
+          <Link
+            href="/admin/gear"
+            id="kpi-card-gear-status"
+            className="glass-panel p-4 sm:p-5 flex flex-col justify-between group h-full"
+          >
           <div className="flex items-center justify-between mb-3">
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#33475f]">
               গিয়ার স্ট্যাটাস • Gear Status
@@ -308,7 +322,8 @@ export default function AdminDashboardPage() {
               {kpis.available}টি ব্যবহারযোগ্য (মোট {kpis.total}টি ক্যামেরা ও গিয়ার)
             </p>
           </div>
-        </Link>
+          </Link>
+        </motion.div>
       </div>
 
       {/* 3. Main Dashboard Layout (Left: 8 cols, Right: 4 cols) */}
@@ -766,7 +781,10 @@ export default function AdminDashboardPage() {
             if (e.target === e.currentTarget) setRejectingReq(null);
           }}
         >
-          <div
+          <motion.div
+            initial={{ opacity: 0, scale: 0.985 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={MODAL_TRANSITION}
             className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-200 p-6 space-y-4"
             id="dashboard-reject-modal"
           >
@@ -847,7 +865,7 @@ export default function AdminDashboardPage() {
                 </button>
               </div>
             </form>
-          </div>
+          </motion.div>
         </div>
       )}
     </div>

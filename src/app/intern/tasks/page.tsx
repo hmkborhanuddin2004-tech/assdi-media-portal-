@@ -49,31 +49,31 @@ export default function InternTasksPage() {
   return (
     <div className="space-y-4 w-full max-w-xl mx-auto pb-8">
       {/* Top Banner */}
-      <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-emerald-600/20 bg-white/90 shadow-2xs space-y-1">
+      <div className="glass-panel p-4 sm:p-5 space-y-1">
         <div className="flex items-center justify-between">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-700 text-xs font-semibold">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#0f766e]/15 text-[#0b5a54] text-xs font-semibold">
             <Kanban className="w-3.5 h-3.5" />
             <span>ইন্টার্ন টাস্ক ও অ্যাসাইনমেন্ট</span>
           </div>
-          <span className="text-[11px] font-bold text-slate-500">
+          <span className="text-[11px] font-bold text-[#33475f]">
             {currentUser?.full_name || "Intern"}
           </span>
         </div>
-        <h1 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+        <h1 className="text-lg sm:text-xl font-extrabold text-[#0b1f3a] tracking-tight">
           Assigned Tasks &amp; Project Status
         </h1>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-[#33475f] font-medium">
           আপনার অংশগ্রহণে চলমান ও সম্পন্ন প্রজেক্টের তালিকা এবং স্ট্যাটাস।
         </p>
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-xs text-slate-400 glass-panel rounded-2xl bg-white">
+        <div className="p-12 text-center text-xs text-[#33475f] font-medium glass-panel">
           <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#0F766E]" />
           <span>টাস্ক লোড হচ্ছে...</span>
         </div>
       ) : tasks.length === 0 ? (
-        <div className="p-8 text-center text-xs text-slate-400 bg-white rounded-2xl border border-slate-200/80">
+        <div className="p-8 text-center text-xs text-[#33475f] font-medium glass-panel">
           কোনো নির্ধারিত টাস্ক পাওয়া যায়নি।
         </div>
       ) : (
@@ -85,14 +85,14 @@ export default function InternTasksPage() {
             return (
               <div
                 key={task.id}
-                className="glass-panel p-4 rounded-2xl border border-slate-200/80 bg-white shadow-2xs space-y-2.5"
+                className="glass-panel p-4 space-y-2.5"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="space-y-0.5">
-                    <span className="text-[11px] font-bold text-slate-400 block">
+                    <span className="text-[11px] font-bold text-[#33475f] block">
                       {task.course_code}
                     </span>
-                    <h2 className="text-sm font-bold text-slate-900 leading-tight">
+                    <h2 className="text-sm font-bold text-[#0b1f3a] leading-tight">
                       {task.course_name}
                     </h2>
                   </div>

@@ -212,11 +212,11 @@ export default function CoordinatorNewRequisitionPage() {
     (user?.course_name ? { name: user.course_name, code: user.course_code || "" } : null);
 
   return (
-    <div className="space-y-6 w-full max-w-full pb-10">
+    <div className="space-y-4 w-full max-w-full pb-10">
       {/* Top Banner Matching Institutional Theme */}
-      <div className="glass-panel rounded-2xl p-5 md:p-6 border border-emerald-600/20 bg-white/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="glass-panel p-5 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#0F766E] text-xs font-semibold">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#0f766e]/15 text-[#0b5a54] text-xs font-semibold">
             <Film className="w-3.5 h-3.5" />
             <span>
               {user?.role === "admin"
@@ -224,10 +224,10 @@ export default function CoordinatorNewRequisitionPage() {
                 : `কোর্স কোঅর্ডিনেটর পোর্টাল • ${assignedCourse?.name || "কোর্স"}`}
             </span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-[#0b1f3a] tracking-tight">
             Course Requisition Portal
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs sm:text-[13px] text-[#33475f] font-medium">
             নতুন ভিডিও শুটিং ও মিডিয়া কাভারেজের জন্য রিকুইজিশন ফর্ম পূরণ করুন।
           </p>
         </div>
@@ -235,27 +235,27 @@ export default function CoordinatorNewRequisitionPage() {
         <Link
           href="/coordinator/requests"
           id="view-my-requests-link"
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-semibold shadow-xs transition-all duration-150 shrink-0"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[11px] border border-white/80 bg-white/55 hover:bg-white/80 text-[#0b1f3a] text-xs sm:text-sm font-semibold shadow-xs transition-all duration-150 shrink-0"
         >
           <span>My Requests</span>
-          <ChevronRight className="w-4 h-4 text-slate-400" />
+          <ChevronRight className="w-4 h-4 text-[#33475f]" />
         </Link>
       </div>
 
       {/* Main 2-Column Responsive Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         {/* Left Column: Requisition Form (Mockup matching) */}
-        <div className="lg:col-span-7 glass-panel rounded-2xl p-5 sm:p-7 border border-white/80 shadow-sm bg-white/85 space-y-6">
-          <div className="border-b border-slate-100 pb-4 flex items-center justify-between">
+        <div className="lg:col-span-7 glass-panel p-5 sm:p-7 space-y-6">
+          <div className="border-b border-white/60 pb-4 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-[#0F766E] flex items-center justify-center font-bold">
+              <div className="w-9 h-9 rounded-xl bg-[#0f766e]/15 text-[#0F766E] flex items-center justify-center font-bold">
                 <FilePlus2 className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-base sm:text-lg font-bold text-slate-900">
+                <h2 className="text-base sm:text-lg font-bold text-[#0b1f3a]">
                   New Shoot Requisition Form
                 </h2>
-                <p className="text-[11px] text-slate-500">
+                <p className="text-[11.5px] text-[#33475f] font-medium">
                   সঠিক তথ্য প্রদান করে শুটিংয়ের জন্য অগ্রিম শিডিউল নিশ্চিত করুন।
                 </p>
               </div>
@@ -655,12 +655,12 @@ export default function CoordinatorNewRequisitionPage() {
 
         {/* Right Column: Live Course Requests (Mockup matching) */}
         <div className="lg:col-span-5 space-y-4">
-          <div className="glass-panel rounded-2xl p-5 border border-white/80 shadow-sm bg-white/85 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-sm sm:text-base font-bold text-slate-900">
+          <div className="glass-panel p-5 space-y-4">
+            <div className="flex items-center justify-between border-b border-white/60 pb-3">
+              <h3 className="text-[15.5px] font-bold text-[#0b1f3a]">
                 My Course Requests
               </h3>
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#0F766E] text-[11px] font-semibold">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#0f766e]/15 text-[#0b5a54] text-[11px] font-bold">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E] animate-pulse"></span>
                 <span>Live Status</span>
               </span>
@@ -669,7 +669,7 @@ export default function CoordinatorNewRequisitionPage() {
             {/* List of Requisition Cards */}
             <div className="space-y-3" id="course-requests-list">
               {existingRequests.length === 0 ? (
-                <div className="text-center py-8 text-xs text-slate-400">
+                <div className="text-center py-8 text-xs text-[#33475f] font-medium">
                   এখনো কোনো রিকুইজিশন জমা দেওয়া হয়নি।
                 </div>
               ) : (
@@ -677,7 +677,7 @@ export default function CoordinatorNewRequisitionPage() {
                   return (
                     <div
                       key={req.id}
-                      className="p-3.5 rounded-xl border border-slate-200/80 bg-white/70 shadow-xs space-y-2 hover:border-[#0F766E]/30 transition-all"
+                      className="p-3.5 rounded-[13px] border border-white/70 bg-white/40 space-y-2 hover:bg-white/60 transition-all"
                     >
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-xs font-bold text-slate-800 line-clamp-1">

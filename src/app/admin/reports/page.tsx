@@ -91,10 +91,10 @@ export default function AdminReportsPage() {
   );
 
   return (
-    <div className="space-y-6 w-full max-w-full">
-      {/* Page Title & Filter Header matching mockup reports-users.jpg */}
-      <div className="space-y-4">
-        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+    <div className="space-y-4 w-full max-w-full">
+      {/* Page Title & Filter Header matching design-reference */}
+      <div className="glass-panel p-4 sm:p-5 space-y-3.5">
+        <h1 className="text-xl sm:text-2xl font-extrabold text-[#0b1f3a] tracking-tight">
           Work History &amp; Analytics Reports
         </h1>
 
@@ -106,7 +106,7 @@ export default function AdminReportsPage() {
               id="report-name-filter"
               value={selectedMember}
               onChange={(e) => setSelectedMember(e.target.value)}
-              className="w-full text-xs sm:text-sm font-semibold text-slate-700 py-2.5 px-3.5 rounded-xl border border-slate-200/80 bg-white/90 shadow-2xs focus:ring-2 focus:ring-[#0F766E] focus:outline-none cursor-pointer"
+              className="w-full text-xs sm:text-sm font-semibold text-[#0b1f3a] py-2 px-3.5 rounded-[11px] border border-white/80 bg-white/55 focus:bg-white/75 focus:ring-2 focus:ring-[#0F766E]/25 focus:outline-none cursor-pointer"
             >
               <option value="all">Name: All Members</option>
               {teamMembers.map((m) => (
@@ -123,7 +123,7 @@ export default function AdminReportsPage() {
               id="report-role-filter"
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
-              className="w-full text-xs sm:text-sm font-semibold text-slate-700 py-2.5 px-3.5 rounded-xl border border-slate-200/80 bg-white/90 shadow-2xs focus:ring-2 focus:ring-[#0F766E] focus:outline-none cursor-pointer"
+              className="w-full text-xs sm:text-sm font-semibold text-[#0b1f3a] py-2 px-3.5 rounded-[11px] border border-white/80 bg-white/55 focus:bg-white/75 focus:ring-2 focus:ring-[#0F766E]/25 focus:outline-none cursor-pointer"
             >
               <option value="all">Role: Staff / Intern</option>
               <option value="staff">Staff Only</option>
@@ -137,7 +137,7 @@ export default function AdminReportsPage() {
               id="report-period-filter"
               value={selectedPeriod}
               onChange={(e) => setSelectedPeriod(e.target.value)}
-              className="w-full text-xs sm:text-sm font-semibold text-slate-700 py-2.5 px-3.5 rounded-xl border border-slate-200/80 bg-white/90 shadow-2xs focus:ring-2 focus:ring-[#0F766E] focus:outline-none cursor-pointer"
+              className="w-full text-xs sm:text-sm font-semibold text-[#0b1f3a] py-2 px-3.5 rounded-[11px] border border-white/80 bg-white/55 focus:bg-white/75 focus:ring-2 focus:ring-[#0F766E]/25 focus:outline-none cursor-pointer"
             >
               <option value="monthly">Period: Monthly (Nov 2026)</option>
               <option value="weekly">Period: Weekly</option>
@@ -152,7 +152,7 @@ export default function AdminReportsPage() {
             id="report-export-csv-btn"
             onClick={handleExportCsv}
             disabled={exporting || loading}
-            className="ml-auto inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0F766E] hover:bg-[#115E59] text-white text-xs sm:text-sm font-bold shadow-xs transition-all duration-150 cursor-pointer disabled:opacity-50"
+            className="ml-auto inline-flex items-center gap-2 px-4 py-2 rounded-[11px] bg-[#0F766E] hover:bg-[#0b5a54] text-white text-xs sm:text-sm font-bold shadow-[0_6px_14px_rgba(15,118,110,0.3)] transition-all duration-150 cursor-pointer disabled:opacity-50"
           >
             {exporting ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -165,7 +165,7 @@ export default function AdminReportsPage() {
       </div>
 
       {loading ? (
-        <div className="p-16 text-center text-xs text-slate-400 glass-panel rounded-2xl bg-white">
+        <div className="p-16 text-center text-xs text-[#33475f] font-medium glass-panel">
           <Loader2 className="w-8 h-8 animate-spin mx-auto mb-3 text-[#0F766E]" />
           <span>অ্যানালিটিক্স ডাটা গণনা করা হচ্ছে...</span>
         </div>
@@ -174,39 +174,39 @@ export default function AdminReportsPage() {
           {/* Top 3 KPI Cards matching mockup */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4" id="report-kpi-cards">
             {/* Card 1: Completed Projects */}
-            <div className="glass-panel p-5 rounded-2xl border border-slate-200/80 bg-white/90 shadow-2xs space-y-1">
-              <span className="text-xs font-bold text-slate-600 block">
+            <div className="glass-panel p-5 space-y-1">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#33475f] block">
                 Completed Projects
               </span>
               <div
                 id="kpi-completed-projects"
-                className="text-3xl font-black text-slate-900 tracking-tight"
+                className="text-3xl font-extrabold text-[#0b1f3a] tracking-tight"
               >
                 {report.completed_projects_count}
               </div>
             </div>
 
             {/* Card 2: Total Field & Editing Hours */}
-            <div className="glass-panel p-5 rounded-2xl border border-slate-200/80 bg-white/90 shadow-2xs space-y-1">
-              <span className="text-xs font-bold text-slate-600 block">
+            <div className="glass-panel p-5 space-y-1">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#33475f] block">
                 Total Field &amp; Editing Hours
               </span>
               <div
                 id="kpi-total-hours"
-                className="text-3xl font-black text-slate-900 tracking-tight"
+                className="text-3xl font-extrabold text-[#0b1f3a] tracking-tight"
               >
-                {report.total_field_and_edit_hours} <span className="text-lg font-bold">hrs</span>
+                {report.total_field_and_edit_hours} <span className="text-lg font-bold text-[#33475f]">hrs</span>
               </div>
             </div>
 
             {/* Card 3: On-Time Deadlines */}
-            <div className="glass-panel p-5 rounded-2xl border border-slate-200/80 bg-white/90 shadow-2xs space-y-1">
-              <span className="text-xs font-bold text-slate-600 block">
+            <div className="glass-panel p-5 space-y-1">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#33475f] block">
                 On-Time Deadlines
               </span>
               <div
                 id="kpi-on-time-deadlines"
-                className="text-3xl font-black text-slate-900 tracking-tight"
+                className="text-3xl font-extrabold text-[#0b1f3a] tracking-tight"
               >
                 {report.on_time_deadlines_pct}%
               </div>
@@ -214,39 +214,39 @@ export default function AdminReportsPage() {
           </div>
 
           {/* Main 2-Column Content Layout matching mockup */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
             {/* Left 8 Cols: Team Performance Report Table & SVG Velocity Chart */}
-            <div className="lg:col-span-8 glass-panel p-5 rounded-2xl border border-slate-200/80 bg-white shadow-2xs space-y-5">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h2 className="text-base font-bold text-slate-900">
+            <div className="lg:col-span-8 glass-panel p-5 space-y-5">
+              <div className="flex items-center justify-between border-b border-white/60 pb-3">
+                <h2 className="text-[15.5px] font-bold text-[#0b1f3a]">
                   Team Performance Report
                 </h2>
-                <span className="text-xs font-medium text-slate-400">
+                <span className="text-xs font-semibold text-[#33475f]">
                   {report.period_label}
                 </span>
               </div>
 
               {/* Monthly Velocity & Workload Distribution SVG Chart */}
-              <div className="p-4 rounded-xl bg-slate-50/70 border border-slate-200/60 space-y-2">
-                <div className="flex items-center justify-between text-xs font-bold text-slate-800">
+              <div className="p-4 rounded-[14px] bg-white/35 border border-white/65 space-y-2">
+                <div className="flex items-center justify-between text-xs font-bold text-[#0b1f3a]">
                   <span>Weekly Output &amp; Completion Velocity</span>
-                  <span className="text-[11px] text-[#0F766E] font-semibold">100% Target Met</span>
+                  <span className="text-[11px] text-[#0F766E] font-bold">100% Target Met</span>
                 </div>
                 <div className="h-24 w-full flex items-end gap-3 pt-3 px-2">
                   <div className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                    <span className="text-[10px] font-bold text-slate-500">42h</span>
-                    <div className="w-full bg-[#0F766E]/20 hover:bg-[#0F766E]/30 rounded-t-md h-3/5 transition-all" />
-                    <span className="text-[10px] text-slate-400">W1</span>
+                    <span className="text-[10px] font-bold text-[#33475f]">42h</span>
+                    <div className="w-full bg-[#0F766E]/25 hover:bg-[#0F766E]/35 rounded-t-md h-3/5 transition-all" />
+                    <span className="text-[10px] font-semibold text-[#33475f]">W1</span>
                   </div>
                   <div className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                    <span className="text-[10px] font-bold text-slate-500">58h</span>
-                    <div className="w-full bg-[#0F766E]/40 hover:bg-[#0F766E]/50 rounded-t-md h-4/5 transition-all" />
-                    <span className="text-[10px] text-slate-400">W2</span>
+                    <span className="text-[10px] font-bold text-[#33475f]">58h</span>
+                    <div className="w-full bg-[#0F766E]/45 hover:bg-[#0F766E]/55 rounded-t-md h-4/5 transition-all" />
+                    <span className="text-[10px] font-semibold text-[#33475f]">W2</span>
                   </div>
                   <div className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
-                    <span className="text-[10px] font-bold text-slate-500">65h</span>
+                    <span className="text-[10px] font-bold text-[#33475f]">65h</span>
                     <div className="w-full bg-[#0F766E]/70 hover:bg-[#0F766E]/80 rounded-t-md h-5/6 transition-all" />
-                    <span className="text-[10px] text-slate-400">W3</span>
+                    <span className="text-[10px] font-semibold text-[#33475f]">W3</span>
                   </div>
                   <div className="flex-1 flex flex-col items-center gap-1 h-full justify-end">
                     <span className="text-[10px] font-bold text-[#0F766E]">74h</span>
@@ -257,8 +257,8 @@ export default function AdminReportsPage() {
               </div>
 
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs" id="team-performance-table">
-                  <thead className="bg-slate-50 text-slate-600 font-bold border-b border-slate-200/60">
+                <table className="w-full text-left text-[12.5px]" id="team-performance-table">
+                  <thead className="bg-white/30 text-[#33475f] text-[10px] font-bold uppercase tracking-[0.13em] border-b border-white/70">
                     <tr>
                       <th className="py-3 px-3">Member</th>
                       <th className="py-3 px-3">Role</th>
@@ -268,38 +268,38 @@ export default function AdminReportsPage() {
                       <th className="py-3 px-3 text-right">Deadline</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-white/45">
                     {report.team_performance.map((m) => (
                       <tr
                         key={m.member_id}
-                        className="hover:bg-slate-50/70 transition-colors"
+                        className="hover:bg-white/30 transition-colors"
                       >
-                        <td className="py-3 px-3 font-bold text-slate-800 whitespace-nowrap">
+                        <td className="py-3 px-3 font-bold text-[#0b1f3a] whitespace-nowrap">
                           <div className="flex items-center gap-2.5">
-                            <div className="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs shrink-0">
+                            <div className="w-8 h-8 rounded-full bg-white/60 border border-white/80 text-[#0b1f3a] flex items-center justify-center font-bold text-xs shrink-0">
                               {m.full_name.charAt(0)}
                             </div>
                             <span>{m.full_name}</span>
                           </div>
                         </td>
-                        <td className="py-3 px-3 text-slate-600 whitespace-nowrap capitalize">
+                        <td className="py-3 px-3 text-[#33475f] font-medium whitespace-nowrap capitalize">
                           {m.role === "staff" ? "Staff" : "Intern"}
                         </td>
-                        <td className="py-3 px-3 text-center font-bold text-slate-900">
+                        <td className="py-3 px-3 text-center font-bold text-[#0b1f3a]">
                           {m.projects_count}
                         </td>
-                        <td className="py-3 px-3 text-center text-slate-700 whitespace-nowrap font-medium">
+                        <td className="py-3 px-3 text-center text-[#0b1f3a] whitespace-nowrap font-semibold">
                           {m.field_hours}h
                         </td>
-                        <td className="py-3 px-3 text-center text-slate-700 whitespace-nowrap font-medium">
+                        <td className="py-3 px-3 text-center text-[#0b1f3a] whitespace-nowrap font-semibold">
                           {m.edit_hours}h
                         </td>
-                        <td className="py-3 px-3 text-right font-bold text-slate-900 whitespace-nowrap">
+                        <td className="py-3 px-3 text-right font-bold whitespace-nowrap">
                           <span
                             className={
                               m.deadline_pct >= 90
-                                ? "text-emerald-700"
-                                : "text-amber-700"
+                                ? "text-[#15803d]"
+                                : "text-[#b45309]"
                             }
                           >
                             {m.deadline_pct}%
@@ -313,28 +313,28 @@ export default function AdminReportsPage() {
             </div>
 
             {/* Right 4 Cols: User Management Box matching mockup */}
-            <div className="lg:col-span-4 glass-panel p-5 rounded-2xl border border-slate-200/80 bg-white shadow-2xs space-y-4">
-              <div className="space-y-0.5 border-b border-slate-100 pb-3">
-                <h3 className="text-base font-bold text-slate-900">
+            <div className="lg:col-span-4 glass-panel p-5 space-y-4">
+              <div className="space-y-0.5 border-b border-white/60 pb-3">
+                <h3 className="text-[15.5px] font-bold text-[#0b1f3a]">
                   User Management
                 </h3>
-                <span className="text-xs text-slate-400 block font-mono">
+                <span className="text-xs text-[#33475f] font-medium block font-mono">
                   (/admin/users)
                 </span>
               </div>
 
               {/* Neutral Role Pills from mockup */}
               <div className="flex flex-wrap gap-2">
-                <span className="px-3 py-1 rounded-full bg-emerald-100/80 text-emerald-900 text-xs font-semibold">
+                <span className="px-3 py-1 rounded-full bg-[#0f766e]/15 text-[#0b5a54] border border-[#0f766e]/25 text-xs font-semibold">
                   Media Head
                 </span>
-                <span className="px-3 py-1 rounded-full bg-teal-100/80 text-teal-900 text-xs font-semibold">
+                <span className="px-3 py-1 rounded-full bg-teal-500/12 text-[#0f766e] border border-teal-500/20 text-xs font-semibold">
                   Coordinator
                 </span>
-                <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-800 text-xs font-semibold">
+                <span className="px-3 py-1 rounded-full bg-slate-700/10 text-[#0b1f3a] border border-slate-500/20 text-xs font-semibold">
                   Staff
                 </span>
-                <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-semibold">
+                <span className="px-3 py-1 rounded-full bg-slate-500/10 text-[#33475f] border border-slate-400/25 text-xs font-semibold">
                   Intern
                 </span>
               </div>
@@ -343,7 +343,7 @@ export default function AdminReportsPage() {
                 <Link
                   href="/admin/users"
                   id="admin-add-user-btn"
-                  className="w-full py-2.5 px-4 rounded-xl bg-[#0F766E] hover:bg-[#115E59] text-white text-xs font-bold shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
+                  className="w-full py-2.5 px-4 rounded-xl bg-[#0F766E] hover:bg-[#0b5a54] text-white text-xs font-bold shadow-[0_6px_14px_rgba(15,118,110,0.3)] flex items-center justify-center gap-2 transition-all cursor-pointer"
                 >
                   <UserPlus className="w-4 h-4" />
                   <span>+ Add User &amp; Assign Role</span>
@@ -353,7 +353,7 @@ export default function AdminReportsPage() {
           </div>
         </>
       ) : (
-        <div className="p-12 text-center text-xs text-slate-400 glass-panel rounded-2xl bg-white border border-slate-200/80">
+        <div className="p-12 text-center text-xs text-[#33475f] font-medium glass-panel">
           রিপোর্ট ডাটা লোড করতে ব্যর্থ হয়েছে।
         </div>
       )}

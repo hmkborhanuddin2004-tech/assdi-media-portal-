@@ -236,18 +236,18 @@ export default function AdminRequisitionsPage() {
   const countRejected = requisitions.filter((r) => r.status === "rejected").length;
 
   return (
-    <div className="space-y-6 w-full max-w-full pb-10">
+    <div className="space-y-4 w-full max-w-full pb-10">
       {/* Top Banner Matching Dashboard Mockup */}
-      <div className="glass-panel rounded-2xl p-5 md:p-6 border border-emerald-600/20 bg-white/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="glass-panel p-5 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#0F766E] text-xs font-semibold">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#0f766e]/15 text-[#0b5a54] text-xs font-semibold">
             <FileCheck2 className="w-3.5 h-3.5" />
             <span>মিডিয়া হেড প্রশাসন • কিউ ম্যানেজমেন্ট</span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-[#0b1f3a] tracking-tight">
             Course Requisitions (Approval Queue)
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs sm:text-[13px] text-[#33475f] font-medium">
             সকল কোর্সের ভিডিও শুটিং রিকুইজিশন পর্যালোচনা, অনুমোদন এবং ইমার্জেন্সি ওভাররাইড কিউ।
           </p>
         </div>
@@ -265,78 +265,78 @@ export default function AdminRequisitionsPage() {
       </div>
 
       {/* Stats Summary */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="glass-panel p-4 rounded-xl border border-slate-200/80 bg-white/80">
-          <span className="text-[11px] font-semibold text-slate-500 block">মোট রিকুইজিশন</span>
-          <span className="text-xl sm:text-2xl font-bold text-slate-900">{requisitions.length}</span>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+        <div className="glass-panel p-4">
+          <span className="text-[11px] font-bold text-[#33475f] uppercase tracking-wider block">মোট রিকুইজিশন</span>
+          <span className="text-xl sm:text-2xl font-extrabold text-[#0b1f3a] mt-0.5 block">{requisitions.length}</span>
         </div>
-        <div className="glass-panel p-4 rounded-xl border border-amber-200 bg-amber-50/50">
-          <span className="text-[11px] font-semibold text-amber-700 block">অনুমোদনের অপেক্ষায় (Pending)</span>
-          <span className="text-xl sm:text-2xl font-bold text-amber-900">{countPending}</span>
+        <div className="glass-panel p-4">
+          <span className="text-[11px] font-bold text-[#b45309] uppercase tracking-wider block">অনুমোদনের অপেক্ষায় (Pending)</span>
+          <span className="text-xl sm:text-2xl font-extrabold text-[#b45309] mt-0.5 block">{countPending}</span>
         </div>
-        <div className="glass-panel p-4 rounded-xl border border-emerald-200 bg-emerald-50/50">
-          <span className="text-[11px] font-semibold text-emerald-700 block">অনুমোদিত (Approved)</span>
-          <span className="text-xl sm:text-2xl font-bold text-emerald-900">{countApproved}</span>
+        <div className="glass-panel p-4">
+          <span className="text-[11px] font-bold text-[#15803d] uppercase tracking-wider block">অনুমোদিত (Approved)</span>
+          <span className="text-xl sm:text-2xl font-extrabold text-[#15803d] mt-0.5 block">{countApproved}</span>
         </div>
-        <div className="glass-panel p-4 rounded-xl border border-rose-200 bg-rose-50/50">
-          <span className="text-[11px] font-semibold text-rose-700 block">বাতিলকৃত (Rejected)</span>
-          <span className="text-xl sm:text-2xl font-bold text-rose-900">{countRejected}</span>
+        <div className="glass-panel p-4">
+          <span className="text-[11px] font-bold text-[#dc2626] uppercase tracking-wider block">বাতিলকৃত (Rejected)</span>
+          <span className="text-xl sm:text-2xl font-extrabold text-[#dc2626] mt-0.5 block">{countRejected}</span>
         </div>
       </div>
 
       {/* Error alert */}
       {actionError && (
-        <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center justify-between gap-2">
+        <div className="p-3.5 rounded-[14px] bg-red-500/15 backdrop-blur-md border border-red-400/35 text-[#0b1f3a] text-xs flex items-center justify-between gap-2 font-medium">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
-            <span className="font-medium">{actionError}</span>
+            <AlertTriangle className="w-4 h-4 text-[#dc2626] shrink-0" />
+            <span>{actionError}</span>
           </div>
-          <button onClick={() => setActionError(null)} className="text-rose-500 hover:text-rose-700">
+          <button onClick={() => setActionError(null)} className="text-[#dc2626] hover:opacity-80">
             <X className="w-4 h-4" />
           </button>
         </div>
       )}
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div className="glass-panel p-3.5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         {/* Filter Pills */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 text-xs">
           <button
             onClick={() => setActiveFilter("all")}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition-all shrink-0 ${
+            className={`px-3 py-1.5 rounded-[10px] font-semibold transition-all shrink-0 ${
               activeFilter === "all"
-                ? "bg-[#0F766E] text-white shadow-xs"
-                : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium"
+                ? "bg-[#0F766E] text-white shadow-[0_5px_12px_rgba(15,118,110,0.3)]"
+                : "bg-white/55 border border-white/80 text-[#33475f] hover:bg-white/80 hover:text-[#0b1f3a]"
             }`}
           >
             সকল ({requisitions.length})
           </button>
           <button
             onClick={() => setActiveFilter("pending")}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition-all shrink-0 ${
+            className={`px-3 py-1.5 rounded-[10px] font-semibold transition-all shrink-0 ${
               activeFilter === "pending"
-                ? "bg-[#0F766E] text-white shadow-xs"
-                : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium"
+                ? "bg-[#0F766E] text-white shadow-[0_5px_12px_rgba(15,118,110,0.3)]"
+                : "bg-white/55 border border-white/80 text-[#33475f] hover:bg-white/80 hover:text-[#0b1f3a]"
             }`}
           >
             পেন্ডিং ({countPending})
           </button>
           <button
             onClick={() => setActiveFilter("approved")}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition-all shrink-0 ${
+            className={`px-3 py-1.5 rounded-[10px] font-semibold transition-all shrink-0 ${
               activeFilter === "approved"
-                ? "bg-[#0F766E] text-white shadow-xs"
-                : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium"
+                ? "bg-[#0F766E] text-white shadow-[0_5px_12px_rgba(15,118,110,0.3)]"
+                : "bg-white/55 border border-white/80 text-[#33475f] hover:bg-white/80 hover:text-[#0b1f3a]"
             }`}
           >
             অনুমোদিত ({countApproved})
           </button>
           <button
             onClick={() => setActiveFilter("rejected")}
-            className={`px-3 py-1.5 rounded-lg font-semibold transition-all shrink-0 ${
+            className={`px-3 py-1.5 rounded-[10px] font-semibold transition-all shrink-0 ${
               activeFilter === "rejected"
-                ? "bg-[#0F766E] text-white shadow-xs"
-                : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium"
+                ? "bg-[#0F766E] text-white shadow-[0_5px_12px_rgba(15,118,110,0.3)]"
+                : "bg-white/55 border border-white/80 text-[#33475f] hover:bg-white/80 hover:text-[#0b1f3a]"
             }`}
           >
             বাতিলকৃত ({countRejected})
@@ -345,13 +345,13 @@ export default function AdminRequisitionsPage() {
 
         {/* Search Input */}
         <div className="relative w-full sm:w-64">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#33475f] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="কোর্স বা প্রোগ্রাম খুঁজুন..."
-            className="w-full pl-9 pr-3 py-1.5 rounded-xl border border-slate-200 bg-white text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/20"
+            className="w-full pl-9 pr-3 py-1.5 rounded-[11px] border border-white/80 bg-white/55 text-xs text-[#0b1f3a] placeholder-[#475569] focus:outline-none focus:bg-white/75 focus:ring-2 focus:ring-[#0F766E]/25"
           />
         </div>
       </div>
@@ -359,11 +359,11 @@ export default function AdminRequisitionsPage() {
       {/* Requisitions List Table / Cards */}
       <div className="space-y-3" id="admin-requisitions-list">
         {loading ? (
-          <div className="p-8 text-center text-xs text-slate-400 glass-panel rounded-xl">
+          <div className="p-8 text-center text-xs text-[#33475f] font-medium glass-panel">
             অনুমোদন কিউ লোড হচ্ছে...
           </div>
         ) : filteredRequisitions.length === 0 ? (
-          <div className="p-8 text-center text-xs text-slate-500 glass-panel rounded-xl border border-dashed border-slate-200">
+          <div className="p-8 text-center text-xs text-[#33475f] font-medium glass-panel">
             কোনো রিকুইজিশন পাওয়া যায়নি।
           </div>
         ) : (
@@ -377,16 +377,16 @@ export default function AdminRequisitionsPage() {
               <div
                 key={req.id}
                 id={`admin-req-${req.id}`}
-                className="glass-panel p-4 sm:p-5 rounded-xl border border-slate-200/80 shadow-xs space-y-3 bg-white/90 hover:border-[#0F766E]/40 transition-all"
+                className="glass-panel p-4 sm:p-5 space-y-3 hover:border-[#0F766E]/40 transition-all"
               >
                 {/* Header Row */}
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/60 pb-3">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-bold text-sm text-slate-900">
+                    <span className="font-bold text-sm text-[#0b1f3a]">
                       {req.course_name}
                     </span>
-                    <span className="text-xs text-slate-400">•</span>
-                    <span className="text-xs font-semibold text-slate-700">
+                    <span className="text-xs text-[#33475f]">•</span>
+                    <span className="text-xs font-semibold text-[#33475f]">
                       {programMeta?.en || req.program_type} ({req.format_duration})
                     </span>
 

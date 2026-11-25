@@ -141,20 +141,20 @@ export default function AdminDashboardPage() {
   const upcomingShoots = data?.calendar_preview_next_7_days || [];
 
   return (
-    <div className="space-y-6 w-full max-w-full">
+    <div className="space-y-4 w-full max-w-full">
       {/* 1. Top Emerald Glassmorphic Banner */}
-      <div className="glass-emerald-card rounded-2xl p-5 md:p-8 border border-emerald-600/20 shadow-xs relative overflow-hidden bg-gradient-to-br from-emerald-50/80 via-white to-teal-50/50">
-        <div className="relative z-10 max-w-3xl space-y-2.5">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-[#0F766E] text-xs font-semibold">
+      <div className="glass-emerald-card rounded-[18px] p-5 md:p-6 relative overflow-hidden">
+        <div className="relative z-10 max-w-3xl space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0f766e]/15 text-[#0b5a54] text-xs font-semibold">
             <ShieldCheck className="w-4 h-4" />
             <span>মিডিয়া হেড ও কেন্দ্রীয় অ্যাডমিন ড্যাশবোর্ড • Media Head Control</span>
           </div>
 
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#0F172A] tracking-tight leading-snug">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-[#0b1f3a] tracking-tight leading-snug">
             সেন্ট্রাল মিডিয়া অ্যাডমিনিস্ট্রেশন হাব
           </h1>
 
-          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+          <p className="text-xs sm:text-[13px] text-[#33475f] leading-relaxed font-medium">
             আছ-সুন্নাহ স্কিল ডেভেলপমেন্ট ইনস্টিটিউটের সকল কোর্সের রিকুইজিশন
             অনুমোদন, গিয়ার বরাদ্দ, কেন্দ্রীয় টাস্ক বোর্ড ও শিডিউল ট্র্যাকিং।
           </p>
@@ -163,7 +163,7 @@ export default function AdminDashboardPage() {
             <Link
               href="/admin/requisitions"
               id="dashboard-nav-requisitions-btn"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0F766E] hover:bg-[#115E59] text-white text-xs sm:text-sm font-semibold shadow-xs transition-all"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0F766E] hover:bg-[#0b5a54] text-white text-xs sm:text-sm font-semibold shadow-[0_6px_14px_rgba(15,118,110,0.3)] transition-all"
             >
               <span>অনুমোদন কিউ ({data?.pending_requisitions_count || 0})</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -172,7 +172,7 @@ export default function AdminDashboardPage() {
             <Link
               href="/admin/calendar"
               id="dashboard-nav-calendar-btn"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-800 text-xs sm:text-sm font-semibold border border-slate-200/90 shadow-xs transition-all"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/55 hover:bg-white/80 text-[#0b1f3a] text-xs sm:text-sm font-semibold border border-white/80 shadow-xs transition-all"
             >
               <Calendar className="w-4 h-4 text-[#0F766E]" />
               <span>মাস্টার ক্যালেন্ডার</span>
@@ -181,7 +181,7 @@ export default function AdminDashboardPage() {
             <Link
               href="/admin/tasks"
               id="dashboard-nav-tasks-btn"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-800 text-xs sm:text-sm font-semibold border border-slate-200/90 shadow-xs transition-all"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/55 hover:bg-white/80 text-[#0b1f3a] text-xs sm:text-sm font-semibold border border-white/80 shadow-xs transition-all"
             >
               <Kanban className="w-4 h-4 text-[#0F766E]" />
               <span>টাস্ক বোর্ড</span>
@@ -191,19 +191,19 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* 2. Top 3 Live KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
         {/* KPI 1: Pending Requisitions */}
         <Link
           href="/admin/requisitions"
           id="kpi-card-pending-requisitions"
-          className="glass-panel rounded-2xl p-4 sm:p-5 border border-slate-200/80 hover:border-amber-400/60 hover:shadow-sm transition-all flex flex-col justify-between group"
+          className="glass-panel p-4 sm:p-5 flex flex-col justify-between group"
         >
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-slate-600">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#33475f]">
               পেন্ডিং রিকুইজিশন • Pending
             </span>
-            <div className="p-2.5 rounded-xl bg-amber-50 text-amber-600 group-hover:scale-105 transition-transform">
-              <Clock className="w-5 h-5" />
+            <div className="p-2 rounded-xl bg-amber-500/15 text-[#b45309] group-hover:scale-105 transition-transform">
+              <Clock className="w-4 h-4" />
             </div>
           </div>
           <div>
@@ -211,19 +211,20 @@ export default function AdminDashboardPage() {
               <div className="flex items-baseline gap-2">
                 <span
                   id="kpi-pending-count"
-                  className="text-2xl sm:text-3xl font-extrabold text-slate-900"
+                  className="text-2xl sm:text-[26px] font-extrabold text-[#0b1f3a] leading-none"
                 >
                   {data?.pending_requisitions_count || 0}টি
                 </span>
-                <span className="text-[11px] font-semibold text-amber-600">
+                <span className="text-[11px] font-bold text-[#b45309]">
                   রিভিউ আবশ্যক
                 </span>
               </div>
-              <svg className="w-16 h-7 text-amber-500 shrink-0 opacity-80" viewBox="0 0 64 24" fill="none">
-                <path d="M2 18L14 12L26 16L38 8L50 14L62 4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              <svg className="w-[74px] h-[30px] text-[#b45309] shrink-0" viewBox="0 0 74 30" fill="none">
+                <polyline points="2,22 14,18 26,20 38,12 50,14 62,7 72,9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="72" cy="9" r="2.6" fill="currentColor" />
               </svg>
             </div>
-            <p className="text-[11px] text-slate-400 mt-1">
+            <p className="text-[11.5px] text-[#33475f] mt-1.5 font-medium">
               অনুমোদনের অপেক্ষায় থাকা কোর্স শুট রিকুইজিশন
             </p>
           </div>
@@ -233,14 +234,14 @@ export default function AdminDashboardPage() {
         <Link
           href="/admin/tasks"
           id="kpi-card-active-tasks"
-          className="glass-panel rounded-2xl p-4 sm:p-5 border border-slate-200/80 hover:border-emerald-500/60 hover:shadow-sm transition-all flex flex-col justify-between group"
+          className="glass-panel p-4 sm:p-5 flex flex-col justify-between group"
         >
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-slate-600">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#33475f]">
               সক্রিয় টাস্ক • Active Tasks
             </span>
-            <div className="p-2.5 rounded-xl bg-emerald-50 text-[#0F766E] group-hover:scale-105 transition-transform">
-              <Kanban className="w-5 h-5" />
+            <div className="p-2 rounded-xl bg-[#0f766e]/15 text-[#0F766E] group-hover:scale-105 transition-transform">
+              <Kanban className="w-4 h-4" />
             </div>
           </div>
           <div>
@@ -248,19 +249,20 @@ export default function AdminDashboardPage() {
               <div className="flex items-baseline gap-2">
                 <span
                   id="kpi-active-tasks-count"
-                  className="text-2xl sm:text-3xl font-extrabold text-slate-900"
+                  className="text-2xl sm:text-[26px] font-extrabold text-[#0b1f3a] leading-none"
                 >
                   {data?.active_tasks_count || 0}টি
                 </span>
-                <span className="text-[11px] font-semibold text-emerald-600">
+                <span className="text-[11px] font-bold text-[#0F766E]">
                   চলমান পাইপলাইন
                 </span>
               </div>
-              <svg className="w-16 h-7 text-[#0F766E] shrink-0 opacity-80" viewBox="0 0 64 24" fill="none">
-                <path d="M2 20L16 16L30 18L44 8L58 4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              <svg className="w-[74px] h-[30px] text-[#0f766e] shrink-0" viewBox="0 0 74 30" fill="none">
+                <polyline points="2,20 14,22 26,15 38,17 50,10 62,12 72,5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="72" cy="5" r="2.6" fill="currentColor" />
               </svg>
             </div>
-            <p className="text-[11px] text-slate-400 mt-1">
+            <p className="text-[11.5px] text-[#33475f] mt-1.5 font-medium">
               মাঠে শুটিং, ফুটেজ আপলোড ও ভিডিও এডিটিং চলমান
             </p>
           </div>
@@ -270,14 +272,14 @@ export default function AdminDashboardPage() {
         <Link
           href="/admin/gear"
           id="kpi-card-gear-status"
-          className="glass-panel rounded-2xl p-4 sm:p-5 border border-slate-200/80 hover:border-blue-400/60 hover:shadow-sm transition-all flex flex-col justify-between group sm:col-span-2 lg:col-span-1"
+          className="glass-panel p-4 sm:p-5 flex flex-col justify-between group sm:col-span-2 lg:col-span-1"
         >
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-semibold text-slate-600">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#33475f]">
               গিয়ার স্ট্যাটাস • Gear Status
             </span>
-            <div className="p-2.5 rounded-xl bg-blue-50 text-blue-600 group-hover:scale-105 transition-transform">
-              <Camera className="w-5 h-5" />
+            <div className="p-2 rounded-xl bg-cyan-500/15 text-[#0891b2] group-hover:scale-105 transition-transform">
+              <Camera className="w-4 h-4" />
             </div>
           </div>
           <div>
@@ -285,23 +287,24 @@ export default function AdminDashboardPage() {
               <div className="flex items-baseline gap-2">
                 <span
                   id="kpi-gear-inuse-count"
-                  className="text-xl sm:text-2xl font-extrabold text-slate-900"
+                  className="text-xl sm:text-[22px] font-extrabold text-[#0b1f3a] leading-none"
                 >
                   {kpis.in_use}টি ইন ইউজ
                 </span>
-                <span className="text-slate-300">•</span>
+                <span className="text-[#33475f]/50">•</span>
                 <span
                   id="kpi-gear-maint-count"
-                  className="text-xs sm:text-sm font-bold text-amber-600"
+                  className="text-xs sm:text-sm font-bold text-[#b45309]"
                 >
                   {kpis.maintenance}টি মেইনটেন্যান্স
                 </span>
               </div>
-              <svg className="w-16 h-7 text-blue-500 shrink-0 opacity-80" viewBox="0 0 64 24" fill="none">
-                <path d="M2 12L15 14L28 10L42 16L56 8L62 10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              <svg className="w-[74px] h-[30px] text-[#0ea5b7] shrink-0" viewBox="0 0 74 30" fill="none">
+                <polyline points="2,12 14,15 26,11 38,16 50,13 62,18 72,15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="72" cy="15" r="2.6" fill="currentColor" />
               </svg>
             </div>
-            <p className="text-[11px] text-slate-400 mt-1">
+            <p className="text-[11.5px] text-[#33475f] mt-1.5 font-medium">
               {kpis.available}টি ব্যবহারযোগ্য (মোট {kpis.total}টি ক্যামেরা ও গিয়ার)
             </p>
           </div>
@@ -309,28 +312,28 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* 3. Main Dashboard Layout (Left: 8 cols, Right: 4 cols) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
         {/* Left Column (8 cols): Approval Queue + Bottom 2 Cards */}
-        <div className="lg:col-span-8 space-y-6">
+        <div className="lg:col-span-8 space-y-4">
           {/* Middle: Course Requisitions (Approval Queue) Table */}
           <div
             id="dashboard-approval-queue-section"
-            className="glass-panel rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs"
+            className="glass-panel overflow-hidden"
           >
-            <div className="p-4 sm:p-5 border-b border-slate-100 flex flex-wrap items-center justify-between gap-3 bg-slate-50/60">
+            <div className="p-4 sm:p-5 border-b border-white/60 flex flex-wrap items-center justify-between gap-3 bg-white/25">
               <div>
-                <h2 className="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
+                <h2 className="text-[15.5px] font-bold text-[#0b1f3a] flex items-center gap-2">
                   <Clock className="w-4 h-4 text-[#0F766E]" />
                   <span>কোর্স রিকুইজিশন অনুমোদন কিউ • Approval Queue</span>
                 </h2>
-                <p className="text-xs text-slate-500 mt-0.5 font-normal">
+                <p className="text-xs text-[#33475f] mt-0.5 font-medium">
                   অনুমোদনের অপেক্ষায় থাকা কোর্স শুট রিকুইজিশনসমূহ
                 </p>
               </div>
 
               <Link
                 href="/admin/requisitions"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-[#0F766E] hover:text-[#115E59]"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-[#0F766E] hover:underline"
               >
                 <span>সব রিকুইজিশন</span>
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -338,36 +341,36 @@ export default function AdminDashboardPage() {
             </div>
 
             {queue.length === 0 ? (
-              <div className="p-10 text-center text-slate-400 space-y-2">
-                <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto" />
-                <p className="text-xs font-medium text-slate-600">
+              <div className="p-10 text-center text-[#33475f] space-y-2">
+                <CheckCircle2 className="w-8 h-8 text-[#0f766e] mx-auto" />
+                <p className="text-xs font-semibold text-[#0b1f3a]">
                   বর্তমানে কোনো পেন্ডিং রিকুইজিশন নেই
                 </p>
-                <p className="text-[11px] text-slate-400">
+                <p className="text-[11px] text-[#33475f]">
                   সকল কোর্স রিকুইজিশন যথাযথভাবে রিভিউ ও প্রসেস করা হয়েছে।
                 </p>
               </div>
             ) : (
-              <div className="divide-y divide-slate-100 overflow-x-auto">
+              <div className="divide-y divide-white/45 overflow-x-auto">
                 {queue.map((req) => (
                   <div
                     key={req.id}
                     id={`approval-queue-item-${req.id}`}
-                    className="p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50/70 transition-colors"
+                    className="p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-white/30 transition-colors"
                   >
                     {/* Requisition Meta */}
                     <div className="space-y-1.5 flex-1 min-w-0">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-bold text-sm text-slate-900">
+                        <span className="font-bold text-sm text-[#0b1f3a]">
                           {req.course_name}
                         </span>
-                        <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-mono">
+                        <span className="px-2 py-0.5 rounded-md bg-white/55 border border-white/75 text-[#33475f] text-[11px] font-mono font-semibold">
                           {req.course_code}
                         </span>
                         {req.is_emergency_override && (
                           <span
                             id={`override-badge-${req.id}`}
-                            className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-red-100 text-red-700 text-[10px] font-bold tracking-wide uppercase"
+                            className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-red-500/15 text-[#dc2626] text-[10px] font-bold tracking-wide uppercase"
                           >
                             <AlertTriangle className="w-3 h-3" />
                             <span>Override</span>
@@ -375,35 +378,35 @@ export default function AdminDashboardPage() {
                         )}
                       </div>
 
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600 font-medium">
-                        <span className="flex items-center gap-1 text-[#0F766E] font-semibold font-mono">
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[#33475f] font-medium">
+                        <span className="flex items-center gap-1 text-[#0F766E] font-bold font-mono">
                           <Calendar className="w-3.5 h-3.5" />
                           <span>{req.shoot_date}</span>
                         </span>
 
                         <span className="flex items-center gap-1">
-                          <Clock className="w-3.5 h-3.5 text-slate-400" />
+                          <Clock className="w-3.5 h-3.5 text-[#33475f]" />
                           <span>{req.call_time}</span>
                         </span>
 
                         <span className="flex items-center gap-1">
-                          <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                          <MapPin className="w-3.5 h-3.5 text-[#33475f]" />
                           <span>{req.venue_name}</span>
                         </span>
 
-                        <span className="text-slate-400">•</span>
+                        <span className="text-[#33475f]/60">•</span>
                         <span>{req.format_duration}</span>
                       </div>
 
-                      <div className="flex items-center gap-2 text-[11px] text-slate-500">
-                        <Users className="w-3.5 h-3.5 text-slate-400" />
+                      <div className="flex items-center gap-2 text-[11.5px] text-[#33475f] font-medium">
+                        <Users className="w-3.5 h-3.5 text-[#33475f]" />
                         <span>
                           {req.coordinator_name} ({req.coordinator_phone})
                         </span>
                       </div>
 
                       {req.is_emergency_override && req.override_reason && (
-                        <p className="text-[11px] text-red-600 font-medium bg-red-50/80 px-2.5 py-1 rounded-lg border border-red-100">
+                        <p className="text-[11px] text-[#dc2626] font-semibold bg-red-500/10 px-2.5 py-1 rounded-lg border border-red-200/70">
                           জরুরি অনুমোদনের কারণ: {req.override_reason}
                         </p>
                       )}
@@ -412,7 +415,7 @@ export default function AdminDashboardPage() {
                     {/* Actions: Approve & Assign / Reject */}
                     <div className="flex items-center gap-2 shrink-0 pt-2 md:pt-0">
                       {req.status === "approved" ? (
-                        <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-100 text-[#0F766E] text-xs font-bold border border-emerald-200 shadow-2xs">
+                        <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#22c55e]/15 text-[#15803d] text-xs font-bold border border-emerald-500/25">
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           <span>Approved</span>
                         </span>
@@ -422,7 +425,7 @@ export default function AdminDashboardPage() {
                             type="button"
                             id={`dashboard-approve-btn-${req.id}`}
                             onClick={() => setApprovingReq(req)}
-                            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0F766E] hover:bg-[#115E59] text-white text-xs font-semibold shadow-xs transition-all"
+                            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[10px] bg-[#0F766E] hover:bg-[#0b5a54] text-white text-xs font-semibold shadow-[0_5px_12px_rgba(15,118,110,0.3)] transition-all"
                           >
                             <CheckCircle2 className="w-3.5 h-3.5" />
                             <span>Approve & Assign</span>
@@ -436,7 +439,7 @@ export default function AdminDashboardPage() {
                               setRejectionReason("");
                               setRejectionError(null);
                             }}
-                            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-red-50 text-red-600 hover:text-red-700 text-xs font-semibold border border-red-200 transition-all"
+                            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-[10px] bg-white/55 hover:bg-red-500/10 text-[#33475f] hover:text-[#dc2626] text-xs font-semibold border border-white/85 transition-all"
                           >
                             <X className="w-3.5 h-3.5" />
                             <span>Reject</span>
@@ -455,16 +458,16 @@ export default function AdminDashboardPage() {
             {/* Card 1: Task Board Progress */}
             <div
               id="dashboard-task-progress-card"
-              className="glass-panel p-5 rounded-2xl border border-slate-200/90 shadow-xs space-y-4"
+              className="glass-panel p-5 space-y-4"
             >
               <div className="flex items-center justify-between">
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-2">
+                <h3 className="text-[15px] font-bold text-[#0b1f3a] flex items-center gap-2">
                   <Kanban className="w-4 h-4 text-[#0F766E]" />
                   <span>টাস্ক বোর্ড অগ্রগতি • Task Progress</span>
                 </h3>
                 <Link
                   href="/admin/tasks"
-                  className="text-[11px] font-semibold text-[#0F766E] hover:underline"
+                  className="text-[11.5px] font-semibold text-[#0F766E] hover:underline"
                 >
                   বোর্ডে যান
                 </Link>
@@ -472,29 +475,29 @@ export default function AdminDashboardPage() {
 
               {/* 6-Segment Horizontal Task Pipeline Bar */}
               <div className="space-y-1.5 pt-1">
-                <div className="flex items-center justify-between text-[10px] font-semibold text-slate-500 uppercase tracking-wider">
+                <div className="flex items-center justify-between text-[10px] font-bold text-[#33475f] uppercase tracking-wider">
                   <span>6-Stage Pipeline</span>
                   <span>{progress.total} Active</span>
                 </div>
-                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden flex shadow-inner">
+                <div className="h-[22px] w-full bg-white/35 rounded-lg overflow-hidden flex border border-white/70">
                   <div
                     style={{ width: `${progress.total ? Math.max(12, (progress.assigned / progress.total) * 100) : 25}%` }}
-                    className="bg-blue-500 h-full transition-all"
+                    className="bg-[#0ea5b7] h-full transition-all"
                     title={`Assigned: ${progress.assigned}`}
                   />
                   <div
                     style={{ width: `${progress.total ? Math.max(12, (progress.editing / progress.total) * 100) : 25}%` }}
-                    className="bg-teal-500 h-full transition-all"
+                    className="bg-[#0f766e] h-full transition-all"
                     title={`Editing: ${progress.editing}`}
                   />
                   <div
                     style={{ width: `${progress.total ? Math.max(12, (progress.review / progress.total) * 100) : 25}%` }}
-                    className="bg-purple-500 h-full transition-all"
+                    className="bg-[#f59e0b] h-full transition-all"
                     title={`Review: ${progress.review}`}
                   />
                   <div
                     style={{ width: `${progress.total ? Math.max(12, (progress.completed / progress.total) * 100) : 25}%` }}
-                    className="bg-emerald-500 h-full transition-all"
+                    className="bg-[#22c55e] h-full transition-all"
                     title={`Completed: ${progress.completed}`}
                   />
                 </div>
@@ -502,58 +505,58 @@ export default function AdminDashboardPage() {
 
               {/* Stage Progress Pills */}
               <div className="grid grid-cols-2 gap-2.5">
-                <div className="p-3 rounded-xl bg-blue-50/70 border border-blue-100 flex flex-col justify-between">
-                  <span className="text-[11px] font-semibold text-blue-700">
+                <div className="p-3 rounded-xl bg-white/40 border border-white/70 flex flex-col justify-between">
+                  <span className="text-[11px] font-bold text-[#0e7490]">
                     Assigned / Field
                   </span>
                   <span
                     id="progress-count-assigned"
-                    className="text-lg font-bold text-blue-900 mt-1"
+                    className="text-lg font-extrabold text-[#0b1f3a] mt-0.5"
                   >
                     {progress.assigned}টি
                   </span>
                 </div>
 
-                <div className="p-3 rounded-xl bg-teal-50/70 border border-teal-100 flex flex-col justify-between">
-                  <span className="text-[11px] font-semibold text-teal-700">
+                <div className="p-3 rounded-xl bg-white/40 border border-white/70 flex flex-col justify-between">
+                  <span className="text-[11px] font-bold text-[#0f766e]">
                     Editing
                   </span>
                   <span
                     id="progress-count-editing"
-                    className="text-lg font-bold text-teal-900 mt-1"
+                    className="text-lg font-extrabold text-[#0b1f3a] mt-0.5"
                   >
                     {progress.editing}টি
                   </span>
                 </div>
 
-                <div className="p-3 rounded-xl bg-purple-50/70 border border-purple-100 flex flex-col justify-between">
-                  <span className="text-[11px] font-semibold text-purple-700">
+                <div className="p-3 rounded-xl bg-white/40 border border-white/70 flex flex-col justify-between">
+                  <span className="text-[11px] font-bold text-[#b45309]">
                     Review
                   </span>
                   <span
                     id="progress-count-review"
-                    className="text-lg font-bold text-purple-900 mt-1"
+                    className="text-lg font-extrabold text-[#0b1f3a] mt-0.5"
                   >
                     {progress.review}টি
                   </span>
                 </div>
 
-                <div className="p-3 rounded-xl bg-emerald-50/70 border border-emerald-100 flex flex-col justify-between">
-                  <span className="text-[11px] font-semibold text-emerald-700">
+                <div className="p-3 rounded-xl bg-white/40 border border-white/70 flex flex-col justify-between">
+                  <span className="text-[11px] font-bold text-[#15803d]">
                     Completed
                   </span>
                   <span
                     id="progress-count-completed"
-                    className="text-lg font-bold text-emerald-900 mt-1"
+                    className="text-lg font-extrabold text-[#0b1f3a] mt-0.5"
                   >
                     {progress.completed}টি
                   </span>
                 </div>
               </div>
 
-              <div className="pt-1 flex items-center justify-between text-[11px] text-slate-500">
-                <span>মোট অ্যাক্টিভ টাস্ক: {progress.total}টি</span>
-                <span className="text-[#0F766E] font-semibold">
+              <div className="pt-1 flex items-center justify-between text-[11.5px] font-medium text-[#33475f]">
+                <span>মোট অ্যাক্টিভ টাস্ক: <b className="text-[#0b1f3a]">{progress.total}টি</b></span>
+                <span className="text-[#0F766E] font-bold">
                   সম্পূর্ণতার হার:{" "}
                   {progress.total > 0
                     ? Math.round((progress.completed / progress.total) * 100)
@@ -566,27 +569,27 @@ export default function AdminDashboardPage() {
             {/* Card 2: Gear Stock Live */}
             <div
               id="dashboard-gear-stock-card"
-              className="glass-panel p-5 rounded-2xl border border-slate-200/90 shadow-xs space-y-3.5"
+              className="glass-panel p-5 space-y-3.5"
             >
               <div className="flex items-center justify-between">
-                <h3 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-2">
-                  <Camera className="w-4 h-4 text-blue-600" />
+                <h3 className="text-[15px] font-bold text-[#0b1f3a] flex items-center gap-2">
+                  <Camera className="w-4 h-4 text-[#0f766e]" />
                   <span>লাইভ গিয়ার স্টক • Gear Stock</span>
                 </h3>
                 <Link
                   href="/admin/gear"
-                  className="text-[11px] font-semibold text-[#0F766E] hover:underline"
+                  className="text-[11.5px] font-semibold text-[#0F766E] hover:underline"
                 >
                   স্টকে যান
                 </Link>
               </div>
 
               {/* Scrollable Gear Rows */}
-              <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
+              <div className="divide-y divide-white/45 max-h-60 overflow-y-auto pr-1">
                 {gearRows.length === 0 ? (
-                  <div className="py-6 text-center text-slate-400 space-y-1">
-                    <Camera className="w-6 h-6 text-slate-300 mx-auto" />
-                    <p className="text-xs text-slate-500 font-medium">
+                  <div className="py-6 text-center text-[#33475f] space-y-1">
+                    <Camera className="w-6 h-6 text-[#33475f]/60 mx-auto" />
+                    <p className="text-xs text-[#33475f] font-medium">
                       কোনো গিয়ার তালিকাভুক্ত নেই
                     </p>
                   </div>
@@ -594,23 +597,34 @@ export default function AdminDashboardPage() {
                   gearRows.map((item) => (
                     <div
                       key={item.id}
-                      className="p-2.5 rounded-xl bg-slate-50/80 border border-slate-100 flex items-center justify-between text-xs"
+                      className="py-2.5 px-1 flex items-center justify-between text-xs"
                     >
-                      <div className="space-y-0.5">
-                        <p className="font-semibold text-slate-800">{item.name}</p>
-                        <p className="text-[10px] text-slate-400 font-mono">
-                          {item.serial_number}
-                        </p>
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <span
+                          className={`w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_0_3px_rgba(255,255,255,0.5)] ${
+                            item.status === "available"
+                              ? "bg-[#22c55e]"
+                              : item.status === "in_use"
+                              ? "bg-[#0f766e]"
+                              : "bg-[#f59e0b]"
+                          }`}
+                        />
+                        <div className="space-y-0.5 min-w-0">
+                          <p className="font-semibold text-[#0b1f3a] truncate">{item.name}</p>
+                          <p className="text-[10.5px] text-[#33475f] font-mono">
+                            {item.serial_number}
+                          </p>
+                        </div>
                       </div>
 
-                      <div className="text-right space-y-0.5">
+                      <div className="text-right space-y-0.5 shrink-0">
                         <span
-                          className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                          className={`inline-block px-2 py-0.5 rounded-full text-[10.5px] font-bold ${
                             item.status === "available"
-                              ? "bg-emerald-100 text-emerald-800"
+                              ? "bg-[#22c55e]/15 text-[#15803d]"
                               : item.status === "in_use"
-                              ? "bg-blue-100 text-blue-800"
-                              : "bg-red-100 text-red-800"
+                              ? "bg-[#0f766e]/15 text-[#0b5a54]"
+                              : "bg-red-500/15 text-[#dc2626]"
                           }`}
                         >
                           {item.status === "available"
@@ -620,7 +634,7 @@ export default function AdminDashboardPage() {
                             : "Maintenance"}
                         </span>
                         {item.assigned_to && (
-                          <p className="text-[9px] text-slate-500 truncate max-w-[100px]">
+                          <p className="text-[10px] text-[#33475f] truncate max-w-[110px]">
                             {item.assigned_to}
                           </p>
                         )}
@@ -635,28 +649,31 @@ export default function AdminDashboardPage() {
 
         {/* Right Column (4 cols): Master Calendar Preview (Next 7 Days) */}
         <div className="lg:col-span-4 space-y-3.5">
-          <div className="flex items-center justify-between px-1">
-            <h2 className="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-[#0F766E]" />
-              <span>মাস্টার ক্যালেন্ডার (আগামী ৭ দিন)</span>
-            </h2>
-            <Link
-              href="/admin/calendar"
-              id="dashboard-view-full-calendar-link"
-              className="text-[11px] font-semibold text-[#0F766E] hover:underline"
-            >
-              সম্পূর্ণ ক্যালেন্ডার
-            </Link>
-          </div>
-
           <div
             id="dashboard-calendar-preview-section"
-            className="glass-panel p-4 rounded-2xl border border-slate-200/90 shadow-xs space-y-3"
+            className="glass-panel p-4 sm:p-5 space-y-3.5"
           >
+            <div className="flex items-center justify-between">
+              <h2 className="text-[15.5px] font-bold text-[#0b1f3a] flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-[#0F766E]" />
+                <span>মাস্টার ক্যালেন্ডার</span>
+              </h2>
+              <Link
+                href="/admin/calendar"
+                id="dashboard-view-full-calendar-link"
+                className="text-[11.5px] font-semibold text-[#0F766E] hover:underline"
+              >
+                সম্পূর্ণ ক্যালেন্ডার
+              </Link>
+            </div>
+            <div className="text-[10px] font-bold tracking-[0.15em] uppercase text-[#33475f]">
+              আগামী ৭ দিন • Next 7 Days
+            </div>
+
             {upcomingShoots.length === 0 ? (
-              <div className="py-8 text-center text-slate-400 space-y-2">
-                <Calendar className="w-7 h-7 text-slate-300 mx-auto" />
-                <p className="text-xs text-slate-500">
+              <div className="py-8 text-center text-[#33475f] space-y-2">
+                <Calendar className="w-7 h-7 text-[#33475f]/60 mx-auto" />
+                <p className="text-xs font-medium text-[#33475f]">
                   আগামী ৭ দিনে কোনো শুটিং নির্ধারিত নেই
                 </p>
               </div>
@@ -666,43 +683,43 @@ export default function AdminDashboardPage() {
                   <div
                     key={shoot.id}
                     id={`preview-shoot-card-${shoot.id}`}
-                    className="p-3.5 rounded-xl bg-slate-50/90 border border-slate-100 hover:border-emerald-500/40 hover:bg-white transition-all space-y-2"
+                    className="p-3 rounded-[13px] bg-white/40 border border-white/65 hover:bg-white/60 transition-all space-y-2"
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold text-xs text-slate-900 truncate">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-bold text-[12.5px] text-[#0b1f3a] truncate">
                         {shoot.course_name}
                       </span>
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-[#0F766E] font-mono shrink-0">
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#0f766e]/15 text-[#0b5a54] font-mono shrink-0">
                         {shoot.shoot_date}
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between text-[11px] text-slate-600">
+                    <div className="flex items-center justify-between text-[11px] font-medium text-[#33475f]">
                       <span className="flex items-center gap-1 font-mono">
                         <Clock className="w-3 h-3 text-[#0F766E]" />
                         <span>{shoot.call_time}</span>
                       </span>
-                      <span className="truncate text-slate-500 max-w-[120px]">
+                      <span className="truncate max-w-[130px]">
                         {shoot.venue_name}
                       </span>
                     </div>
 
-                    <div className="text-[11px] text-slate-500 flex items-center justify-between">
-                      <span className="truncate">টিম: {shoot.lead_name}</span>
-                      <span className="text-[10px] text-slate-400">
+                    <div className="text-[11px] text-[#33475f] flex items-center justify-between">
+                      <span className="truncate font-medium">টিম: {shoot.lead_name}</span>
+                      <span className="text-[10px] font-mono text-[#33475f]">
                         {shoot.slip.slip_number}
                       </span>
                     </div>
 
                     {/* Quick Slip & WhatsApp Actions */}
-                    <div className="pt-1.5 border-t border-slate-200/70 flex items-center gap-2">
+                    <div className="pt-2 border-t border-white/60 flex items-center gap-2">
                       <button
                         type="button"
                         id={`quick-slip-btn-${shoot.id}`}
                         onClick={() => handleQuickSlip(shoot)}
-                        className="flex-1 inline-flex items-center justify-center gap-1 py-1 px-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-[11px] font-medium transition-all"
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-[10px] bg-[#0F766E] hover:bg-[#0b5a54] text-white text-[11.5px] font-semibold shadow-xs transition-all"
                       >
-                        <FileText className="w-3 h-3" />
+                        <FileText className="w-3.5 h-3.5" />
                         <span>PDF Slip</span>
                       </button>
 
@@ -711,9 +728,9 @@ export default function AdminDashboardPage() {
                         target="_blank"
                         rel="noopener noreferrer"
                         id={`quick-whatsapp-btn-${shoot.id}`}
-                        className="flex-1 inline-flex items-center justify-center gap-1 py-1 px-2 rounded-lg bg-[#0F766E] hover:bg-[#115E59] text-white text-[11px] font-medium transition-all"
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-2.5 rounded-[10px] bg-white/60 hover:bg-white/85 text-[#0b1f3a] border border-white/85 text-[11.5px] font-semibold transition-all"
                       >
-                        <Share2 className="w-3 h-3" />
+                        <Share2 className="w-3.5 h-3.5 text-[#0F766E]" />
                         <span>WhatsApp</span>
                       </a>
                     </div>

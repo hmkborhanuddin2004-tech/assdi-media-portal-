@@ -165,18 +165,18 @@ export default function StaffDailyLogPage() {
   };
 
   return (
-    <div className="space-y-6 w-full max-w-full">
+    <div className="space-y-4 w-full max-w-full">
       {/* Top Banner (Desktop Staff View matching mockup) */}
-      <div className="glass-panel rounded-2xl p-5 md:p-6 border border-emerald-600/20 bg-white/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="glass-panel p-5 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-semibold">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#0f766e]/15 text-[#0b5a54] text-xs font-semibold">
             <Sparkles className="w-3.5 h-3.5" />
             <span>পার্মানেন্ট স্টাফ পোর্টাল • ডেইলি কাজের লগ</span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-extrabold text-[#0b1f3a] tracking-tight">
             Permanent Staff Daily Worklog
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs sm:text-[13px] text-[#33475f] font-medium">
             আজকের সম্পাদিত কাজের ক্যাটাগরি, সময়কাল ও সারসংক্ষেপ ডাটাবেজে সাবমিট করুন।
           </p>
         </div>
@@ -185,7 +185,7 @@ export default function StaffDailyLogPage() {
           <Link
             href="/staff/tasks"
             id="staff-my-tasks-link"
-            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs transition-all"
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-[11px] border border-white/80 bg-white/55 hover:bg-white/80 text-[#0b1f3a] text-xs font-semibold shadow-xs transition-all"
           >
             <Layers className="w-4 h-4 text-[#0F766E]" />
             <span>My Tasks</span>
@@ -193,7 +193,7 @@ export default function StaffDailyLogPage() {
           <Link
             href="/staff/intern-status"
             id="staff-intern-status-link"
-            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs transition-all"
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-[11px] border border-white/80 bg-white/55 hover:bg-white/80 text-[#0b1f3a] text-xs font-semibold shadow-xs transition-all"
           >
             <UserCheck className="w-4 h-4 text-[#0F766E]" />
             <span>Intern Status</span>
@@ -205,35 +205,35 @@ export default function StaffDailyLogPage() {
       {statusMessage && (
         <div
           id="staff-log-status-banner"
-          className={`p-4 rounded-xl text-xs sm:text-sm font-medium flex items-center gap-2.5 shadow-2xs animate-in fade-in ${
+          className={`p-4 rounded-[14px] text-xs sm:text-sm font-semibold flex items-center gap-2.5 backdrop-blur-md animate-in fade-in ${
             statusMessage.type === "success"
-              ? "bg-emerald-50 border border-emerald-200 text-emerald-800"
-              : "bg-rose-50 border border-rose-200 text-rose-800"
+              ? "bg-emerald-500/15 border border-emerald-400/35 text-[#0b1f3a]"
+              : "bg-red-500/15 border border-red-400/35 text-[#0b1f3a]"
           }`}
         >
           {statusMessage.type === "success" ? (
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+            <CheckCircle2 className="w-5 h-5 text-[#15803d] shrink-0" />
           ) : (
-            <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
+            <AlertCircle className="w-5 h-5 text-[#dc2626] shrink-0" />
           )}
           <span>{statusMessage.text}</span>
         </div>
       )}
 
       {/* Main Worklog Submission Card matching mockup */}
-      <div className="glass-panel rounded-2xl border border-slate-200/80 bg-white shadow-xs p-5 md:p-6 space-y-6">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+      <div className="glass-panel p-5 md:p-6 space-y-6">
+        <div className="flex items-center justify-between border-b border-white/60 pb-4">
           <div className="space-y-0.5">
-            <h2 className="text-base sm:text-lg font-bold text-slate-900">
+            <h2 className="text-base sm:text-lg font-bold text-[#0b1f3a]">
               Daily Logs — Submit Daily Worklog
             </h2>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[#33475f] font-medium">
               Selectable Category • Hours Worked • Short Work Summary
             </p>
           </div>
           <div className="text-right">
-            <span className="text-[11px] text-slate-400 block">Current User</span>
-            <span className="text-xs font-bold text-slate-700 block">
+            <span className="text-[11px] text-[#33475f] font-medium block">Current User</span>
+            <span className="text-xs font-bold text-[#0b1f3a] block">
               {currentUser?.full_name || "Permanent Staff"}
             </span>
           </div>
@@ -362,15 +362,15 @@ export default function StaffDailyLogPage() {
       </div>
 
       {/* Project Lead Update Intern Task Status Banner (Mockup reference) */}
-      <div className="glass-panel rounded-2xl border border-slate-200/80 bg-white/90 p-4 sm:p-5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="glass-panel p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <h3 className="text-xs sm:text-sm font-bold text-slate-800">
+            <h3 className="text-xs sm:text-sm font-bold text-[#0b1f3a]">
               Project Lead • Update Intern Task Status
             </h3>
           </div>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-[#33475f] font-medium">
             Hasan Ali (Intern) • Art of Creation Shoot • Raw Uploaded
           </p>
         </div>
@@ -386,28 +386,28 @@ export default function StaffDailyLogPage() {
       {/* Recent Submitted Logs List (Live PostgreSQL store) */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+          <h2 className="text-sm font-bold text-[#0b1f3a] flex items-center gap-2">
             <FileText className="w-4 h-4 text-[#0F766E]" />
             <span>আপনার সাম্প্রতিক সাবমিট করা কাজের লগ (Recent Daily Logs)</span>
-            <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-xs font-semibold">
+            <span className="px-2 py-0.5 rounded-full bg-white/60 border border-white/80 text-[#0b1f3a] text-xs font-bold">
               {recentLogs.length}
             </span>
           </h2>
         </div>
 
         {loading ? (
-          <div className="p-8 text-center text-xs text-slate-400 glass-panel rounded-2xl">
+          <div className="p-8 text-center text-xs text-[#33475f] font-medium glass-panel">
             <Loader2 className="w-5 h-5 animate-spin mx-auto mb-2 text-[#0F766E]" />
             <span>লগ ডাটা লোড হচ্ছে...</span>
           </div>
         ) : recentLogs.length === 0 ? (
-          <div className="p-8 text-center text-xs text-slate-400 glass-panel rounded-2xl bg-white">
+          <div className="p-8 text-center text-xs text-[#33475f] font-medium glass-panel">
             এখনও কোনো কাজের লগ সাবমিট করা হয়নি।
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-2xl border border-slate-200/80 bg-white shadow-2xs">
-            <table className="w-full text-left text-xs" id="staff-recent-logs-table">
-              <thead className="bg-slate-50 text-slate-600 font-bold border-b border-slate-200/80">
+          <div className="overflow-x-auto glass-panel">
+            <table className="w-full text-left text-[12.5px]" id="staff-recent-logs-table">
+              <thead className="bg-white/30 text-[#33475f] text-[10px] font-bold uppercase tracking-[0.13em] border-b border-white/70">
                 <tr>
                   <th className="py-3 px-4">Date</th>
                   <th className="py-3 px-4">Category</th>

@@ -188,18 +188,18 @@ export default function AdminUsersPage() {
   });
 
   return (
-    <div className="space-y-6 w-full max-w-full">
+    <div className="space-y-4 w-full max-w-full">
       {/* Top Header */}
-      <div className="glass-panel rounded-2xl p-5 md:p-6 border border-emerald-600/20 bg-white/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="glass-panel p-5 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#0F766E] text-xs font-semibold">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#0f766e]/15 text-[#0b5a54] text-xs font-semibold">
             <ShieldCheck className="w-4 h-4" />
             <span>অ্যাডমিন আরবাক কন্ট্রোল • RBAC Security</span>
           </div>
-          <h1 className="text-lg sm:text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-lg sm:text-2xl font-extrabold text-[#0b1f3a] tracking-tight">
             ব্যবহারকারী ও ভূমিকা ব্যবস্থাপনা
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs sm:text-[13px] text-[#33475f] font-medium">
             পোর্টালের সকল মিডিয়া হেড, কোঅর্ডিনেটর, স্টাফ ও ইন্টার্নদের অ্যাকাউন্ট ও
             অনুমতি নিয়ন্ত্রণ করুন।
           </p>
@@ -212,7 +212,7 @@ export default function AdminUsersPage() {
             setFormSuccess(null);
           }}
           id="admin-add-user-btn"
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#0F766E] hover:bg-[#115E59] text-white text-xs sm:text-sm font-semibold shadow-sm transition-all duration-150 shrink-0 cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#0F766E] hover:bg-[#0b5a54] text-white text-xs sm:text-sm font-semibold shadow-[0_6px_14px_rgba(15,118,110,0.3)] transition-all duration-150 shrink-0 cursor-pointer"
         >
           <UserPlus className="w-4 h-4" />
           <span>নতুন ব্যবহারকারী যোগ করুন</span>
@@ -220,38 +220,38 @@ export default function AdminUsersPage() {
       </div>
 
       {/* Security Banner: Self-Signup Disabled */}
-      <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200 text-amber-900 text-xs flex items-start gap-2.5 leading-relaxed">
-        <ShieldAlert className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+      <div className="p-3.5 rounded-[14px] bg-amber-500/15 backdrop-blur-md border border-amber-400/35 text-[#0b1f3a] text-xs flex items-start gap-2.5 leading-relaxed font-medium">
+        <ShieldAlert className="w-4 h-4 text-[#b45309] shrink-0 mt-0.5" />
         <div>
-          <span className="font-bold">জিরো পাবলিক সেলফ-সাইনআপ নীতি:</span> সাধারণ
+          <span className="font-bold text-[#b45309]">জিরো পাবলিক সেলফ-সাইনআপ নীতি:</span> সাধারণ
           জনগণের রেজিস্ট্রেশন সম্পূর্ণ বন্ধ রাখা হয়েছে। কেবলমাত্র এই অ্যাডমিন প্যানেল
           হতে তৈরি করা ক্রেডেনশিয়াল দিয়েই পোর্টালে লগইন করা সম্ভব।
         </div>
       </div>
 
       {/* Search & Role Filters */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-xs">
+      <div className="glass-panel p-3.5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-xs">
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5 pointer-events-none" />
+          <Search className="w-4 h-4 text-[#33475f] absolute left-3 top-2.5 pointer-events-none" />
           <input
             type="text"
             placeholder="নাম, ইমেইল বা ফোন নম্বর দিয়ে খুঁজুন..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 bg-white text-xs focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+            className="w-full pl-9 pr-3 py-2 rounded-[11px] border border-white/80 bg-white/55 text-[#0b1f3a] placeholder-[#475569] text-xs focus:ring-2 focus:ring-[#0F766E]/25 focus:bg-white/75 focus:outline-none"
           />
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-          <Filter className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+          <Filter className="w-3.5 h-3.5 text-[#33475f] shrink-0" />
           {["all", "admin", "coordinator", "staff", "intern"].map((r) => (
             <button
               key={r}
               onClick={() => setRoleFilter(r)}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-[10px] font-semibold transition-all cursor-pointer whitespace-nowrap ${
                 roleFilter === r
-                  ? "bg-[#0F766E] text-white shadow-xs font-semibold"
-                  : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"
+                  ? "bg-[#0F766E] text-white shadow-[0_5px_12px_rgba(15,118,110,0.3)]"
+                  : "bg-white/55 border border-white/80 text-[#33475f] hover:bg-white/80 hover:text-[#0b1f3a]"
               }`}
             >
               {r === "all" ? "সকল রোল" : ROLE_LABELS[r as UserRole]?.en || r}
@@ -281,21 +281,21 @@ export default function AdminUsersPage() {
 
       {/* Users List (Table on Desktop, Cards on Mobile) */}
       {loading ? (
-        <div className="p-12 flex flex-col items-center justify-center gap-3 text-slate-400 text-xs">
+        <div className="glass-panel p-12 flex flex-col items-center justify-center gap-3 text-[#33475f] text-xs font-medium">
           <Loader2 className="w-6 h-6 animate-spin text-[#0F766E]" />
           <span>ইউজার তালিকা লোড হচ্ছে...</span>
         </div>
       ) : filteredUsers.length === 0 ? (
-        <div className="glass-panel p-8 text-center rounded-xl border border-slate-200 text-slate-500 text-xs">
+        <div className="glass-panel p-8 text-center text-[#33475f] text-xs font-medium">
           কোনো ব্যবহারকারী পাওয়া যায়নি।
         </div>
       ) : (
         <>
           {/* Desktop Table View */}
-          <div className="hidden md:block glass-panel rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden bg-white">
+          <div className="hidden md:block glass-panel overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
+              <table className="w-full text-left text-[12.5px]">
+                <thead className="bg-white/30 border-b border-white/70 text-[#33475f] text-[10px] font-bold uppercase tracking-[0.13em]">
                   <tr>
                     <th className="py-3 px-4">নাম ও ইমেইল</th>
                     <th className="py-3 px-4">মোবাইল নম্বর</th>
@@ -305,32 +305,32 @@ export default function AdminUsersPage() {
                     <th className="py-3 px-4 text-right">অ্যাকশন</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-white/45">
                   {filteredUsers.map((u) => {
                     const roleStyle = {
-                      admin: "bg-purple-100 text-purple-800 border-purple-200",
-                      coordinator: "bg-sky-100 text-sky-800 border-sky-200",
-                      staff: "bg-indigo-100 text-indigo-800 border-indigo-200",
-                      intern: "bg-amber-100 text-amber-800 border-amber-200",
+                      admin: "bg-[#0f766e]/15 text-[#0b5a54] border-[#0f766e]/30",
+                      coordinator: "bg-teal-500/12 text-[#0f766e] border-teal-500/25",
+                      staff: "bg-slate-700/10 text-[#0b1f3a] border-slate-500/25",
+                      intern: "bg-slate-500/10 text-[#33475f] border-slate-400/30",
                     }[u.role];
 
                     return (
-                      <tr key={u.id} className="hover:bg-slate-50/70 transition-colors">
+                      <tr key={u.id} className="hover:bg-white/30 transition-colors">
                         <td className="py-3 px-4">
-                          <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                          <div className="font-bold text-[#0b1f3a] flex items-center gap-1.5">
                             <span>{u.full_name}</span>
                             {u.id === currentUserId && (
-                              <span className="px-1.5 py-0.5 rounded bg-emerald-100 text-[#0F766E] text-[10px] font-semibold">
+                              <span className="px-1.5 py-0.5 rounded bg-[#0f766e]/15 text-[#0b5a54] text-[10px] font-bold">
                                 আপনি
                               </span>
                             )}
                           </div>
-                          <div className="text-[11px] text-slate-500">{u.email}</div>
+                          <div className="text-[11px] text-[#33475f] font-medium">{u.email}</div>
                         </td>
-                        <td className="py-3 px-4 font-mono text-slate-700">{u.phone}</td>
+                        <td className="py-3 px-4 font-mono text-[#0b1f3a] font-medium">{u.phone}</td>
                         <td className="py-3 px-4">
                           <span
-                            className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${roleStyle}`}
+                            className={`inline-block px-2.5 py-0.5 rounded-full text-[10.5px] font-bold border ${roleStyle}`}
                           >
                             {ROLE_LABELS[u.role]?.bn} ({u.role})
                           </span>
@@ -338,29 +338,29 @@ export default function AdminUsersPage() {
                         <td className="py-3 px-4">
                           {u.role === "coordinator" ? (
                             u.courses?.name ? (
-                              <span className="font-medium text-slate-800">
+                              <span className="font-semibold text-[#0b1f3a]">
                                 {u.courses.name} ({u.courses.code})
                               </span>
                             ) : (
-                              <span className="text-red-500 text-[11px] font-semibold">
+                              <span className="text-[#dc2626] text-[11px] font-semibold">
                                 কোর্স বরাদ্দ নেই
                               </span>
                             )
                           ) : (
-                            <span className="text-slate-400">সকল ডিপার্টমেন্ট</span>
+                            <span className="text-[#33475f] font-medium">সকল ডিপার্টমেন্ট</span>
                           )}
                         </td>
                         <td className="py-3 px-4">
                           <span
-                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                            className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10.5px] font-bold ${
                               u.is_active
-                                ? "bg-emerald-100 text-emerald-800"
-                                : "bg-slate-200 text-slate-700"
+                                ? "bg-[#22c55e]/15 text-[#15803d]"
+                                : "bg-slate-500/15 text-[#33475f]"
                             }`}
                           >
                             <span
                               className={`w-1.5 h-1.5 rounded-full ${
-                                u.is_active ? "bg-emerald-600" : "bg-slate-500"
+                                u.is_active ? "bg-[#15803d]" : "bg-[#33475f]"
                               }`}
                             />
                             <span>{u.is_active ? "সক্রিয় (Active)" : "নিষ্ক্রিয় (Inactive)"}</span>
@@ -368,16 +368,16 @@ export default function AdminUsersPage() {
                         </td>
                         <td className="py-3 px-4 text-right">
                           {u.id === currentUserId ? (
-                            <span className="text-[11px] text-slate-400 italic font-medium px-2 py-1">
+                            <span className="text-[11px] text-[#33475f] italic font-medium px-2 py-1">
                               বর্তমান ইউজার
                             </span>
                           ) : (
                             <button
                               onClick={() => handleToggleStatus(u.id, u.is_active)}
-                              className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition-all cursor-pointer ${
+                              className={`px-2.5 py-1 rounded-[9px] text-[11px] font-semibold border transition-all cursor-pointer ${
                                 u.is_active
-                                  ? "bg-red-50 text-red-700 border-red-200 hover:bg-red-100"
-                                  : "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100"
+                                  ? "bg-white/55 text-[#33475f] border-white/85 hover:bg-red-500/10 hover:text-[#dc2626]"
+                                  : "bg-[#0f766e]/15 text-[#0b5a54] border-[#0f766e]/30 hover:bg-[#0f766e]/25"
                               }`}
                             >
                               {u.is_active ? "নিষ্ক্রিয় করুন" : "সক্রিয় করুন"}
@@ -396,68 +396,68 @@ export default function AdminUsersPage() {
           <div className="block md:hidden space-y-3">
             {filteredUsers.map((u) => {
               const roleStyle = {
-                admin: "bg-purple-100 text-purple-800 border-purple-200",
-                coordinator: "bg-sky-100 text-sky-800 border-sky-200",
-                staff: "bg-indigo-100 text-indigo-800 border-indigo-200",
-                intern: "bg-amber-100 text-amber-800 border-amber-200",
+                admin: "bg-[#0f766e]/15 text-[#0b5a54] border-[#0f766e]/30",
+                coordinator: "bg-teal-500/12 text-[#0f766e] border-teal-500/25",
+                staff: "bg-slate-700/10 text-[#0b1f3a] border-slate-500/25",
+                intern: "bg-slate-500/10 text-[#33475f] border-slate-400/30",
               }[u.role];
 
               return (
                 <div
                   key={`mobile-${u.id}`}
-                  className="glass-panel p-4 rounded-xl border border-slate-200 bg-white space-y-2.5 shadow-xs"
+                  className="glass-panel p-4 space-y-2.5"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="space-y-0.5">
-                      <div className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+                      <div className="font-bold text-[#0b1f3a] text-sm flex items-center gap-1.5">
                         <span>{u.full_name}</span>
                         {u.id === currentUserId && (
-                          <span className="px-1.5 py-0.5 rounded bg-emerald-100 text-[#0F766E] text-[10px] font-semibold">
+                          <span className="px-1.5 py-0.5 rounded bg-[#0f766e]/15 text-[#0b5a54] text-[10px] font-bold">
                             আপনি
                           </span>
                         )}
                       </div>
-                      <div className="text-xs text-slate-500">{u.email}</div>
-                      <div className="text-xs font-mono text-slate-600">{u.phone}</div>
+                      <div className="text-xs text-[#33475f] font-medium">{u.email}</div>
+                      <div className="text-xs font-mono text-[#0b1f3a]">{u.phone}</div>
                     </div>
                     <span
-                      className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${roleStyle} shrink-0`}
+                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${roleStyle} shrink-0`}
                     >
                       {ROLE_LABELS[u.role]?.bn}
                     </span>
                   </div>
 
-                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+                  <div className="pt-2 border-t border-white/55 flex items-center justify-between text-xs">
                     <div>
                       {u.role === "coordinator" ? (
-                        <span className="text-[11px] font-medium text-slate-700">
+                        <span className="text-[11px] font-semibold text-[#0b1f3a]">
                           {u.courses?.name ? `${u.courses.name} (${u.courses.code})` : "কোর্স নেই"}
                         </span>
                       ) : (
-                        <span className="text-[11px] text-slate-400">সকল ডিপার্টমেন্ট</span>
+                        <span className="text-[11px] text-[#33475f] font-medium">সকল ডিপার্টমেন্ট</span>
                       )}
                     </div>
 
                     <div className="flex items-center gap-2">
                       <span
                         className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                          u.is_active ? "bg-emerald-100 text-emerald-800" : "bg-slate-200 text-slate-700"
+                          u.is_active ? "bg-[#22c55e]/15 text-[#15803d]" : "bg-slate-500/15 text-[#33475f]"
                         }`}
                       >
                         <span
                           className={`w-1.5 h-1.5 rounded-full ${
-                            u.is_active ? "bg-emerald-600" : "bg-slate-500"
+                            u.is_active ? "bg-[#15803d]" : "bg-[#33475f]"
                           }`}
                         />
                         <span>{u.is_active ? "সক্রিয়" : "নিষ্ক্রিয়"}</span>
                       </span>
 
                       {u.id === currentUserId ? (
-                        <span className="text-[11px] text-slate-400 italic">Self</span>
+                        <span className="text-[11px] text-[#33475f] italic">Self</span>
                       ) : (
                         <button
                           onClick={() => handleToggleStatus(u.id, u.is_active)}
-                          className={`px-2 py-1 rounded-lg text-[11px] font-semibold border ${
+                          className={`px-2 py-1 rounded-[9px] text-[11px] font-semibold border ${
                             u.is_active
                               ? "bg-red-50 text-red-700 border-red-200"
                               : "bg-emerald-50 text-emerald-700 border-emerald-200"

@@ -59,26 +59,26 @@ export default function InternSchedulePage() {
   return (
     <div className="space-y-4 w-full max-w-xl mx-auto pb-8">
       {/* Top Banner */}
-      <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-emerald-600/20 bg-white/90 shadow-2xs space-y-1">
+      <div className="glass-panel p-4 sm:p-5 space-y-1">
         <div className="flex items-center justify-between">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-semibold">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#0f766e]/15 text-[#0b5a54] text-xs font-semibold">
             <Sparkles className="w-3.5 h-3.5" />
             <span>ইন্টার্ন শুটিং শিডিউল</span>
           </div>
-          <span className="text-[11px] font-bold text-slate-500">
+          <span className="text-[11px] font-bold text-[#33475f]">
             {currentUser?.full_name || "Intern"}
           </span>
         </div>
-        <h1 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+        <h1 className="text-lg sm:text-xl font-extrabold text-[#0b1f3a] tracking-tight">
           Today&apos;s &amp; Upcoming Assigned Shoots
         </h1>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-[#33475f] font-medium">
           আপনার নির্ধারিত শুটিং টিম, কল টাইম এবং ভেন্যু বিস্তারিত দেখুন।
         </p>
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-xs text-slate-400 glass-panel rounded-2xl bg-white">
+        <div className="p-12 text-center text-xs text-[#33475f] font-medium glass-panel">
           <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#0F766E]" />
           <span>শিডিউল লোড হচ্ছে...</span>
         </div>
@@ -88,10 +88,10 @@ export default function InternSchedulePage() {
           {todayShoot ? (
             <div
               id="intern-schedule-today-card"
-              className="rounded-2xl p-4 sm:p-5 bg-gradient-to-br from-emerald-500/15 via-teal-500/10 to-white border border-emerald-600/30 shadow-xs space-y-3"
+              className="glass-emerald-card rounded-[18px] p-4 sm:p-5 space-y-3"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-black text-emerald-800 uppercase tracking-wider">
+                <span className="text-xs font-black text-[#0b5a54] uppercase tracking-wider">
                   Today&apos;s Shoot
                 </span>
                 <span className="px-2.5 py-0.5 rounded-full bg-[#0F766E] text-white text-[11px] font-bold shadow-2xs">

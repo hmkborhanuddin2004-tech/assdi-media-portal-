@@ -105,17 +105,17 @@ export default function CoordinatorRequestsPage() {
   const countRejected = requisitions.filter((r) => r.status === "rejected").length;
 
   return (
-    <div className="space-y-6 w-full max-w-full pb-10">
+    <div className="space-y-4 w-full max-w-full pb-10">
       {/* Top Banner (Preserves Gate 3 E2E test texts) */}
-      <div className="glass-panel rounded-2xl p-5 md:p-6 border border-emerald-600/20 bg-white/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="glass-panel p-5 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#0F766E] text-xs font-semibold">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#0f766e]/15 text-[#0b5a54] text-xs font-semibold">
             <span>কোর্স কোঅর্ডিনেটর পোর্টাল • {user?.course_name || "আমার কোর্স"}</span>
           </div>
-          <h1 className="text-lg sm:text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-lg sm:text-2xl font-extrabold text-[#0b1f3a] tracking-tight">
             কোর্স মিডিয়া রিকুইজিশন ট্র্যাকার
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs sm:text-[13px] text-[#33475f] font-medium">
             আপনার কোর্স হতে প্রেরিত সকল শুটিং রিকুইজিশনের রিয়েল-টাইম অগ্রগতি ও
             ফাইনাল গুগল ড্রাইভ ডেলিভারি লিংক।
           </p>
@@ -124,7 +124,7 @@ export default function CoordinatorRequestsPage() {
         <Link
           href="/coordinator/new"
           id="coordinator-new-req-btn"
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#0F766E] hover:bg-[#115E59] text-white text-xs sm:text-sm font-semibold shadow-sm transition-all duration-150 shrink-0"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[11px] bg-[#0F766E] hover:bg-[#0b5a54] text-white text-xs sm:text-sm font-semibold shadow-[0_6px_14px_rgba(15,118,110,0.3)] transition-all duration-150 shrink-0"
         >
           <FilePlus2 className="w-4 h-4" />
           <span>নতুন রিকুইজিশন দিন</span>
@@ -135,20 +135,20 @@ export default function CoordinatorRequestsPage() {
       <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 text-xs" id="status-filters">
         <button
           onClick={() => setActiveFilter("all")}
-          className={`px-3 py-1.5 rounded-lg font-semibold transition-all shrink-0 ${
+          className={`px-3 py-1.5 rounded-[10px] font-semibold transition-all shrink-0 ${
             activeFilter === "all"
-              ? "bg-[#0F766E] text-white shadow-xs"
-              : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium"
+              ? "bg-[#0F766E] text-white shadow-[0_5px_12px_rgba(15,118,110,0.3)]"
+              : "bg-white/55 border border-white/80 text-[#33475f] hover:bg-white/80 hover:text-[#0b1f3a]"
           }`}
         >
           সকল ({countAll})
         </button>
         <button
           onClick={() => setActiveFilter("pending")}
-          className={`px-3 py-1.5 rounded-lg font-semibold transition-all shrink-0 ${
+          className={`px-3 py-1.5 rounded-[10px] font-semibold transition-all shrink-0 ${
             activeFilter === "pending"
-              ? "bg-[#0F766E] text-white shadow-xs"
-              : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium"
+              ? "bg-[#0F766E] text-white shadow-[0_5px_12px_rgba(15,118,110,0.3)]"
+              : "bg-white/55 border border-white/80 text-[#33475f] hover:bg-white/80 hover:text-[#0b1f3a]"
           }`}
         >
           পেন্ডিং ({countPending})
@@ -156,10 +156,10 @@ export default function CoordinatorRequestsPage() {
         <button
           onClick={() => setActiveFilter("approved")}
           id="filter-approved"
-          className={`px-3 py-1.5 rounded-lg font-semibold transition-all shrink-0 ${
+          className={`px-3 py-1.5 rounded-[10px] font-semibold transition-all shrink-0 ${
             activeFilter === "approved"
-              ? "bg-[#0F766E] text-white shadow-xs"
-              : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium"
+              ? "bg-[#0F766E] text-white shadow-[0_5px_12px_rgba(15,118,110,0.3)]"
+              : "bg-white/55 border border-white/80 text-[#33475f] hover:bg-white/80 hover:text-[#0b1f3a]"
           }`}
         >
           অনুমোদিত ({countApproved})
@@ -167,10 +167,10 @@ export default function CoordinatorRequestsPage() {
         <button
           onClick={() => setActiveFilter("shoot_done")}
           id="filter-shoot-done"
-          className={`px-3 py-1.5 rounded-lg font-semibold transition-all shrink-0 ${
+          className={`px-3 py-1.5 rounded-[10px] font-semibold transition-all shrink-0 ${
             activeFilter === "shoot_done"
-              ? "bg-[#0F766E] text-white shadow-xs"
-              : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium"
+              ? "bg-[#0F766E] text-white shadow-[0_5px_12px_rgba(15,118,110,0.3)]"
+              : "bg-white/55 border border-white/80 text-[#33475f] hover:bg-white/80 hover:text-[#0b1f3a]"
           }`}
         >
           শ্যুট সম্পন্ন ({countShootDone})
@@ -178,20 +178,20 @@ export default function CoordinatorRequestsPage() {
         <button
           onClick={() => setActiveFilter("delivered")}
           id="filter-delivered"
-          className={`px-3 py-1.5 rounded-lg font-semibold transition-all shrink-0 ${
+          className={`px-3 py-1.5 rounded-[10px] font-semibold transition-all shrink-0 ${
             activeFilter === "delivered"
-              ? "bg-[#0F766E] text-white shadow-xs"
-              : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium"
+              ? "bg-[#0F766E] text-white shadow-[0_5px_12px_rgba(15,118,110,0.3)]"
+              : "bg-white/55 border border-white/80 text-[#33475f] hover:bg-white/80 hover:text-[#0b1f3a]"
           }`}
         >
           ডেলিভার্ড ({countDelivered})
         </button>
         <button
           onClick={() => setActiveFilter("rejected")}
-          className={`px-3 py-1.5 rounded-lg font-semibold transition-all shrink-0 ${
+          className={`px-3 py-1.5 rounded-[10px] font-semibold transition-all shrink-0 ${
             activeFilter === "rejected"
-              ? "bg-[#0F766E] text-white shadow-xs"
-              : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium"
+              ? "bg-[#0F766E] text-white shadow-[0_5px_12px_rgba(15,118,110,0.3)]"
+              : "bg-white/55 border border-white/80 text-[#33475f] hover:bg-white/80 hover:text-[#0b1f3a]"
           }`}
         >
           বাতিলকৃত ({countRejected})
@@ -201,11 +201,11 @@ export default function CoordinatorRequestsPage() {
       {/* Requisitions List */}
       <div className="space-y-3" id="requisitions-container">
         {loading ? (
-          <div className="p-8 text-center text-xs text-slate-400 glass-panel rounded-xl">
+          <div className="p-8 text-center text-xs text-[#33475f] font-medium glass-panel">
             রিকুইজিশন তালিকা লোড হচ্ছে...
           </div>
         ) : filtered.length === 0 ? (
-          <div className="p-8 text-center text-xs text-slate-500 glass-panel rounded-xl border border-dashed border-slate-200">
+          <div className="p-8 text-center text-xs text-[#33475f] font-medium glass-panel">
             এই ক্যাটাগরিতে কোনো রিকুইজিশন পাওয়া যায়নি।
           </div>
         ) : (
@@ -222,10 +222,10 @@ export default function CoordinatorRequestsPage() {
               <div
                 key={req.id}
                 id={`req-card-${req.id}`}
-                className="glass-panel p-4 sm:p-5 rounded-xl border border-slate-200/80 shadow-xs space-y-3 hover:border-[#0F766E]/40 transition-all bg-white/90"
+                className="glass-panel p-4 sm:p-5 space-y-3 hover:border-[#0F766E]/40 transition-all"
               >
                 {/* Header Row */}
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/60 pb-3">
                   <div className="flex items-center gap-2">
                     {/* Status Badge */}
                     {isDelivered && (

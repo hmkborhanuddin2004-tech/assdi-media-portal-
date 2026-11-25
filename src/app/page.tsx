@@ -36,14 +36,14 @@ export default function HomePage() {
             </div>
           </div>
 
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#0F172A] tracking-tight leading-snug">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#0b1f3a] tracking-tight leading-snug">
             আছ-সুন্নাহ স্কিল ডেভেলপমেন্ট ইনস্টিটিউট
             <span className="block text-[#0F766E] mt-1">
               সেন্ট্রাল মিডিয়া ম্যানেজমেন্ট পোর্টাল
             </span>
           </h1>
 
-          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+          <p className="text-xs sm:text-sm text-[#33475f] leading-relaxed font-medium">
             কোর্স রিকুইজিশন, গিয়ার ইনভেন্টরি, ৬-ধাপ সেন্ট্রাল টাস্ক বোর্ড ও দৈনিক
             কাজের লগ পরিচালনার সমন্বিত ডিজিটাল প্ল্যাটফর্ম।
           </p>
@@ -51,7 +51,7 @@ export default function HomePage() {
           <div className="pt-2 flex flex-wrap gap-2.5">
             <Link
               href="/coordinator/new"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0F766E] hover:bg-[#115E59] text-white text-xs sm:text-sm font-semibold shadow-sm transition-all duration-150"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[11px] bg-[#0F766E] hover:bg-[#0b5a54] text-white text-xs sm:text-sm font-semibold shadow-[0_6px_14px_rgba(15,118,110,0.3)] transition-all duration-150"
             >
               <FilePlus2 className="w-4 h-4" />
               <span>নতুন রিকুইজিশন</span>
@@ -60,7 +60,7 @@ export default function HomePage() {
 
             <Link
               href="/admin/tasks"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 text-xs sm:text-sm font-semibold border border-slate-200/90 shadow-xs transition-all duration-150"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-[11px] bg-white/55 hover:bg-white/80 text-[#0b1f3a] text-xs sm:text-sm font-semibold border border-white/80 shadow-xs transition-all duration-150"
             >
               <Kanban className="w-4 h-4 text-[#0F766E]" />
               <span>টাস্ক বোর্ড</span>

@@ -127,9 +127,9 @@ export default function AdminMasterCalendarPage() {
       </div>
 
       {/* Filter Tabs & Search Bar */}
-      <div className="print:hidden flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-2.5 rounded-2xl border border-slate-200/80 shadow-xs">
+      <div className="print:hidden glass-panel flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-2.5">
         {/* Tabs: Tomorrow, Next 3 Days, Next 7 Days */}
-        <div className="inline-flex p-1 bg-slate-100/90 rounded-xl gap-1 shrink-0">
+        <div className="inline-flex p-1 bg-white/35 border border-white/60 rounded-xl gap-1 shrink-0">
           {(["tomorrow", "next_3_days", "next_7_days"] as CalendarWindow[]).map((win) => {
             const isActive = activeWindow === win;
             const meta = CALENDAR_WINDOW_LABELS[win];
@@ -138,19 +138,19 @@ export default function AdminMasterCalendarPage() {
                 key={win}
                 id={`calendar-tab-${win}`}
                 onClick={() => handleTabChange(win)}
-                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all duration-150 ${
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-[10px] text-xs font-semibold transition-all duration-150 ${
                   isActive
-                    ? "bg-[#0F766E] text-white shadow-xs"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
+                    ? "bg-[#0F766E] text-white shadow-[0_5px_12px_rgba(15,118,110,0.3)]"
+                    : "text-[#33475f] hover:text-[#0b1f3a] hover:bg-white/60"
                 }`}
               >
-                <Calendar className={`w-3.5 h-3.5 shrink-0 ${isActive ? "text-white" : "text-slate-400"}`} />
+                <Calendar className={`w-3.5 h-3.5 shrink-0 ${isActive ? "text-white" : "text-[#33475f]"}`} />
                 <span>{meta.en}</span>
-                <span className="hidden sm:inline text-[11px] opacity-80">
+                <span className="hidden sm:inline text-[11px] opacity-85">
                   ({meta.bn})
                 </span>
                 {isActive && (
-                  <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-white/20 text-white font-bold">
+                  <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-white/25 text-white font-bold">
                     {shoots.length}
                   </span>
                 )}
@@ -161,14 +161,14 @@ export default function AdminMasterCalendarPage() {
 
         {/* Search Input */}
         <div className="relative flex-1 sm:max-w-xs">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#33475f] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             id="calendar-search-input"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="কোর্স, ভেন্যু বা টিম দিয়ে খুঁজুন..."
-            className="w-full pl-9 pr-3 py-2 text-xs rounded-xl bg-slate-50 border border-slate-200 focus:outline-hidden focus:ring-2 focus:ring-[#0F766E]/20 focus:border-[#0F766E] transition-all"
+            className="w-full pl-9 pr-3 py-2 text-xs rounded-[11px] bg-white/55 border border-white/80 text-[#0b1f3a] placeholder-[#475569] focus:outline-hidden focus:bg-white/75 focus:ring-2 focus:ring-[#0F766E]/25 focus:border-[#0F766E] transition-all"
           />
         </div>
       </div>
@@ -387,7 +387,7 @@ export default function AdminMasterCalendarPage() {
             {selectedShoot ? (
               <div
                 id="calendar-shoot-slip-panel"
-                className="glass-panel bg-white/95 rounded-2xl p-6 border border-emerald-600/30 shadow-md space-y-5 relative overflow-hidden print:p-8 print:m-0 print:border-none print:shadow-none print:w-full print:bg-white"
+                className="glass-strong p-6 space-y-5 relative overflow-hidden print:p-8 print:m-0 print:border-none print:shadow-none print:w-full print:bg-white"
               >
                 {/* Slip Header Badge */}
                 <div className="flex flex-col items-center text-center pb-2 border-b border-slate-100">

@@ -592,52 +592,52 @@ export default function AdminGearPage() {
       )}
 
       {/* Quick Stats Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-        <div className="bg-white/80 backdrop-blur-md border border-slate-200/80 rounded-2xl p-4 shadow-sm">
-          <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">মোট সরঞ্জাম (Total)</div>
-          <div className="text-2xl font-bold text-slate-900 mt-1">{totalCount}</div>
-          <div className="text-[10px] text-slate-400 mt-0.5">সব ক্যাটাগরি মিলিয়ে</div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+        <div className="glass-panel p-4">
+          <div className="text-[11px] font-bold text-[#33475f] uppercase tracking-wider">মোট সরঞ্জাম (Total)</div>
+          <div className="text-2xl font-extrabold text-[#0b1f3a] mt-1">{totalCount}</div>
+          <div className="text-[10.5px] font-medium text-[#33475f] mt-0.5">সব ক্যাটাগরি মিলিয়ে</div>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-md border border-slate-200/80 rounded-2xl p-4 shadow-sm">
-          <div className="text-[11px] font-semibold text-emerald-700 uppercase tracking-wider flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+        <div className="glass-panel p-4">
+          <div className="text-[11px] font-bold text-[#15803d] uppercase tracking-wider flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#22c55e]"></span>
             উপলব্ধ (Available)
           </div>
-          <div className="text-2xl font-bold text-emerald-700 mt-1">{availableCount}</div>
-          <div className="text-[10px] text-slate-400 mt-0.5">শুটের জন্য প্রস্তুত</div>
+          <div className="text-2xl font-extrabold text-[#15803d] mt-1">{availableCount}</div>
+          <div className="text-[10.5px] font-medium text-[#33475f] mt-0.5">শুটের জন্য প্রস্তুত</div>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-md border border-slate-200/80 rounded-2xl p-4 shadow-sm">
-          <div className="text-[11px] font-semibold text-amber-700 uppercase tracking-wider flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+        <div className="glass-panel p-4">
+          <div className="text-[11px] font-bold text-[#b45309] uppercase tracking-wider flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#f59e0b]"></span>
             ব্যবহৃত (In Use)
           </div>
-          <div className="text-2xl font-bold text-amber-700 mt-1">{inUseCount}</div>
-          <div className="text-[10px] text-slate-400 mt-0.5">চলতি শুটে নিয়োজিত</div>
+          <div className="text-2xl font-extrabold text-[#b45309] mt-1">{inUseCount}</div>
+          <div className="text-[10.5px] font-medium text-[#33475f] mt-0.5">চলতি শুটে নিয়োজিত</div>
         </div>
 
-        <div className="bg-white/80 backdrop-blur-md border border-slate-200/80 rounded-2xl p-4 shadow-sm">
-          <div className="text-[11px] font-semibold text-rose-700 uppercase tracking-wider flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-rose-500"></span>
+        <div className="glass-panel p-4">
+          <div className="text-[11px] font-bold text-[#dc2626] uppercase tracking-wider flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#dc2626]"></span>
             রক্ষণাবেক্ষণ (Maintenance)
           </div>
-          <div className="text-2xl font-bold text-rose-700 mt-1">{maintenanceCount}</div>
-          <div className="text-[10px] text-slate-400 mt-0.5">মেরামত বা টেস্টিং চলছে</div>
+          <div className="text-2xl font-extrabold text-[#dc2626] mt-1">{maintenanceCount}</div>
+          <div className="text-[10.5px] font-medium text-[#33475f] mt-0.5">মেরামত বা টেস্টিং চলছে</div>
         </div>
       </div>
 
       {/* Filter Tabs & Category Selector */}
-      <div className="bg-white/80 backdrop-blur-md border border-slate-200/80 rounded-2xl p-3 sm:p-4 shadow-sm flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div className="glass-panel p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         {/* Status Filters */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           <button
             onClick={() => setStatusFilter("all")}
             data-testid="filter-status-all"
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 ${
+            className={`px-3 py-1.5 rounded-[10px] text-xs font-semibold transition-all shrink-0 ${
               statusFilter === "all"
-                ? "bg-[#0F766E] text-white shadow-sm"
-                : "text-slate-600 hover:bg-slate-100"
+                ? "bg-[#0F766E] text-white shadow-[0_5px_12px_rgba(15,118,110,0.3)]"
+                : "text-[#33475f] hover:bg-white/60 hover:text-[#0b1f3a]"
             }`}
           >
             All Status ({totalCount})
@@ -645,10 +645,10 @@ export default function AdminGearPage() {
           <button
             onClick={() => setStatusFilter("available")}
             data-testid="filter-status-available"
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 ${
+            className={`px-3 py-1.5 rounded-[10px] text-xs font-semibold transition-all shrink-0 ${
               statusFilter === "available"
                 ? "bg-emerald-600 text-white shadow-sm"
-                : "text-slate-600 hover:bg-emerald-50 hover:text-emerald-700"
+                : "text-[#33475f] hover:bg-white/60 hover:text-[#15803d]"
             }`}
           >
             Available ({availableCount})
@@ -656,10 +656,10 @@ export default function AdminGearPage() {
           <button
             onClick={() => setStatusFilter("in_use")}
             data-testid="filter-status-in_use"
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 ${
+            className={`px-3 py-1.5 rounded-[10px] text-xs font-semibold transition-all shrink-0 ${
               statusFilter === "in_use"
                 ? "bg-amber-600 text-white shadow-sm"
-                : "text-slate-600 hover:bg-amber-50 hover:text-amber-700"
+                : "text-[#33475f] hover:bg-white/60 hover:text-[#b45309]"
             }`}
           >
             In Use ({inUseCount})
@@ -667,10 +667,10 @@ export default function AdminGearPage() {
           <button
             onClick={() => setStatusFilter("maintenance")}
             data-testid="filter-status-maintenance"
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all shrink-0 ${
+            className={`px-3 py-1.5 rounded-[10px] text-xs font-semibold transition-all shrink-0 ${
               statusFilter === "maintenance"
-                ? "bg-rose-600 text-white shadow-sm"
-                : "text-slate-600 hover:bg-rose-50 hover:text-rose-700"
+                ? "bg-[#dc2626] text-white shadow-sm"
+                : "text-[#33475f] hover:bg-white/60 hover:text-[#dc2626]"
             }`}
           >
             Maintenance ({maintenanceCount})
@@ -679,12 +679,12 @@ export default function AdminGearPage() {
 
         {/* Category Dropdown */}
         <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-slate-500 hidden sm:inline">Category:</span>
+          <span className="text-xs font-semibold text-[#33475f] hidden sm:inline">Category:</span>
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
             data-testid="filter-category-select"
-            className="w-full sm:w-auto px-3 py-1.5 text-xs rounded-xl bg-white border border-slate-200 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E] shadow-sm"
+            className="w-full sm:w-auto px-3 py-1.5 text-xs rounded-[11px] bg-white/55 border border-white/80 text-[#0b1f3a] font-semibold focus:outline-none focus:bg-white/75 focus:ring-2 focus:ring-[#0F766E]/25"
           >
             <option value="all">সকল ক্যাটাগরি (All Categories)</option>
             {GEAR_CATEGORIES.map((cat) => (
@@ -697,23 +697,23 @@ export default function AdminGearPage() {
       </div>
 
       {/* Master Inventory Card matching Mockup */}
-      <div className="bg-white/85 backdrop-blur-md border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
-        <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+      <div className="glass-panel overflow-hidden">
+        <div className="px-5 py-4 border-b border-white/60 bg-white/25 flex items-center justify-between">
           <div>
-            <h2 className="text-base font-bold text-slate-900 tracking-tight">Master Inventory</h2>
-            <p className="text-xs text-slate-500">
+            <h2 className="text-[15.5px] font-bold text-[#0b1f3a] tracking-tight">Master Inventory</h2>
+            <p className="text-xs text-[#33475f] font-medium">
               ক্যামেরা বডি, লেন্স, ড্রোন, গিম্বল ও লাইটিং ইকুইপমেন্টের লাইভ রেজিস্টার
             </p>
           </div>
-          <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full">
+          <span className="text-xs font-bold text-[#0b1f3a] bg-white/55 border border-white/80 px-2.5 py-1 rounded-full">
             {filteredGear.length} Items Listed
           </span>
         </div>
 
         {loading ? (
-          <div className="p-12 text-center text-xs text-slate-500">ইনভেন্টরি লোড হচ্ছে...</div>
+          <div className="p-12 text-center text-xs text-[#33475f] font-medium">ইনভেন্টরি লোড হচ্ছে...</div>
         ) : filteredGear.length === 0 ? (
-          <div className="p-12 text-center text-xs text-slate-500">
+          <div className="p-12 text-center text-xs text-[#33475f] font-medium">
             কোনো সরঞ্জাম খুঁজে পাওয়া যায়নি। ফিল্টার পরিবর্তন করুন।
           </div>
         ) : (
@@ -722,7 +722,7 @@ export default function AdminGearPage() {
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse" data-testid="gear-master-table">
                 <thead>
-                  <tr className="border-b border-slate-200/80 bg-slate-50/70 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                  <tr className="border-b border-white/70 bg-white/30 text-[10px] font-bold text-[#33475f] uppercase tracking-[0.13em]">
                     <th className="py-3 px-5">Gear & Model</th>
                     <th className="py-3 px-4">Serial No.</th>
                     <th className="py-3 px-4">Status</th>

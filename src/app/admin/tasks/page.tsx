@@ -343,20 +343,20 @@ export default function AdminTasksKanbanPage() {
                         <div
                           key={task.id}
                           id={`task-card-${task.id}`}
-                          className="glass-panel p-3.5 rounded-xl border border-slate-200/90 bg-white/95 shadow-2xs hover:shadow-xs hover:border-[#0F766E]/40 transition-all space-y-2.5 text-xs"
+                          className="glass-panel p-3.5 hover:border-[#0F766E]/40 transition-all space-y-2.5 text-xs"
                         >
                           {/* Title & Format */}
                           <div>
-                            <h3 className="font-bold text-slate-900 leading-snug">
+                            <h3 className="font-bold text-[#0b1f3a] leading-snug">
                               {task.course_name}
                             </h3>
-                            <p className="text-[11px] text-slate-500 font-medium">
+                            <p className="text-[11px] text-[#33475f] font-medium">
                               {task.format_duration} • {task.shoot_date}
                             </p>
                           </div>
 
                           {/* Card Sub-Lines Matching Mockup */}
-                          <div className="space-y-1 text-[11px] text-slate-600">
+                          <div className="space-y-1 text-[11px] text-[#33475f]">
                             {/* Team Assignment Line */}
                             {task.assignees.length > 0 && (
                               <div className="flex items-center gap-1">

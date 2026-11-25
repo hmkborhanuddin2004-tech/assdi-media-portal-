@@ -106,9 +106,9 @@ function LoginForm() {
     <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center p-3 sm:p-6 w-full max-w-full">
       <div className="w-full max-w-md mx-auto space-y-5">
         {/* Main Login Card */}
-        <div className="glass-panel rounded-2xl p-6 sm:p-8 border border-emerald-600/20 shadow-md bg-white/90 backdrop-blur-md">
+        <div className="glass-strong p-6 sm:p-8">
           {/* Brand Header */}
-          <div className="flex flex-col items-center text-center space-y-2.5 pb-4 border-b border-slate-200/80">
+          <div className="flex flex-col items-center text-center space-y-2.5 pb-4 border-b border-white/60">
             <div className="w-16 h-16 rounded-2xl bg-white p-2 border border-emerald-100 flex items-center justify-center shadow-md shadow-emerald-900/10">
               <Image
                 src="/images/assdi-logo.png"
@@ -249,8 +249,8 @@ function LoginForm() {
         </div>
 
         {/* Quick Demo Logins Helper */}
-        <div className="glass-panel rounded-xl p-3.5 border border-slate-200/80 bg-white/70 text-center space-y-2">
-          <div className="text-[11px] font-semibold text-slate-600">
+        <div className="glass-panel p-3.5 text-center space-y-2">
+          <div className="text-[11px] font-semibold text-[#33475f]">
             টেস্ট লগইন বিকল্প (Quick Test Accounts • Pass: assdi123):
           </div>
           <div className="flex flex-wrap justify-center gap-1.5">

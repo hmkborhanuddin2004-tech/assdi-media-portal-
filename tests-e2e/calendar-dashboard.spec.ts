@@ -98,16 +98,25 @@ test.describe("Step 7 (S7-01): Master Calendar & Live Dashboard E2E", () => {
     }
 
     // ========================================================================
-    // 2. CREATE 3 SHOOTS ON THE SAME DAY ACROSS DIFFERENT COURSES & TIMES
+    // 2. CREATE SHOOTS ON TOMORROW'S DATE ACROSS DIFFERENT COURSES & TIMES
     // ========================================================================
-    // Target Date: 2026-11-25 (Tomorrow in Asia/Dhaka)
-    // Shoot A: 09:00 AM • Electrical
-    // Shoot B: 11:30 AM • Mobile Servicing
-    // Shoot C: 04:30 PM • Dawah
-    // (Existing: 02:00 PM • Motorcycle Servicing)
-    const sameDay = "2026-11-25";
+    const tomorrowRes = await page.request.get("/api/calendar?window=tomorrow");
+    const tomorrowJson = await tomorrowRes.json();
+    const existingTomorrow: Array<{ call_time: string; course_name: string }> = tomorrowJson.shoots || [];
+    const sameDay: string =
+      tomorrowJson.bounds?.tomorrowStr ||
+      (() => {
+        const d = new Date();
+        d.setDate(d.getDate() + 1);
+        return new Intl.DateTimeFormat("en-CA", {
+          timeZone: "Asia/Dhaka",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }).format(d);
+      })();
 
-    // Shoot A: Electrical at 09:00 AM
+    // Shoot A: Electrical at 08:30 AM (strictly before seeded 10:30 AM or 02:00 PM)
     const resA = await page.request.post("/api/requisitions", {
       data: {
         course_id: "c1000000-0000-0000-0000-000000000004", // Electrical
@@ -116,7 +125,7 @@ test.describe("Step 7 (S7-01): Master Calendar & Live Dashboard E2E", () => {
         framing_type: "vertical_9_16",
         venue_id: "ba000000-0000-0000-0000-000000000001",
         shoot_date: sameDay,
-        call_time: "09:00 AM",
+        call_time: "08:30 AM",
         coordinator_phone: "01711000001",
         notes: "Morning Electrical Lab Shoot",
         is_emergency_override: true,
@@ -137,7 +146,7 @@ test.describe("Step 7 (S7-01): Master Calendar & Live Dashboard E2E", () => {
       },
     });
 
-    // Shoot B: Mobile Servicing at 11:30 AM
+    // Shoot B: Mobile Servicing at 09:30 AM
     const resB = await page.request.post("/api/requisitions", {
       data: {
         course_id: "c1000000-0000-0000-0000-000000000003", // Mobile Servicing
@@ -146,7 +155,7 @@ test.describe("Step 7 (S7-01): Master Calendar & Live Dashboard E2E", () => {
         framing_type: "vertical_9_16",
         venue_id: "ba000000-0000-0000-0000-000000000003",
         shoot_date: sameDay,
-        call_time: "11:30 AM",
+        call_time: "09:30 AM",
         coordinator_phone: "01711000001",
         notes: "Midday Mobile Lab Demonstration",
         is_emergency_override: true,
@@ -167,6 +176,37 @@ test.describe("Step 7 (S7-01): Master Calendar & Live Dashboard E2E", () => {
       },
     });
 
+    let expectedThirdTime = existingTomorrow[0]?.call_time || "02:00 PM";
+    let expectedThirdCourse = existingTomorrow[0]?.course_name || "Motorcycle Servicing";
+
+    if (existingTomorrow.length === 0) {
+      const resC = await page.request.post("/api/requisitions", {
+        data: {
+          course_id: "c1000000-0000-0000-0000-000000000002", // Motorcycle Servicing
+          program_type: "workshop",
+          format_duration: "3-5m Documentary",
+          framing_type: "horizontal_16_9",
+          venue_id: "ba000000-0000-0000-0000-000000000002",
+          shoot_date: sameDay,
+          call_time: "02:00 PM",
+          coordinator_phone: "01711000001",
+          notes: "Afternoon Motorcycle Servicing Shoot",
+          is_emergency_override: true,
+          override_reason: "Special emergency override by Media Head",
+        },
+      });
+      const jsonC = await resC.json();
+      await page.request.patch(`/api/requisitions/${jsonC.requisition.id}`, {
+        data: {
+          action: "approve",
+          lead_staff_id: "00000000-0000-0000-0000-000000000007",
+          assignee_ids: ["00000000-0000-0000-0000-000000000007"],
+          deadline_at: `${sameDay}T18:00:00Z`,
+          gear_ids: ["g1000000-0000-0000-0000-000000000006"],
+        },
+      });
+    }
+
     // ========================================================================
     // 3. NAVIGATE TO /admin/calendar & VERIFY CHRONOLOGICAL ORDERING
     // ========================================================================
@@ -183,8 +223,7 @@ test.describe("Step 7 (S7-01): Master Calendar & Live Dashboard E2E", () => {
     await expect(tabNext3Days).toBeVisible();
     await expect(tabNext7Days).toBeVisible();
 
-    // On Tomorrow tab: Verify all shoots on 2026-11-25 are listed
-    // Ordered: 09:00 AM (Electrical) < 11:30 AM (Mobile) < 02:00 PM (Motorcycle)
+    // On Tomorrow tab: Verify all shoots on tomorrow date are listed in strict chronological order
     const shootCards = page.locator("#calendar-shoots-list > div");
     await expect(shootCards).toHaveCount(3);
 
@@ -193,14 +232,14 @@ test.describe("Step 7 (S7-01): Master Calendar & Live Dashboard E2E", () => {
     const shoot3 = shootCards.nth(2);
 
     // Verify strict chronological order
-    await expect(shoot1).toContainText("09:00 AM");
+    await expect(shoot1).toContainText("08:30 AM");
     await expect(shoot1).toContainText("Electrical");
 
-    await expect(shoot2).toContainText("11:30 AM");
+    await expect(shoot2).toContainText("09:30 AM");
     await expect(shoot2).toContainText("Mobile Servicing");
 
-    await expect(shoot3).toContainText("02:00 PM");
-    await expect(shoot3).toContainText("Motorcycle Servicing");
+    await expect(shoot3).toContainText(expectedThirdTime);
+    await expect(shoot3).toContainText(expectedThirdCourse);
 
     // ========================================================================
     // 4. LIVE SHOOT ASSIGNMENT SLIP INTERACTION (Desktop Right Panel & Mobile Modal)
@@ -210,10 +249,10 @@ test.describe("Step 7 (S7-01): Master Calendar & Live Dashboard E2E", () => {
       const slipPanel = page.locator("#calendar-shoot-slip-panel");
       await expect(slipPanel).toBeVisible();
 
-      // Click second shoot (Mobile Servicing at 11:30 AM)
+      // Click second shoot (Mobile Servicing at 09:30 AM)
       await shoot2.click();
       await expect(page.locator("#calendar-slip-course")).toContainText("Mobile Servicing");
-      await expect(page.locator("#calendar-slip-calltime")).toContainText("11:30 AM");
+      await expect(page.locator("#calendar-slip-calltime")).toContainText("09:30 AM");
 
       // Verify 1-click Download PDF and WhatsApp share buttons in right panel
       const downloadBtn = page.locator("#calendar-download-pdf-btn");
@@ -225,10 +264,10 @@ test.describe("Step 7 (S7-01): Master Calendar & Live Dashboard E2E", () => {
       expect(whatsappHref).toContain("https://wa.me/?text=");
       expect(whatsappHref).toContain("Mobile%20Servicing");
 
-      // Click third shoot (Motorcycle Servicing at 02:00 PM)
+      // Click third shoot
       await shoot3.click();
-      await expect(page.locator("#calendar-slip-course")).toContainText("Motorcycle Servicing");
-      await expect(page.locator("#calendar-slip-calltime")).toContainText("02:00 PM");
+      await expect(page.locator("#calendar-slip-course")).toContainText(expectedThirdCourse);
+      await expect(page.locator("#calendar-slip-calltime")).toContainText(expectedThirdTime);
     } else {
       // Mobile: Tap "স্লিপ দেখুন" button on second shoot
       const viewSlipBtn = shoot2.locator("button:has-text('স্লিপ দেখুন')");

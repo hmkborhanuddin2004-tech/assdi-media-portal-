@@ -82,25 +82,25 @@ export default function StaffInternStatusPage() {
   });
 
   return (
-    <div className="space-y-6 w-full max-w-full">
+    <div className="space-y-4 w-full max-w-full">
       {/* Top Banner */}
-      <div className="glass-panel rounded-2xl p-5 md:p-6 border border-emerald-600/20 bg-white/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="glass-panel p-5 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teal-100 text-[#0F766E] text-xs font-semibold">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#0f766e]/15 text-[#0b5a54] text-xs font-semibold">
             <Users className="w-3.5 h-3.5" />
             <span>টিম লিড পর্যবেক্ষণ • ইন্টার্ন ট্র্যাকিং</span>
           </div>
-          <h1 className="text-lg sm:text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-lg sm:text-2xl font-extrabold text-[#0b1f3a] tracking-tight">
             ইন্টার্ন অ্যাক্টিভিটি ও র ফুটেজ ট্র্যাকিং
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs sm:text-[13px] text-[#33475f] font-medium">
             প্রজেক্ট লিড হিসেবে আপনার অ্যাসাইন করা ইন্টার্নদের শুটিং ও র ফুটেজ আপলোড স্ট্যাটাস মনিটর করুন।
           </p>
         </div>
 
         <Link
           href="/staff/tasks"
-          className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs transition-all shrink-0"
+          className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-[11px] border border-white/80 bg-white/55 hover:bg-white/80 text-[#0b1f3a] text-xs font-semibold shadow-xs transition-all shrink-0"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>টাস্ক তালিকায় ফিরে যান</span>
@@ -108,25 +108,25 @@ export default function StaffInternStatusPage() {
       </div>
 
       {successNote && (
-        <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2 animate-in fade-in">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+        <div className="p-3.5 rounded-[14px] bg-emerald-500/15 backdrop-blur-md border border-emerald-400/35 text-[#0b1f3a] font-semibold text-xs flex items-center gap-2 animate-in fade-in">
+          <CheckCircle2 className="w-4 h-4 text-[#15803d] shrink-0" />
           <span>{successNote}</span>
         </div>
       )}
 
       {/* Interns Tracking List */}
       <div className="space-y-3">
-        <h2 className="text-sm font-bold text-slate-800">
+        <h2 className="text-sm font-bold text-[#0b1f3a]">
           অ্যাসাইন করা ইন্টার্ন ও ফুটেজ রিসিভ স্ট্যাটাস ({internTasks.length})
         </h2>
 
         {loading ? (
-          <div className="p-12 text-center text-xs text-slate-400 glass-panel rounded-xl">
+          <div className="p-12 text-center text-xs text-[#33475f] font-medium glass-panel">
             <Loader2 className="w-5 h-5 animate-spin mx-auto text-[#0F766E] mb-2" />
             <span>ইন্টার্ন ট্র্যাকিং তথ্য লোড হচ্ছে...</span>
           </div>
         ) : internTasks.length === 0 ? (
-          <div className="p-8 text-center text-xs text-slate-500 glass-panel rounded-xl border border-dashed border-slate-200">
+          <div className="p-8 text-center text-xs text-[#33475f] font-medium glass-panel">
             বর্তমানে আপনার কোনো টাস্কে ইন্টার্ন সদস্য যুক্ত নেই।
           </div>
         ) : (
@@ -138,15 +138,15 @@ export default function StaffInternStatusPage() {
                 <div
                   key={task.id}
                   id={`intern-status-card-${task.id}`}
-                  className="glass-panel p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-2xs bg-white/95 space-y-3.5"
+                  className="glass-panel p-4 sm:p-5 space-y-3.5"
                 >
                   {/* Task Header */}
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                  <div className="flex items-center justify-between border-b border-white/60 pb-2.5">
                     <div>
-                      <h3 className="font-bold text-slate-900 text-sm">
+                      <h3 className="font-bold text-[#0b1f3a] text-sm">
                         {task.course_name}
                       </h3>
-                      <p className="text-[11px] text-slate-500">
+                      <p className="text-[11px] text-[#33475f] font-medium">
                         {task.venue_name} • {task.call_time}
                       </p>
                     </div>

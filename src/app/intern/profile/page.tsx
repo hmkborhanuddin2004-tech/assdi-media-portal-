@@ -69,28 +69,28 @@ export default function InternProfilePage() {
   return (
     <div className="space-y-4 w-full max-w-xl mx-auto pb-8">
       {/* Top Banner */}
-      <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-emerald-600/20 bg-white/90 shadow-2xs space-y-1">
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-800 text-xs font-semibold">
+      <div className="glass-panel p-4 sm:p-5 space-y-1">
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#0f766e]/15 text-[#0b5a54] text-xs font-semibold">
           <Sparkles className="w-3.5 h-3.5" />
           <span>ইন্টার্ন প্রোফাইল ও অ্যাকাউন্ট</span>
         </div>
-        <h1 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+        <h1 className="text-lg sm:text-xl font-extrabold text-[#0b1f3a] tracking-tight">
           Intern Member Profile
         </h1>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-[#33475f] font-medium">
           আপনার প্রোফাইল তথ্য ও মোট সম্পন্ন কাজের হিসেব।
         </p>
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-xs text-slate-400 glass-panel rounded-2xl bg-white">
+        <div className="p-12 text-center text-xs text-[#33475f] font-medium glass-panel">
           <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#0F766E]" />
           <span>প্রোফাইল লোড হচ্ছে...</span>
         </div>
       ) : (
         <div className="space-y-4">
           {/* User Card */}
-          <div className="glass-panel p-5 rounded-2xl border border-slate-200/80 bg-white shadow-2xs space-y-4">
+          <div className="glass-panel p-5 space-y-4">
             <div className="flex items-center gap-3.5">
               <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#0F766E] to-teal-500 text-white flex items-center justify-center font-bold text-lg shadow-sm">
                 {currentUser?.full_name?.charAt(0) || "I"}

@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light" />
+    <link rel="icon" href="data:," />
+    <title>ASSDI Media Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root{
+        --ink:#0b1f3a;
+        --ink-2:#33475f;
+        --muted:#64748b;
+        --teal:#0f766e;
+        --teal-dark:#0b5a54;
+        --amber:#b45309;
+        --amber-bg:rgba(245,158,11,.16);
+        --green:#15803d;
+        --green-bg:rgba(34,197,94,.15);
+        --red:#dc2626;
+        --red-bg:rgba(220,38,38,.10);
+        --glass:rgba(255,255,255,.40);
+        --glass-strong:rgba(255,255,255,.52);
+        --glass-border:rgba(255,255,255,.75);
+        --shadow:0 18px 40px rgba(11,50,60,.16), 0 2px 8px rgba(11,50,60,.08);
+        --radius:18px;
+      }
+      *{ box-sizing:border-box; }
+      html,body{ height:100%; }
+      body{
+        margin:0;
+        font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+        font-size:13px;
+        color:var(--ink);
+        background:#bfe6e0;
+        overflow-x:hidden;
+        -webkit-font-smoothing:antialiased;
+      }
+      button{ font-family:inherit; cursor:pointer; min-height:2rem; }
+      input{ font-family:inherit; }
+
+      /* ---------- Vivid blurred background with soft 3D-like shapes ---------- */
+      .bg{ position:fixed; inset:0; z-index:0; overflow:hidden;
+        background:linear-gradient(135deg,#a8e6dd 0%,#cdeef5 38%,#fdeeda 78%,#fbe3cf 100%); }
+      .shape{ position:absolute; border-radius:50%; filter:blur(46px); }
+      .s-teal{ width:560px; height:560px; left:-140px; top:-160px;
+        background:radial-gradient(circle at 32% 30%, #5eead4 0%, #14b8a6 46%, #0f766e 100%); opacity:.85; }
+      .s-cyan{ width:520px; height:520px; right:-120px; top:-140px;
+        background:radial-gradient(circle at 35% 32%, #a5f3fc 0%, #22d3ee 52%, #0891b2 100%); opacity:.8; }
+      .s-peach{ width:620px; height:620px; right:-100px; bottom:-260px;
+        background:radial-gradient(circle at 36% 30%, #ffe4c7 0%, #fdba74 48%, #f59e0b 100%); opacity:.75; }
+      .s-teal2{ width:420px; height:420px; left:34%; bottom:-240px;
+        background:radial-gradient(circle at 34% 30%, #99f6e4 0%, #2dd4bf 55%, #0d9488 100%); opacity:.7; }
+      .orb{ position:absolute; border-radius:50%; filter:blur(2px);
+        box-shadow:inset -18px -22px 38px rgba(0,0,0,.14), inset 12px 14px 26px rgba(255,255,255,.55), 0 24px 44px rgba(11,50,60,.20); }
+      .orb-1{ width:170px; height:170px; left:6%; bottom:9%;
+        background:radial-gradient(circle at 32% 28%, #ccfbf1, #14b8a6 58%, #0f766e); opacity:.55; }
+      .orb-2{ width:110px; height:110px; right:12%; top:16%;
+        background:radial-gradient(circle at 32% 28%, #ffedd5, #fdba74 58%, #ea580c); opacity:.5; }
+      .orb-3{ width:74px; height:74px; left:44%; top:6%;
+        background:radial-gradient(circle at 32% 28%, #ecfeff, #67e8f9 58%, #0284c7); opacity:.5; }
+      .bg::after{ content:""; position:absolute; inset:0; backdrop-filter:blur(30px); }
+
+      /* ---------- App frame ---------- */
+      .app{ position:relative; z-index:1; display:grid; grid-template-columns:216px 1fr;
+        gap:16px; max-width:1560px; margin:0 auto; padding:16px; min-height:100vh; }
+
+      .glass{
+        background:var(--glass);
+        -webkit-backdrop-filter:blur(24px) saturate(160%);
+        backdrop-filter:blur(24px) saturate(160%);
+        border:1px solid var(--glass-border);
+        border-radius:var(--radius);
+        box-shadow:var(--shadow);
+      }
+
+      /* ---------- Sidebar ---------- */
+      .sidebar{ padding:20px 14px; display:flex; flex-direction:column; gap:6px;
+        position:sticky; top:16px; height:calc(100vh - 32px); }
+      .brand{ font-size:19px; font-weight:800; letter-spacing:-.02em; color:var(--ink);
+        padding:2px 10px 4px; }
+      .brand span{ color:var(--teal); }
+      .brand-sub{ font-size:10px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+        color:var(--muted); padding:0 10px 14px; }
+      .nav-label{ font-size:10px; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+        color:var(--muted); padding:14px 10px 6px; }
+      .nav-item{ display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:11px;
+        color:var(--ink-2); font-size:12.5px; font-weight:500; text-decoration:none; min-height:36px;
+        transition:background .15s ease, color .15s ease; }
+      .nav-item svg{ width:16px; height:16px; flex:none; }
+      .nav-item:hover{ background:rgba(255,255,255,.45); }
+      .nav-item.active{ background:var(--teal); color:#fff; font-weight:600;
+        box-shadow:0 8px 18px rgba(15,118,110,.35); }
+      .nav-item .count{ margin-left:auto; font-size:10.5px; font-weight:700; background:rgba(15,118,110,.14);
+        color:var(--teal-dark); border-radius:999px; padding:1px 7px; }
+      .nav-item.active .count{ background:rgba(255,255,255,.25); color:#fff; }
+      .side-foot{ margin-top:auto; padding:12px 10px 2px; border-top:1px solid rgba(255,255,255,.6); }
+      .side-foot .sf-title{ font-size:12px; font-weight:600; }
+      .side-foot .sf-sub{ font-size:11px; color:var(--muted); margin-top:2px; line-height:1.45; }
+
+      /* ---------- Main column ---------- */
+      .main{ display:flex; flex-direction:column; gap:16px; min-width:0; }
+
+      .topbar{ display:flex; align-items:center; gap:14px; padding:12px 16px; }
+      .topbar h1{ font-size:17px; font-weight:700; margin:0; letter-spacing:-.01em; white-space:nowrap; }
+      .topbar .date{ font-size:11.5px; color:var(--muted); white-space:nowrap; }
+      .search{ margin-left:auto; position:relative; flex:0 1 300px; }
+      .search svg{ position:absolute; left:11px; top:50%; transform:translateY(-50%);
+        width:15px; height:15px; color:var(--muted); pointer-events:none; }
+      .search input{ width:100%; height:36px; border-radius:11px; border:1px solid rgba(255,255,255,.8);
+        background:rgba(255,255,255,.55); padding:0 12px 0 34px; font-size:12.5px; color:var(--ink); outline:none; }
+      .search input::placeholder{ color:var(--muted); }
+      .search input:focus{ border-color:var(--teal); box-shadow:0 0 0 3px rgba(15,118,110,.18); background:rgba(255,255,255,.75); }
+      .icon-btn{ position:relative; width:38px; height:38px; flex:none; border-radius:11px;
+        border:1px solid rgba(255,255,255,.8); background:rgba(255,255,255,.55);
+        display:grid; place-items:center; color:var(--ink-2); }
+      .icon-btn svg{ width:17px; height:17px; }
+      .icon-btn:hover{ background:rgba(255,255,255,.8); }
+      .badge{ position:absolute; top:-5px; right:-5px; min-width:17px; height:17px; padding:0 4px;
+        border-radius:999px; background:var(--red); color:#fff; font-size:10px; font-weight:700;
+        display:grid; place-items:center; border:2px solid rgba(255,255,255,.9); }
+      .user{ display:flex; align-items:center; gap:10px; padding-left:4px; }
+      .avatar{ width:38px; height:38px; border-radius:50%; flex:none; display:grid; place-items:center;
+        background:linear-gradient(135deg,#14b8a6,#0f766e); color:#fff; font-size:12.5px; font-weight:700;
+        border:2px solid rgba(255,255,255,.85); box-shadow:0 6px 14px rgba(15,118,110,.3); }
+      .user .u-name{ font-size:12.5px; font-weight:600; line-height:1.2; white-space:nowrap; }
+      .user .u-role{ font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
+        color:var(--muted); white-space:nowrap; }
+
+      .content{ display:grid; grid-template-columns:minmax(0,1fr) 292px; gap:16px; align-items:start; }
+      .col{ display:flex; flex-direction:column; gap:16px; min-width:0; }
+
+      .card{ padding:16px 18px; }
+      .card-head{ display:flex; align-items:baseline; gap:10px; margin-bottom:12px; }
+      .card-title{ font-size:15.5px; font-weight:700; letter-spacing:-.01em; margin:0; }
+      .card-head .hint{ font-size:11px; color:var(--muted); }
+      .card-head .link{ margin-left:auto; font-size:11.5px; font-weight:600; color:var(--teal);
+        text-decoration:none; padding:6px 2px; }
+      .card-head .link:hover{ text-decoration:underline; }
+      .eyebrow{ font-size:10px; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--muted); }
+
+      /* ---------- Stat cards ---------- */
+      .stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+      .stat{ padding:15px 17px 13px; }
+      .stat .eyebrow{ display:flex; align-items:center; gap:6px; }
+      .stat .num{ font-size:24px; font-weight:800; letter-spacing:-.02em; margin:5px 0 2px; line-height:1.1; }
+      .stat .num small{ font-size:12.5px; font-weight:600; color:var(--ink-2); letter-spacing:0; }
+      .stat .sub{ font-size:11.5px; color:var(--muted); }
+      .stat .sub b{ color:var(--ink-2); font-weight:600; }
+      .stat .foot{ display:flex; align-items:flex-end; justify-content:space-between; gap:10px; }
+      .spark{ flex:none; }
+
+      /* ---------- Table ---------- */
+      .table-wrap{ overflow-x:auto; margin:0 -6px; padding:0 6px; }
+      table{ width:100%; border-collapse:collapse; min-width:520px; }
+      th{ font-size:10px; font-weight:700; letter-spacing:.13em; text-transform:uppercase;
+        color:var(--muted); text-align:left; padding:6px 10px; border-bottom:1px solid rgba(255,255,255,.7); }
+      td{ font-size:12.5px; padding:11px 10px; border-bottom:1px solid rgba(255,255,255,.45); vertical-align:middle; }
+      tr:last-child td{ border-bottom:none; }
+      .course{ font-weight:600; color:var(--ink); }
+      .course small{ display:block; font-weight:400; font-size:11px; color:var(--muted); margin-top:1px; }
+      .pill{ display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600;
+        border-radius:999px; padding:3px 9px; white-space:nowrap; }
+      .pill::before{ content:""; width:6px; height:6px; border-radius:50%; background:currentColor; }
+      .pill-amber{ background:var(--amber-bg); color:var(--amber); }
+      .pill-green{ background:var(--green-bg); color:var(--green); }
+      .pill-red{ background:var(--red-bg); color:var(--red); }
+      .actions{ display:flex; gap:7px; justify-content:flex-end; }
+      .btn{ border-radius:9px; font-size:12px; font-weight:600; padding:0 13px; height:30px;
+        border:1px solid transparent; transition:filter .15s ease, background .15s ease; }
+      .btn-approve{ background:var(--teal); color:#fff; box-shadow:0 5px 12px rgba(15,118,110,.3); }
+      .btn-approve:hover{ background:var(--teal-dark); }
+      .btn-reject{ background:rgba(255,255,255,.55); color:var(--ink-2); border-color:rgba(255,255,255,.85); }
+      .btn-reject:hover{ background:rgba(220,38,38,.1); color:var(--red); }
+      .btn[disabled]{ opacity:.45; cursor:default; box-shadow:none; }
+      .done-note{ font-size:11.5px; color:var(--muted); font-weight:500; }
+
+      /* ---------- Pipeline + gear row ---------- */
+      .split{ display:grid; grid-template-columns:1.15fr 1fr; gap:16px; }
+      .pipe-bar{ display:flex; height:26px; border-radius:8px; overflow:hidden;
+        border:1px solid rgba(255,255,255,.7); }
+      .pipe-bar div{ height:100%; }
+      .seg-todo{ background:#94a3b8; } .seg-shoot{ background:#0ea5b7; }
+      .seg-edit{ background:#0f766e; } .seg-review{ background:#f59e0b; }
+      .seg-done{ background:#22c55e; }
+      .legend{ display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:11px; }
+      .legend span{ display:inline-flex; align-items:center; gap:6px; font-size:11.5px; color:var(--ink-2); }
+      .legend i{ width:8px; height:8px; border-radius:3px; display:inline-block; }
+      .legend b{ font-weight:700; color:var(--ink); }
+      .pipe-note{ font-size:11.5px; color:var(--muted); margin-top:10px; line-height:1.5; }
+      .pipe-note b{ color:var(--ink-2); }
+
+      .gear-list{ list-style:none; margin:0; padding:0; }
+      .gear-list li{ display:flex; align-items:center; gap:10px; padding:8px 2px;
+        border-bottom:1px solid rgba(255,255,255,.45); }
+      .gear-list li:last-child{ border-bottom:none; }
+      .dot{ width:9px; height:9px; border-radius:50%; flex:none; box-shadow:0 0 0 3px rgba(255,255,255,.5); }
+      .dot-green{ background:#22c55e; } .dot-teal{ background:#0f766e; }
+      .dot-amber{ background:#f59e0b; } .dot-red{ background:#dc2626; }
+      .gear-name{ font-weight:600; font-size:12.5px; }
+      .gear-meta{ font-size:11px; color:var(--muted); }
+      .gear-status{ margin-left:auto; font-size:11px; font-weight:600; white-space:nowrap; }
+      .st-green{ color:var(--green); } .st-teal{ color:var(--teal-dark); }
+      .st-amber{ color:var(--amber); } .st-red{ color:var(--red); }
+      .live-dot{ display:inline-flex; align-items:center; gap:6px; font-size:10px; font-weight:700;
+        letter-spacing:.12em; text-transform:uppercase; color:var(--green); margin-left:auto; }
+      .live-dot::before{ content:""; width:7px; height:7px; border-radius:50%; background:#22c55e;
+        box-shadow:0 0 0 0 rgba(34,197,94,.5); animation:pulse 2s infinite; }
+      @keyframes pulse{ 70%{ box-shadow:0 0 0 6px rgba(34,197,94,0);} 100%{ box-shadow:0 0 0 0 rgba(34,197,94,0);} }
+      @media (prefers-reduced-motion: reduce){ .live-dot::before{ animation:none; } }
+
+      /* ---------- Right rail ---------- */
+      .event{ display:flex; gap:12px; padding:11px 12px; border-radius:13px;
+        background:rgba(255,255,255,.38); border:1px solid rgba(255,255,255,.65); margin-bottom:10px; }
+      .event:last-of-type{ margin-bottom:0; }
+      .date-chip{ flex:none; width:46px; text-align:center; border-radius:10px; padding:6px 0 5px;
+        background:var(--teal); color:#fff; }
+      .date-chip.alt{ background:#0ea5b7; }
+      .date-chip.warm{ background:#d97706; }
+      .date-chip .d{ font-size:16px; font-weight:800; line-height:1; }
+      .date-chip .m{ font-size:9.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; opacity:.85; }
+      .event .e-title{ font-size:12.5px; font-weight:600; line-height:1.35; }
+      .event .e-meta{ font-size:11px; color:var(--muted); margin-top:2px; line-height:1.45; }
+      .event .e-tag{ display:inline-block; margin-top:5px; font-size:10px; font-weight:700;
+        letter-spacing:.08em; text-transform:uppercase; color:var(--teal-dark);
+        background:rgba(15,118,110,.12); border-radius:5px; padding:2px 6px; }
+
+      .slip{ background:var(--glass-strong); }
+      .slip p{ font-size:12px; color:var(--ink-2); line-height:1.55; margin:0 0 12px; }
+      .slip-actions{ display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+      .slip-btn{ display:flex; align-items:center; justify-content:center; gap:7px; height:38px;
+        border-radius:11px; font-size:12.5px; font-weight:600; text-decoration:none; border:1px solid transparent; }
+      .slip-btn svg{ width:15px; height:15px; }
+      .slip-pdf{ background:var(--teal); color:#fff; box-shadow:0 6px 14px rgba(15,118,110,.3); }
+      .slip-pdf:hover{ background:var(--teal-dark); }
+      .slip-wa{ background:rgba(255,255,255,.6); color:var(--ink-2); border-color:rgba(255,255,255,.9); }
+      .slip-wa:hover{ background:rgba(34,197,94,.14); color:var(--green); }
+
+      /* ---------- Responsive ---------- */
+      @media (max-width:1100px){
+        .content{ grid-template-columns:1fr; }
+        .rail{ display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; }
+      }
+      @media (max-width:640px){
+        /* Table becomes stacked rows — no sideways scroll on phones */
+        .table-wrap{ overflow:visible; }
+        table{ min-width:0; }
+        thead{ display:none; }
+        tbody tr{ display:block; padding:10px 2px; border-bottom:1px solid rgba(255,255,255,.55); }
+        tbody tr:last-child{ border-bottom:none; }
+        tbody td{ display:flex; align-items:center; justify-content:space-between; gap:12px;
+          border-bottom:none; padding:4px 6px; }
+        tbody td:first-child{ display:block; padding-bottom:6px; }
+        tbody td::before{ content:attr(data-label); font-size:10px; font-weight:700;
+          letter-spacing:.13em; text-transform:uppercase; color:var(--muted); }
+        tbody td:first-child::before, tbody td:last-child::before{ content:none; }
+        tbody td:last-child{ justify-content:flex-end; padding-top:8px; }
+      }
+      @media (max-width:860px){
+        .app{ grid-template-columns:1fr; padding:10px; gap:10px; }
+        .sidebar{ position:static; height:auto; flex-direction:row; flex-wrap:wrap; align-items:center; padding:12px; }
+        .brand-sub,.nav-label,.side-foot{ display:none; }
+        .nav-item{ padding:8px 10px; }
+        .stats{ grid-template-columns:1fr; }
+        .split{ grid-template-columns:1fr; }
+        .rail{ grid-template-columns:1fr; }
+        .topbar{ flex-wrap:wrap; }
+        .search{ order:3; flex:1 1 100%; margin-left:0; }
+        .user .u-meta{ display:none; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Vivid blurred backdrop -->
+    <div class="bg" aria-hidden="true">
+      <div class="shape s-teal"></div>
+      <div class="shape s-cyan"></div>
+      <div class="shape s-peach"></div>
+      <div class="shape s-teal2"></div>
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+
+    <div class="app">
+      <!-- ============ SIDEBAR ============ -->
+      <aside class="glass sidebar">
+        <div>
+          <div class="brand">ASSDI <span>Media</span></div>
+          <div class="brand-sub">Production Suite</div>
+        </div>
+
+        <div class="nav-label">Main</div>
+        <a class="nav-item active" href="#" aria-current="page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+          Dashboard
+        </a>
+        <a class="nav-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h4"/></svg>
+          Requisitions
+          <span class="count" id="nav-req-count">4</span>
+        </a>
+        <a class="nav-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><path d="m4 6 1 1 2-2"/><path d="m4 12 1 1 2-2"/><path d="m4 18 1 1 2-2"/></svg>
+          Tasks
+          <span class="count">6</span>
+        </a>
+        <a class="nav-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 9h18"/></svg>
+          Calendar
+        </a>
+
+        <div class="nav-label">Operations</div>
+        <a class="nav-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          Gear Stock
+        </a>
+        <a class="nav-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20M7 4v5M17 4v5M10 13l5 2.5-5 2.5z"/></svg>
+          Shoot Slips
+        </a>
+        <a class="nav-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Team
+        </a>
+        <a class="nav-item" href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings
+        </a>
+
+        <div class="side-foot">
+          <div class="sf-title">Studio A — booked today</div>
+          <div class="sf-sub">HSC Physics set prep, 2:00 PM – 6:00 PM. Crew of 4 confirmed for Friday's shoot.</div>
+        </div>
+      </aside>
+
+      <!-- ============ MAIN ============ -->
+      <div class="main">
+        <!-- Top bar -->
+        <header class="glass topbar">
+          <div>
+            <h1>Dashboard</h1>
+            <div class="date">Wednesday, 25 November 2026</div>
+          </div>
+          <div class="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="search" placeholder="Search courses, gear, tasks…" aria-label="Search" />
+          </div>
+          <button class="icon-btn" type="button" aria-label="Notifications, 3 unread">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+            <span class="badge">3</span>
+          </button>
+          <div class="user">
+            <div class="avatar" aria-hidden="true">AR</div>
+            <div class="u-meta">
+              <div class="u-name">Arif Rahman</div>
+              <div class="u-role">Media Manager</div>
+            </div>
+          </div>
+        </header>
+
+        <div class="content">
+          <!-- ===== Center column ===== -->
+          <div class="col">
+            <!-- Stat cards -->
+            <section class="stats" aria-label="Key numbers">
+              <div class="glass stat">
+                <div class="eyebrow">Pending Requisitions</div>
+                <div class="foot">
+                  <div>
+                    <div class="num" id="stat-pending">4</div>
+                    <div class="sub"><b>2</b> shoots this week · <b>1</b> needs override</div>
+                  </div>
+                  <svg class="spark" width="74" height="30" viewBox="0 0 74 30" aria-hidden="true">
+                    <polyline points="2,22 14,18 26,20 38,12 50,14 62,7 72,9" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="72" cy="9" r="2.6" fill="#b45309"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="glass stat">
+                <div class="eyebrow">Active Tasks</div>
+                <div class="foot">
+                  <div>
+                    <div class="num">6</div>
+                    <div class="sub"><b>2</b> shooting · <b>3</b> editing · <b>1</b> review</div>
+                  </div>
+                  <svg class="spark" width="74" height="30" viewBox="0 0 74 30" aria-hidden="true">
+                    <polyline points="2,20 14,22 26,15 38,17 50,10 62,12 72,5" fill="none" stroke="#0f766e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="72" cy="5" r="2.6" fill="#0f766e"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="glass stat">
+                <div class="eyebrow">Gear</div>
+                <div class="foot">
+                  <div>
+                    <div class="num">7 <small>In Use</small> <span style="color:var(--muted); font-weight:400;">/</span> 1 <small>Maintenance</small></div>
+                    <div class="sub"><b>4</b> available in store · 12 items total</div>
+                  </div>
+                  <svg class="spark" width="74" height="30" viewBox="0 0 74 30" aria-hidden="true">
+                    <polyline points="2,12 14,15 26,11 38,16 50,13 62,18 72,15" fill="none" stroke="#0ea5b7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="72" cy="15" r="2.6" fill="#0ea5b7"/>
+                  </svg>
+                </div>
+              </div>
+            </section>
+
+            <!-- Requisitions table -->
+            <section class="glass card" aria-labelledby="req-title">
+              <div class="card-head">
+                <h2 class="card-title" id="req-title">Course Requisitions</h2>
+                <span class="hint">Awaiting your approval</span>
+                <a class="link" href="#">View all</a>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col">Course</th>
+                      <th scope="col">Type</th>
+                      <th scope="col">Shoot Date</th>
+                      <th scope="col">Status</th>
+                      <th scope="col" style="text-align:right;">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="req-body">
+                    <tr data-row>
+                      <td><span class="course">HSC Physics — Dynamics<small>Chapter 7 · Class 11–12</small></span></td>
+                      <td data-label="Type">Studio Shoot</td>
+                      <td data-label="Shoot Date">Fri, 27 Nov 2026</td>
+                      <td data-label="Status"><span class="pill pill-amber" data-pill>Pending</span></td>
+                      <td>
+                        <div class="actions">
+                          <button class="btn btn-approve" type="button" data-approve>Approve</button>
+                          <button class="btn btn-reject" type="button" data-reject>Reject</button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr data-row>
+                      <td><span class="course">SSC Math — Trigonometry<small>Chapter 9 · Class 9–10</small></span></td>
+                      <td data-label="Type">Studio Shoot</td>
+                      <td data-label="Shoot Date">Sun, 29 Nov 2026</td>
+                      <td data-label="Status"><span class="pill pill-amber" data-pill>Needs override</span></td>
+                      <td>
+                        <div class="actions">
+                          <button class="btn btn-approve" type="button" data-approve>Approve</button>
+                          <button class="btn btn-reject" type="button" data-reject>Reject</button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr data-row>
+                      <td><span class="course">IELTS Speaking — Mock Test<small>Batch 14 · Live session</small></span></td>
+                      <td data-label="Type">Live Class</td>
+                      <td data-label="Shoot Date">Wed, 2 Dec 2026</td>
+                      <td data-label="Status"><span class="pill pill-amber" data-pill>Pending</span></td>
+                      <td>
+                        <div class="actions">
+                          <button class="btn btn-approve" type="button" data-approve>Approve</button>
+                          <button class="btn btn-reject" type="button" data-reject>Reject</button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <!-- Pipeline + Gear -->
+            <div class="split">
+              <section class="glass card" aria-labelledby="pipe-title">
+                <div class="card-head">
+                  <h2 class="card-title" id="pipe-title">Task Pipeline</h2>
+                  <span class="hint">All productions</span>
+                </div>
+                <div class="pipe-bar" role="img" aria-label="Pipeline: 3 to do, 2 shooting, 3 editing, 1 in review, 5 published">
+                  <div class="seg-todo" style="width:21.4%"></div>
+                  <div class="seg-shoot" style="width:14.3%"></div>
+                  <div class="seg-edit" style="width:21.4%"></div>
+                  <div class="seg-review" style="width:7.2%"></div>
+                  <div class="seg-done" style="width:35.7%"></div>
+                </div>
+                <div class="legend">
+                  <span><i style="background:#94a3b8"></i>To Do <b>3</b></span>
+                  <span><i style="background:#0ea5b7"></i>Shooting <b>2</b></span>
+                  <span><i style="background:#0f766e"></i>Editing <b>3</b></span>
+                  <span><i style="background:#f59e0b"></i>Review <b>1</b></span>
+                  <span><i style="background:#22c55e"></i>Published <b>5</b></span>
+                </div>
+                <p class="pipe-note"><b>6 active tasks</b> in the pipeline right now — 3 lessons are with the editors, and 5 more have already been published this cycle.</p>
+              </section>
+
+              <section class="glass card" aria-labelledby="gear-title">
+                <div class="card-head">
+                  <h2 class="card-title" id="gear-title">Gear Stock</h2>
+                  <span class="live-dot">Live</span>
+                </div>
+                <ul class="gear-list">
+                  <li>
+                    <span class="dot dot-teal"></span>
+                    <div><div class="gear-name">Sony A7 IV — Body A</div><div class="gear-meta">Studio A · with Tanvir</div></div>
+                    <span class="gear-status st-teal">In Use</span>
+                  </li>
+                  <li>
+                    <span class="dot dot-green"></span>
+                    <div><div class="gear-name">Sony A7 IV — Body B</div><div class="gear-meta">Store rack 2</div></div>
+                    <span class="gear-status st-green">Available</span>
+                  </li>
+                  <li>
+                    <span class="dot dot-teal"></span>
+                    <div><div class="gear-name">DJI RS 3 Gimbal</div><div class="gear-meta">Studio A · with Tanvir</div></div>
+                    <span class="gear-status st-teal">In Use</span>
+                  </li>
+                  <li>
+                    <span class="dot dot-amber"></span>
+                    <div><div class="gear-name">Godox SL60W Light</div><div class="gear-meta">Sent for repair · due 28 Nov</div></div>
+                    <span class="gear-status st-amber">Maintenance</span>
+                  </li>
+                  <li>
+                    <span class="dot dot-green"></span>
+                    <div><div class="gear-name">Rode NT-USB Mic Kit</div><div class="gear-meta">Store rack 1</div></div>
+                    <span class="gear-status st-green">Available</span>
+                  </li>
+                </ul>
+              </section>
+            </div>
+          </div>
+
+          <!-- ===== Right rail ===== -->
+          <div class="col rail">
+            <section class="glass card" aria-labelledby="cal-title">
+              <div class="card-head">
+                <h2 class="card-title" id="cal-title">Master Calendar</h2>
+              </div>
+              <div class="eyebrow" style="margin-bottom:10px;">Next 7 days</div>
+
+              <div class="event">
+                <div class="date-chip"><div class="d">27</div><div class="m">Nov</div></div>
+                <div>
+                  <div class="e-title">HSC Physics — Dynamics shoot</div>
+                  <div class="e-meta">Fri · 2:00 PM – 6:00 PM · Studio A<br />Crew: Tanvir, Nusrat, Rahim</div>
+                  <span class="e-tag">Shoot</span>
+                </div>
+              </div>
+              <div class="event">
+                <div class="date-chip alt"><div class="d">29</div><div class="m">Nov</div></div>
+                <div>
+                  <div class="e-title">SSC Math — Trigonometry shoot</div>
+                  <div class="e-meta">Sun · 10:00 AM – 1:00 PM · Studio B<br />Crew: Tanvir, Fahim</div>
+                  <span class="e-tag">Shoot</span>
+                </div>
+              </div>
+              <div class="event">
+                <div class="date-chip warm"><div class="d">30</div><div class="m">Nov</div></div>
+                <div>
+                  <div class="e-title">Editing deadline — Biology Ch. 5</div>
+                  <div class="e-meta">Mon · by 5:00 PM · Post-production<br />Editor: Nusrat</div>
+                  <span class="e-tag">Deadline</span>
+                </div>
+              </div>
+            </section>
+
+            <section class="glass card slip" aria-labelledby="slip-title">
+              <div class="card-head">
+                <h2 class="card-title" id="slip-title">Shoot Slip</h2>
+                <span class="hint">Quick share</span>
+              </div>
+              <p>Generate today's shoot slip for the <b>HSC Physics</b> session — gear list, crew and call time included — and send it to the team.</p>
+              <div class="slip-actions">
+                <a class="slip-btn slip-pdf" href="#" id="btn-pdf">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6M9 15l3 3 3-3"/></svg>
+                  PDF
+                </a>
+                <a class="slip-btn slip-wa" href="#" id="btn-wa">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                  WhatsApp
+                </a>
+              </div>
+              <p id="slip-note" style="margin:10px 0 0; font-size:11.5px; color:var(--teal-dark); font-weight:600;" hidden></p>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var pendingEl = document.getElementById('stat-pending');
+        var navCount = document.getElementById('nav-req-count');
+        var pending = 4;
+
+        function refreshCounts() {
+          pendingEl.textContent = pending;
+          navCount.textContent = pending;
+        }
+
+        document.querySelectorAll('[data-row]').forEach(function (row) {
+          var pill = row.querySelector('[data-pill]');
+          var approve = row.querySelector('[data-approve]');
+          var reject = row.querySelector('[data-reject]');
+          var actions = row.querySelector('.actions');
+
+          function settle(text, cls) {
+            pill.textContent = text;
+            pill.className = 'pill ' + cls;
+            pending = Math.max(0, pending - 1);
+            refreshCounts();
+            actions.innerHTML = '<span class="done-note">Done</span>';
+          }
+          approve.addEventListener('click', function () { settle('Approved', 'pill-green'); });
+          reject.addEventListener('click', function () { settle('Rejected', 'pill-red'); });
+        });
+
+        var note = document.getElementById('slip-note');
+        function slipMsg(msg) {
+          note.hidden = false;
+          note.textContent = msg;
+        }
+        document.getElementById('btn-pdf').addEventListener('click', function (e) {
+          e.preventDefault();
+          slipMsg('Shoot slip PDF is being prepared for the HSC Physics session.');
+        });
+        document.getElementById('btn-wa').addEventListener('click', function (e) {
+          e.preventDefault();
+          slipMsg('Shoot slip ready to share with the crew on WhatsApp.');
+        });
+      })();
+    </script>
+  </body>
+</html>

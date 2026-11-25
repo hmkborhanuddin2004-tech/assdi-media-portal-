@@ -21,7 +21,10 @@ import {
   User,
   Search,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
+import { motion, AnimatePresence, LayoutGroup, MotionConfig } from "framer-motion";
 import { ROLE_HOME_ROUTES, ROLE_LABELS, type UserRole } from "@/lib/types/auth";
 
 interface NavItem {
@@ -386,6 +389,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [signingOut, setSigningOut] = useState(false);
   const [navigatingTo, setNavigatingTo] = useState<string | null>(null);
   const [user, setUser] = useState<CurrentUserSession | null>(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const profileTriggerRef = useRef<HTMLButtonElement>(null);
 
@@ -400,6 +405,25 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     if (pathname === "/") return "ASSDI Media Portal";
     return "Production Suite";
   })();
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("assdi_sidebar_collapsed");
+      if (saved !== null) {
+        setSidebarCollapsed(saved === "true");
+      }
+    } catch {}
+  }, []);
+
+  const toggleSidebarCollapsed = () => {
+    setSidebarCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("assdi_sidebar_collapsed", String(next));
+      } catch {}
+      return next;
+    });
+  };
 
   useEffect(() => {
     // Reset transient overlays and progress bar when route completes
@@ -488,7 +512,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <>
+    <MotionConfig reducedMotion="user">
       {/* Subtle Top Route-Transition Progress Bar */}
       {navigatingTo && (
         <div
@@ -511,131 +535,261 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="orb orb-3" />
       </div>
 
-      <div className="relative z-[1] max-w-[1560px] mx-auto md:p-4 md:grid md:grid-cols-[224px_minmax(0,1fr)] md:gap-4 min-h-screen antialiased">
+      <div
+        className={`relative z-[1] max-w-[1560px] mx-auto md:p-4 md:grid ${
+          sidebarCollapsed
+            ? "md:grid-cols-[76px_minmax(0,1fr)]"
+            : "md:grid-cols-[224px_minmax(0,1fr)]"
+        } md:gap-4 min-h-screen antialiased transition-[grid-template-columns] duration-300 ease-out`}
+      >
         {/* Desktop Floating Glass Sidebar */}
-        <aside
+        <motion.aside
           id="desktop-sidebar"
-          className="print:hidden hidden md:flex md:flex-col glass sticky top-4 h-[calc(100vh-32px)] p-4 z-40 overflow-hidden"
+          animate={{ width: sidebarCollapsed ? 76 : 224 }}
+          transition={{ type: "spring", stiffness: 320, damping: 30 }}
+          className="print:hidden hidden md:flex md:flex-col glass sticky top-4 h-[calc(100vh-32px)] p-3 z-40 relative"
         >
-          <div className="flex flex-col h-full">
-            {/* Brand Header: Text ONLY matching design-reference.html */}
-            <div className="px-2 pt-0.5 pb-3.5 border-b border-white/60">
-              <div className="text-[19px] font-extrabold text-[#0b1f3a] tracking-tight leading-tight">
-                ASSDI <span className="text-[#0f766e]">Media</span>
-              </div>
-              <div className="text-[10px] font-semibold text-[#33475f] uppercase tracking-[0.14em] mt-0.5">
-                {user ? `${ROLE_LABELS[user.role]?.en || user.role} Suite` : "Production Suite"}
-              </div>
+          {/* Floating Circular Collapse Toggle Button */}
+          <button
+            type="button"
+            id="sidebar-collapse-toggle"
+            onClick={toggleSidebarCollapsed}
+            aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            className="absolute -right-3 top-5 z-50 w-6 h-6 rounded-full bg-white/95 border border-white/85 shadow-[0_2px_8px_rgba(15,35,50,0.14)] flex items-center justify-center text-[#33475f] hover:text-[#0f766e] hover:bg-white transition-all duration-150 active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0f766e]/40 cursor-pointer"
+          >
+            {sidebarCollapsed ? (
+              <ChevronRight className="w-3.5 h-3.5" />
+            ) : (
+              <ChevronLeft className="w-3.5 h-3.5" />
+            )}
+          </button>
+
+          <div className="flex flex-col h-full overflow-hidden">
+            {/* Brand Header */}
+            <div className="px-1 pt-0.5 pb-3 border-b border-white/60 overflow-hidden">
+              <AnimatePresence mode="wait">
+                {!sidebarCollapsed ? (
+                  <motion.div
+                    key="brand-expanded"
+                    initial={{ opacity: 0, x: -6 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -6 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    <div className="text-[19px] font-extrabold text-[#0b1f3a] tracking-tight leading-tight truncate">
+                      ASSDI <span className="text-[#0f766e]">Media</span>
+                    </div>
+                    <div className="text-[10px] font-semibold text-[#33475f] uppercase tracking-[0.14em] mt-0.5 truncate">
+                      {user ? `${ROLE_LABELS[user.role]?.en || user.role} Suite` : "Production Suite"}
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="brand-collapsed"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.15 }}
+                    className="flex items-center justify-center py-0.5"
+                  >
+                    <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#14b8a6] to-[#0f766e] text-white flex items-center justify-center font-extrabold text-xs shadow-xs border border-white/80">
+                      AM
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
-            {/* Navigation Links Grouped by MAIN & OPERATIONS */}
-            <nav className="flex-1 pt-2 pb-2 space-y-2 overflow-y-auto no-scrollbar">
-              {groupedNav.map((section) => (
-                <div key={section.title} className="space-y-1">
-                  <div className="px-2.5 pt-2 pb-1 text-[10px] font-bold text-[#33475f] uppercase tracking-[0.16em]">
-                    {section.title}
-                  </div>
-                  {section.items.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = pathname === item.href;
-                    const isPending = navigatingTo === item.href;
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        prefetch={true}
-                        onClick={() => handleNavigateStart(item.href)}
-                        className={`group flex items-center justify-between px-2.5 py-2 rounded-[11px] text-[12.5px] font-medium transition-all duration-200 ease-out active:scale-[0.98] ${
-                          isActive
-                            ? "bg-[#0F766E] text-white shadow-[0_8px_18px_rgba(15,118,110,0.32)] font-semibold"
-                            : isPending
-                            ? "bg-[#0f766e]/12 text-[#0b1f3a] border border-[#0f766e]/25 font-semibold"
-                            : "text-[#33475f] hover:bg-white/55 hover:text-[#0b1f3a]"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <Icon
-                            className={`w-4 h-4 shrink-0 transition-colors ${
-                              isActive
-                                ? "text-white"
-                                : "text-[#33475f] group-hover:text-[#0f766e]"
-                            }`}
-                          />
-                          <div className="flex flex-col text-left min-w-0">
-                            <span className="font-semibold text-[12.5px] leading-snug truncate">{item.name}</span>
-                            <span className={`text-[10px] truncate ${isActive ? "text-emerald-100" : "text-[#33475f]/80"}`}>
-                              {item.bnName}
-                            </span>
-                          </div>
-                        </div>
-                        {item.badge && (
-                          <span
-                            className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold shrink-0 ${
-                              isActive
-                                ? "bg-white/25 text-white"
-                                : "bg-[#0f766e]/15 text-[#0b5a54]"
+            {/* Navigation Links Grouped by MAIN & OPERATIONS with Gliding Active & Hover Pill */}
+            <nav
+              onMouseLeave={() => setHoveredNav(null)}
+              className="flex-1 pt-2 pb-2 space-y-2 overflow-y-auto no-scrollbar"
+            >
+              <LayoutGroup id="assdi-sidebar">
+                {groupedNav.map((section) => (
+                  <div key={section.title} className="space-y-1">
+                    <AnimatePresence>
+                      {!sidebarCollapsed && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.15 }}
+                          className="px-2.5 pt-2 pb-1 text-[10px] font-bold text-[#33475f] uppercase tracking-[0.16em] truncate"
+                        >
+                          {section.title}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                    {sidebarCollapsed && <div className="my-1.5 border-t border-white/40" />}
+                    {section.items.map((item) => {
+                      const Icon = item.icon;
+                      const isActive = pathname === item.href;
+                      const isHovered = hoveredNav === item.href;
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          prefetch={true}
+                          onMouseEnter={() => setHoveredNav(item.href)}
+                          onClick={() => handleNavigateStart(item.href)}
+                          className={`group relative flex items-center justify-between px-2.5 py-2 rounded-[11px] text-[12.5px] font-medium transition-colors select-none ${
+                            isActive ? "bg-[#0F766E]/0" : ""
+                          } ${
+                            sidebarCollapsed ? "justify-center px-1" : ""
+                          }`}
+                        >
+                          {/* Active Gliding Background Pill */}
+                          {isActive && (
+                            <motion.div
+                              layoutId="sidebar-active-pill"
+                              transition={{ type: "spring", stiffness: 380, damping: 32, mass: 0.8 }}
+                              className="absolute inset-0 rounded-[11px] bg-[#0F766E] shadow-[0_8px_18px_rgba(15,118,110,0.32)]"
+                            />
+                          )}
+
+                          {/* Hover Gliding Highlight Pill */}
+                          {!isActive && isHovered && (
+                            <motion.div
+                              layoutId="sidebar-hover-pill"
+                              transition={{ type: "spring", stiffness: 420, damping: 35 }}
+                              className="absolute inset-0 rounded-[11px] bg-white/55 border border-white/75"
+                            />
+                          )}
+
+                          {/* Content */}
+                          <div
+                            className={`relative z-10 flex items-center gap-2.5 min-w-0 ${
+                              sidebarCollapsed ? "justify-center" : ""
                             }`}
                           >
-                            {item.badge}
-                          </span>
-                        )}
-                      </Link>
-                    );
-                  })}
-                </div>
-              ))}
+                            <Icon
+                              className={`w-4 h-4 shrink-0 transition-colors ${
+                                isActive
+                                  ? "text-white"
+                                  : "text-[#33475f] group-hover:text-[#0f766e]"
+                              }`}
+                            />
+                            {!sidebarCollapsed && (
+                              <div className="flex flex-col text-left min-w-0">
+                                <span
+                                  className={`font-semibold text-[12.5px] leading-snug truncate ${
+                                    isActive ? "text-white" : "text-[#0b1f3a]"
+                                  }`}
+                                >
+                                  {item.name}
+                                </span>
+                                <span
+                                  className={`text-[10px] truncate ${
+                                    isActive ? "text-emerald-100" : "text-[#33475f]/80"
+                                  }`}
+                                >
+                                  {item.bnName}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          {!sidebarCollapsed && item.badge && (
+                            <span
+                              className={`relative z-10 text-[10px] px-1.5 py-0.5 rounded-full font-bold shrink-0 ${
+                                isActive
+                                  ? "bg-white/25 text-white"
+                                  : "bg-[#0f766e]/15 text-[#0b5a54]"
+                              }`}
+                            >
+                              {item.badge}
+                            </span>
+                          )}
+
+                          {/* Tooltip on hover when collapsed */}
+                          {sidebarCollapsed && (
+                            <div className="opacity-0 group-hover:opacity-100 group-hover:translate-x-0 -translate-x-2 pointer-events-none absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 z-50 whitespace-nowrap rounded-lg bg-slate-900/95 text-white text-[11px] font-semibold px-2.5 py-1.5 shadow-xl backdrop-blur-md transition-all duration-150 border border-white/10">
+                              {item.name} <span className="opacity-75">({item.bnName})</span>
+                            </div>
+                          )}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                ))}
+              </LayoutGroup>
             </nav>
 
             {/* User Footer Panel */}
-            <div className="mt-auto pt-3 border-t border-white/60 space-y-2">
+            <div className="mt-auto pt-3 border-t border-white/60">
               {user ? (
-                <div className="flex items-center justify-between gap-2 px-2.5 py-2 rounded-xl bg-white/45 border border-white/75">
+                <div
+                  className={`flex items-center gap-2 rounded-xl bg-white/45 border border-white/75 ${
+                    sidebarCollapsed ? "p-1.5 justify-center" : "px-2.5 py-2 justify-between"
+                  }`}
+                >
                   <div className="flex items-center gap-2 overflow-hidden">
-                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#14b8a6] to-[#0f766e] text-white flex items-center justify-center shrink-0 font-bold text-xs border border-white/80">
+                    <div
+                      title={
+                        sidebarCollapsed
+                          ? `${user.full_name} (${ROLE_LABELS[user.role]?.en || user.role})`
+                          : undefined
+                      }
+                      className="w-7 h-7 rounded-full bg-gradient-to-br from-[#14b8a6] to-[#0f766e] text-white flex items-center justify-center shrink-0 font-bold text-xs border border-white/80 cursor-default"
+                    >
                       {user.full_name?.[0] || "U"}
                     </div>
-                    <div className="flex flex-col text-[11px] leading-tight truncate">
-                      <span className="font-semibold text-[#0b1f3a] truncate">
-                        {user.full_name}
-                      </span>
-                      <span className="text-[#0f766e] text-[10px] font-semibold">
-                        {ROLE_LABELS[user.role]?.en || user.role}
-                      </span>
-                    </div>
+                    {!sidebarCollapsed && (
+                      <div className="flex flex-col text-[11px] leading-tight truncate">
+                        <span className="font-semibold text-[#0b1f3a] truncate">
+                          {user.full_name}
+                        </span>
+                        <span className="text-[#0f766e] text-[10px] font-semibold">
+                          {ROLE_LABELS[user.role]?.en || user.role}
+                        </span>
+                      </div>
+                    )}
                   </div>
-                  <button
-                    type="button"
-                    onClick={handleSignOut}
-                    disabled={signingOut}
-                    title="লগআউট"
-                    className="p-1.5 rounded-md text-[#33475f] hover:text-red-600 hover:bg-white/65 disabled:opacity-60 transition-all duration-200 ease-out active:scale-[0.98]"
-                  >
-                    <LogOut className="w-4 h-4" />
-                  </button>
+                  {!sidebarCollapsed && (
+                    <button
+                      type="button"
+                      onClick={handleSignOut}
+                      disabled={signingOut}
+                      title="লগআউট"
+                      className="p-1.5 rounded-md text-[#33475f] hover:text-red-600 hover:bg-white/65 disabled:opacity-60 transition-all duration-200 ease-out active:scale-[0.98]"
+                    >
+                      <LogOut className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
               ) : (
-                <div className="flex items-center justify-between gap-2 px-2.5 py-2 rounded-xl bg-white/55 border border-white/80">
+                <div
+                  className={`flex items-center gap-2 rounded-xl bg-white/55 border border-white/80 ${
+                    sidebarCollapsed ? "p-1.5 justify-center" : "px-2.5 py-2 justify-between"
+                  }`}
+                >
                   <div className="flex items-center gap-2">
                     <ShieldCheck className="w-4 h-4 text-[#0F766E]" />
-                    <div className="flex flex-col text-[11px] leading-tight">
-                      <span className="font-semibold text-[#0b1f3a]">গেস্ট ভিজিটর</span>
-                      <span className="text-[#33475f]">Security Active</span>
-                    </div>
+                    {!sidebarCollapsed && (
+                      <div className="flex flex-col text-[11px] leading-tight">
+                        <span className="font-semibold text-[#0b1f3a]">গেস্ট ভিজিটর</span>
+                        <span className="text-[#33475f]">Security Active</span>
+                      </div>
+                    )}
                   </div>
-                  <Link
-                    href="/login"
-                    prefetch={true}
-                    onClick={() => handleNavigateStart("/login")}
-                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0F766E] hover:underline transition-all duration-200 ease-out active:scale-[0.98]"
-                  >
-                    <LogIn className="w-3.5 h-3.5" />
-                    <span>লগইন</span>
-                  </Link>
+                  {!sidebarCollapsed && (
+                    <Link
+                      href="/login"
+                      prefetch={true}
+                      onClick={() => handleNavigateStart("/login")}
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0F766E] hover:underline transition-all duration-200 ease-out active:scale-[0.98]"
+                    >
+                      <LogIn className="w-3.5 h-3.5" />
+                      <span>লগইন</span>
+                    </Link>
+                  )}
                 </div>
               )}
             </div>
           </div>
-        </aside>
+        </motion.aside>
 
         {/* Mobile Top Header (390px optimized) */}
         <header
@@ -837,71 +991,86 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   />
                 </button>
 
-                {profileMenuOpen && (
-                  <div
-                    id="topbar-profile-menu"
-                    role="menu"
-                    aria-labelledby="topbar-profile-trigger"
-                    className="glass-popover animate-popover-in absolute right-0 top-[calc(100%+10px)] w-[272px] p-3 z-50 space-y-2.5"
-                  >
-                    <div className="px-2 py-1 space-y-1.5">
-                      <div className="font-bold text-[13px] text-[#0b1f3a] leading-tight truncate">
-                        {user.full_name}
-                      </div>
-                      <div className="text-[11.5px] font-medium text-[#33475f] truncate">
-                        {user.email}
-                      </div>
-                      <div>
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10.5px] font-semibold bg-[#0f766e]/12 text-[#0b5a54] border border-[#0f766e]/20">
-                          {ROLE_LABELS[user.role]?.en || user.role}
-                        </span>
-                      </div>
-                      {user.role === "coordinator" && (
-                        <div className="text-[11px] font-medium text-[#33475f] bg-slate-900/[0.04] rounded-lg px-2 py-1 border border-white/80 truncate">
-                          Course:{" "}
-                          <span className="font-semibold text-[#0b1f3a]">
-                            {user.course_name || "Assigned Course"}
+                <AnimatePresence>
+                  {profileMenuOpen && (
+                    <motion.div
+                      key="topbar-profile-menu-motion"
+                      initial={{ opacity: 0, scale: 0.95, y: -6 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95, y: -6 }}
+                      transition={{ duration: 0.18, ease: "easeOut" }}
+                      id="topbar-profile-menu"
+                      role="menu"
+                      aria-labelledby="topbar-profile-trigger"
+                      className="glass-popover absolute right-0 top-[calc(100%+10px)] w-[272px] p-3 z-50 space-y-2.5 shadow-[0_16px_36px_rgba(15,35,50,0.16)]"
+                    >
+                      <div className="px-2 py-1 space-y-1.5">
+                        <div className="font-bold text-[13px] text-[#0b1f3a] leading-tight truncate">
+                          {user.full_name}
+                        </div>
+                        <div className="text-[11.5px] font-medium text-[#33475f] truncate">
+                          {user.email}
+                        </div>
+                        <div>
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10.5px] font-semibold bg-[#0f766e]/12 text-[#0b5a54] border border-[#0f766e]/20">
+                            {ROLE_LABELS[user.role]?.en || user.role}
                           </span>
                         </div>
-                      )}
-                    </div>
+                        {user.role === "coordinator" && (
+                          <div className="text-[11px] font-medium text-[#33475f] bg-slate-900/[0.04] rounded-lg px-2 py-1 border border-white/80 truncate">
+                            Course:{" "}
+                            <span className="font-semibold text-[#0b1f3a]">
+                              {user.course_name || "Assigned Course"}
+                            </span>
+                          </div>
+                        )}
+                      </div>
 
-                    <div className="border-t border-slate-200/75" />
+                      <div className="border-t border-slate-200/75" />
 
-                    <div className="space-y-1">
-                      <Link
-                        id="topbar-profile-home-link"
-                        href={homeHref}
-                        prefetch={true}
-                        role="menuitem"
-                        onClick={() => {
-                          handleNavigateStart(homeHref);
-                          setProfileMenuOpen(false);
-                        }}
-                        className="flex items-center gap-2.5 w-full px-2.5 py-2 rounded-xl text-[12.5px] font-semibold text-[#0b1f3a] hover:bg-white/75 hover:text-[#0f766e] transition-all duration-200 ease-out active:scale-[0.98]"
-                      >
-                        <LayoutDashboard className="w-4 h-4 text-[#0f766e] shrink-0" />
-                        <span>Dashboard / হোম</span>
-                      </Link>
+                      <div className="space-y-1">
+                        <Link
+                          id="topbar-profile-home-link"
+                          href={homeHref}
+                          prefetch={true}
+                          role="menuitem"
+                          onClick={() => {
+                            handleNavigateStart(homeHref);
+                            setProfileMenuOpen(false);
+                          }}
+                          className="flex items-center gap-2.5 w-full px-2.5 py-2 rounded-xl text-[12.5px] font-semibold text-[#0b1f3a] hover:bg-white/75 hover:text-[#0f766e] transition-all duration-200 ease-out active:scale-[0.98]"
+                        >
+                          <LayoutDashboard className="w-4 h-4 text-[#0f766e] shrink-0" />
+                          <span>Dashboard / হোম</span>
+                        </Link>
 
-                      <button
-                        id="topbar-profile-signout-btn"
-                        type="button"
-                        role="menuitem"
-                        disabled={signingOut}
-                        onClick={handleSignOut}
-                        className="flex items-center gap-2.5 w-full px-2.5 py-2 rounded-xl text-[12.5px] font-semibold text-red-700 hover:bg-red-500/10 hover:text-red-800 disabled:opacity-60 transition-all duration-200 ease-out active:scale-[0.98]"
-                      >
-                        <LogOut className="w-4 h-4 shrink-0" />
-                        <span>{signingOut ? "Signing out..." : "Sign Out / লগআউট"}</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
+                        <button
+                          id="topbar-profile-signout-btn"
+                          type="button"
+                          role="menuitem"
+                          disabled={signingOut}
+                          onClick={handleSignOut}
+                          className="flex items-center gap-2.5 w-full px-2.5 py-2 rounded-xl text-[12.5px] font-semibold text-red-700 hover:bg-red-500/10 hover:text-red-800 disabled:opacity-60 transition-all duration-200 ease-out active:scale-[0.98]"
+                        >
+                          <LogOut className="w-4 h-4 shrink-0" />
+                          <span>{signingOut ? "Signing out..." : "Sign Out / লগআউট"}</span>
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </header>
           )}
-          <div className="w-full min-w-0 space-y-4">{children}</div>
+          <motion.div
+            key={pathname}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            className="w-full min-w-0 space-y-4"
+          >
+            {children}
+          </motion.div>
         </main>
 
         {/* Mobile 390px Fixed Bottom Navigation Bar */}
@@ -910,54 +1079,61 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           aria-label="Mobile Navigation"
           className="print:hidden md:hidden fixed bottom-0 left-0 right-0 z-40 h-16 bg-white/65 backdrop-blur-2xl border-t border-white/85 shadow-[0_-4px_20px_rgba(15,35,50,0.06)] px-1 flex items-center justify-around"
         >
-          {mobileNav.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href;
-            if (item.href === "#more") {
-              return (
-                <button
-                  type="button"
-                  key="mobile-nav-more"
-                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  aria-expanded={mobileMenuOpen}
-                  className="flex flex-col items-center justify-center flex-1 py-1 min-w-[56px] text-[10px] font-medium text-[#33475f] hover:text-[#0F766E] transition-all duration-200 ease-out active:scale-[0.98]"
-                >
-                  <div
-                    className={`w-9 h-7 rounded-full flex items-center justify-center transition-all duration-200 ease-out ${
-                      mobileMenuOpen ? "bg-[#0f766e]/15 text-[#0F766E]" : ""
-                    }`}
+          <LayoutGroup id="assdi-mobile-nav">
+            {mobileNav.map((item) => {
+              const Icon = item.icon;
+              const isActive = pathname === item.href;
+              if (item.href === "#more") {
+                return (
+                  <button
+                    type="button"
+                    key="mobile-nav-more"
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    aria-expanded={mobileMenuOpen}
+                    className="relative flex flex-col items-center justify-center flex-1 py-1 min-w-[56px] text-[10px] font-medium text-[#33475f] hover:text-[#0F766E] transition-all duration-200 ease-out active:scale-[0.98]"
                   >
-                    <Icon className="w-4 h-4" />
-                  </div>
-                  <span className="truncate max-w-[64px]">{item.name}</span>
-                </button>
-              );
-            }
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                prefetch={true}
-                onClick={() => handleNavigateStart(item.href)}
-                className={`flex flex-col items-center justify-center flex-1 py-1 min-w-[56px] text-[10px] font-medium transition-all duration-200 ease-out active:scale-[0.98] ${
-                  isActive
-                    ? "text-[#0F766E] font-semibold"
-                    : "text-[#33475f] hover:text-[#0F766E]"
-                }`}
-              >
-                <div
-                  className={`w-9 h-7 rounded-full flex items-center justify-center transition-all duration-200 ease-out ${
-                    isActive ? "bg-[#0f766e]/15 text-[#0F766E] scale-100" : "scale-95"
+                    <div
+                      className={`relative w-9 h-7 rounded-full flex items-center justify-center transition-all duration-200 ease-out ${
+                        mobileMenuOpen ? "bg-[#0f766e]/15 text-[#0F766E]" : ""
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <span className="truncate max-w-[64px]">{item.name}</span>
+                  </button>
+                );
+              }
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  prefetch={true}
+                  onClick={() => handleNavigateStart(item.href)}
+                  className={`relative flex flex-col items-center justify-center flex-1 py-1 min-w-[56px] text-[10px] font-medium transition-all duration-200 ease-out active:scale-[0.98] ${
+                    isActive
+                      ? "text-[#0F766E] font-semibold"
+                      : "text-[#33475f] hover:text-[#0F766E]"
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
-                </div>
-                <span className="truncate max-w-[64px]">{item.name}</span>
-              </Link>
-            );
-          })}
+                  <div className="relative w-9 h-7 flex items-center justify-center">
+                    {isActive && (
+                      <motion.div
+                        layoutId="mobile-nav-active-pill"
+                        transition={{ type: "spring", stiffness: 380, damping: 32, mass: 0.8 }}
+                        className="absolute inset-0 rounded-full bg-[#0f766e]/15 border border-[#0f766e]/20"
+                      />
+                    )}
+                    <Icon className={`relative z-10 w-4 h-4 transition-colors ${isActive ? "text-[#0F766E]" : "text-[#33475f]"}`} />
+                  </div>
+                  <span className={`relative z-10 truncate max-w-[64px] font-medium ${isActive ? "text-[#0F766E] font-semibold" : "text-[#33475f]"}`}>
+                    {item.name}
+                  </span>
+                </Link>
+              );
+            })}
+          </LayoutGroup>
         </nav>
       </div>
-    </>
+    </MotionConfig>
   );
 }

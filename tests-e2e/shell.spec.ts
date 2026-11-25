@@ -140,4 +140,50 @@ test.describe("S1-01 Responsive Application Shell & Design Tokens", () => {
     expect(meData.authenticated).toBe(false);
     expect(consoleErrors).toEqual([]);
   });
+
+  test("desktop sidebar collapses to 76px icon rail and expands to 224px with localStorage persistence", async ({
+    page,
+  }, testInfo) => {
+    const isMobile = testInfo.project.name.includes("Mobile");
+    if (isMobile) return;
+
+    await page.goto("/login");
+    await page.fill("#login-email", "admin@assdi.org");
+    await page.fill("#login-password", "assdi123");
+    await page.click("#login-submit-button");
+    await page.waitForURL("**/admin/dashboard", { timeout: 10000 });
+
+    const sidebar = page.locator("#desktop-sidebar");
+    const toggle = page.locator("#sidebar-collapse-toggle");
+    await expect(sidebar).toBeVisible();
+    await expect(toggle).toBeVisible();
+
+    // Check initial expanded width (~224px)
+    const initialBox = await sidebar.boundingBox();
+    expect(initialBox).not.toBeNull();
+    expect(Math.round(initialBox!.width)).toBe(224);
+
+    // Toggle collapse
+    await toggle.click();
+    await page.waitForTimeout(500); // Wait for spring physics
+
+    const collapsedBox = await sidebar.boundingBox();
+    expect(collapsedBox).not.toBeNull();
+    expect(Math.round(collapsedBox!.width)).toBe(76);
+
+    // Verify localStorage persistence
+    const savedState = await page.evaluate(() => localStorage.getItem("assdi_sidebar_collapsed"));
+    expect(savedState).toBe("true");
+
+    // Toggle expand back
+    await toggle.click();
+    await page.waitForTimeout(500); // Wait for spring physics
+
+    const expandedBox = await sidebar.boundingBox();
+    expect(expandedBox).not.toBeNull();
+    expect(Math.round(expandedBox!.width)).toBe(224);
+
+    const savedState2 = await page.evaluate(() => localStorage.getItem("assdi_sidebar_collapsed"));
+    expect(savedState2).toBe("false");
+  });
 });

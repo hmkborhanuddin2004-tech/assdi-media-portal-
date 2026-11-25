@@ -3,7 +3,32 @@
 ## Current Status
 - **Active Step:** All Steps (Step 1 through Step 9) Completed & 100% Verified
 - **Completed Features:** 19 / 19 (S1-01, S2-01, S2-02, S3-01, S3-02, S4-01, S4-02, S4-03, S5-01, S5-02, S6-01, S6-02, S6-03, S6-04, S7-01, S8-01, S8-02, S8-03, S9-01)
-- **Last Verified Step:** Step 9 (S9-01 — Full 4-Role Lifecycle E2E Suite across Desktop & Mobile, Visual Luxury Glassmorphism Polish vs Reference Mockups, and Comprehensive Security Audit)
+- **UX & Motion Upgrade:** Buttery-Smooth 60fps Spring Navigation (`framer-motion`) across Desktop Sidebar, Mobile Nav, Calendar Filters & Popovers (100% Verified)
+
+## Motion & Fluid Interaction Upgrade (framer-motion 60fps Spring Physics)
+- **Persistent Shell & Role Layouts:**
+  - Added dedicated layout wrappers (`src/app/admin/layout.tsx`, `src/app/coordinator/layout.tsx`, `src/app/staff/layout.tsx`, `src/app/intern/layout.tsx`) preserving `AppShell` state across route changes without DOM flashing or reset.
+- **Desktop Sidebar Spring Glide & Hover:**
+  - Integrated `framer-motion` `<LayoutGroup id="assdi-sidebar">`.
+  - Gliding emerald active pill (`#0F766E`) using spring physics (`type: "spring", stiffness: 380, damping: 32, mass: 0.8`).
+  - Subtle translucent hover pill (`layoutId="sidebar-hover-pill"`) with smooth enter/leave feedback.
+- **Collapsible Desktop Sidebar (Expand ↔ Icon Rail):**
+  - Added floating circular collapse toggle button (`#sidebar-collapse-toggle`, `‹` / `›`) on the right edge.
+  - Smooth spring width animation between `224px` (expanded) and `76px` (compact icon rail) with `<AnimatePresence>` for header and text fade.
+  - Collapsed state displays compact `"AM"` brand badge, centered icon-only navigation, and dark frosted tooltips on hover.
+  - Preference dynamically persisted in browser `localStorage` (`assdi_sidebar_collapsed`).
+- **Mobile Bottom Nav & Filter Tabs Glide:**
+  - Mobile bottom navigation bar features spring active pill glide (`layoutId="mobile-nav-active-pill"`).
+  - Master calendar filter tabs (`Tomorrow / 3 Days / 7 Days`) wrapped in `<LayoutGroup id="calendar-tabs">` with `<motion.div layoutId="calendar-tab-active-pill" ... />`.
+- **Fluid Content, Popovers & Accessibility:**
+  - Main page content transitions smoothly (`initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}`).
+  - Topbar user profile dropdown and Shoot Assignment Slip modal animate with spring scale+fade.
+  - Wrapped root in `<MotionConfig reducedMotion="user">` honoring system accessibility preferences.
+- **Verification Gates (100% Green):**
+  - Gate 1: `pnpm typecheck && pnpm lint && pnpm build` exit 0.
+  - Gate 2: `pnpm test` (182 unit & DB tests pass in 1.8s).
+  - Gate 3: `pnpm test:e2e` (48 Playwright E2E tests pass across Desktop 1280px & Mobile 390px in 2.3m).
+  - Gate 4: Zero regressions, zero dead buttons, and 0 horizontal overflow.
 
 ## Step 9 (S9-01) Verification Summary
 - **Gate 1 (Static Quality & Production Build):**

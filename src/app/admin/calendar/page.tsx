@@ -22,6 +22,7 @@ import type { CalendarWindow } from "@/lib/validations/calendar";
 import { CALENDAR_WINDOW_LABELS } from "@/lib/validations/calendar";
 import type { CalendarShootItem } from "@/lib/calendar/store";
 import { ShootAssignmentSlipModal } from "@/components/tasks/ShootAssignmentSlipModal";
+import { motion, LayoutGroup } from "framer-motion";
 
 export default function AdminMasterCalendarPage() {
   const [activeWindow, setActiveWindow] = useState<CalendarWindow>("tomorrow");
@@ -131,33 +132,38 @@ export default function AdminMasterCalendarPage() {
       <div className="print:hidden glass-panel flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-2.5">
         {/* Tabs: Tomorrow, Next 3 Days, Next 7 Days */}
         <div className="inline-flex p-1 bg-white/35 border border-white/60 rounded-xl gap-1 shrink-0">
-          {(["tomorrow", "next_3_days", "next_7_days"] as CalendarWindow[]).map((win) => {
-            const isActive = activeWindow === win;
-            const meta = CALENDAR_WINDOW_LABELS[win];
-            return (
-              <button
-                key={win}
-                id={`calendar-tab-${win}`}
-                onClick={() => handleTabChange(win)}
-                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-[10px] text-xs font-semibold transition-all duration-150 ${
-                  isActive
-                    ? "bg-[#0F766E] text-white shadow-[0_5px_12px_rgba(15,118,110,0.3)]"
-                    : "text-[#33475f] hover:text-[#0b1f3a] hover:bg-white/60"
-                }`}
-              >
-                <Calendar className={`w-3.5 h-3.5 shrink-0 ${isActive ? "text-white" : "text-[#33475f]"}`} />
-                <span>{meta.en}</span>
-                <span className="hidden sm:inline text-[11px] opacity-85">
-                  ({meta.bn})
-                </span>
-                {isActive && (
-                  <span className="ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-white/25 text-white font-bold">
-                    {shoots.length}
+          <LayoutGroup id="calendar-tabs">
+            {(["tomorrow", "next_3_days", "next_7_days"] as CalendarWindow[]).map((win) => {
+              const isActive = activeWindow === win;
+              const meta = CALENDAR_WINDOW_LABELS[win];
+              return (
+                <button
+                  key={win}
+                  id={`calendar-tab-${win}`}
+                  onClick={() => handleTabChange(win)}
+                  className="relative flex items-center gap-1.5 px-3.5 py-2 rounded-[10px] text-xs font-semibold select-none transition-colors duration-150 cursor-pointer"
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="calendar-tab-active-pill"
+                      transition={{ type: "spring", stiffness: 380, damping: 32, mass: 0.8 }}
+                      className="absolute inset-0 rounded-[10px] bg-[#0F766E] shadow-[0_5px_12px_rgba(15,118,110,0.3)]"
+                    />
+                  )}
+                  <Calendar className={`relative z-10 w-3.5 h-3.5 shrink-0 transition-colors ${isActive ? "text-white" : "text-[#33475f]"}`} />
+                  <span className={`relative z-10 transition-colors ${isActive ? "text-white" : "text-[#33475f]"}`}>{meta.en}</span>
+                  <span className={`relative z-10 hidden sm:inline text-[11px] transition-colors ${isActive ? "text-emerald-100 opacity-90" : "text-[#33475f] opacity-85"}`}>
+                    ({meta.bn})
                   </span>
-                )}
-              </button>
-            );
-          })}
+                  {isActive && (
+                    <span className="relative z-10 ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-white/25 text-white font-bold">
+                      {shoots.length}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </LayoutGroup>
         </div>
 
         {/* Search Input */}

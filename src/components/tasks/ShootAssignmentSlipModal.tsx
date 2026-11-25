@@ -12,6 +12,7 @@ import {
   CheckCircle2,
   Users,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import type { ShootSlipData } from "@/lib/tasks/store";
 
 interface ShootAssignmentSlipModalProps {
@@ -41,7 +42,10 @@ export function ShootAssignmentSlipModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96, y: 10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
         className="w-full max-w-xl bg-white/60 backdrop-blur-2xl border border-white/85 rounded-2xl shadow-[0_16px_40px_rgba(11,50,60,0.10)] overflow-hidden flex flex-col max-h-[92vh] print:max-w-none print:shadow-none print:border-none print:rounded-none print:bg-white print:max-h-none"
         id="shoot-assignment-slip-card"
       >
@@ -269,7 +273,7 @@ export function ShootAssignmentSlipModal({
             <span>Share on WhatsApp</span>
           </a>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

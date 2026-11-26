@@ -33,3 +33,10 @@ pnpm-debug.log*
 *.suo
 *.ntvs*
 *.njsproj
+
+# OpenNext & Cloudflare Wrangler
+/.open-next/
+/.wrangler/
+.dev.vars*
+!.dev.vars.example
+cloudflare-env.d.ts

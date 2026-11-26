@@ -239,15 +239,15 @@ export default function AdminRequisitionsPage() {
   return (
     <div className="space-y-5 w-full max-w-full pb-10">
       {/* Flat Linear/Stripe Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4E4E7]">
-        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#09090B] tracking-tight">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4DFD3]">
+        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#1A1917] tracking-tight">
           Requisitions
         </h1>
 
         <button
           onClick={() => setShowEmergencyModal(true)}
           id="create-emergency-btn"
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white text-xs font-medium cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#0F6B5D] hover:bg-[#0B554A] text-white text-xs font-medium cursor-pointer"
         >
           <ShieldAlert className="w-3.5 h-3.5" />
           <span>Emergency Override</span>
@@ -256,27 +256,27 @@ export default function AdminRequisitionsPage() {
 
       {/* Stats Summary */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-        <div className="bg-white border border-[#E4E4E7] rounded-lg p-3.5">
-          <span className="text-xs font-medium text-[#71717A] block">Total</span>
-          <span className="text-xl font-semibold text-[#09090B] mt-1 block tabular-nums">
+        <div className="bg-white border border-[#E4DFD3] rounded-lg p-3.5">
+          <span className="text-xs font-medium text-[#78716C] block">Total</span>
+          <span className="text-xl font-semibold text-[#1A1917] mt-1 block tabular-nums">
             {requisitions.length}
           </span>
         </div>
-        <div className="bg-white border border-[#E4E4E7] rounded-lg p-3.5">
-          <span className="text-xs font-medium text-[#71717A] block">Pending</span>
-          <span className="text-xl font-semibold text-[#09090B] mt-1 block tabular-nums">
+        <div className="bg-white border border-[#E4DFD3] rounded-lg p-3.5">
+          <span className="text-xs font-medium text-[#78716C] block">Pending</span>
+          <span className="text-xl font-semibold text-[#1A1917] mt-1 block tabular-nums">
             {countPending}
           </span>
         </div>
-        <div className="bg-white border border-[#E4E4E7] rounded-lg p-3.5">
-          <span className="text-xs font-medium text-[#71717A] block">Approved</span>
-          <span className="text-xl font-semibold text-[#0F766E] mt-1 block tabular-nums">
+        <div className="bg-white border border-[#E4DFD3] rounded-lg p-3.5">
+          <span className="text-xs font-medium text-[#78716C] block">Approved</span>
+          <span className="text-xl font-semibold text-[#0F6B5D] mt-1 block tabular-nums">
             {countApproved}
           </span>
         </div>
-        <div className="bg-white border border-[#E4E4E7] rounded-lg p-3.5">
-          <span className="text-xs font-medium text-[#71717A] block">Rejected</span>
-          <span className="text-xl font-semibold text-[#DC2626] mt-1 block tabular-nums">
+        <div className="bg-white border border-[#E4DFD3] rounded-lg p-3.5">
+          <span className="text-xs font-medium text-[#78716C] block">Rejected</span>
+          <span className="text-xl font-semibold text-[#B91C1C] mt-1 block tabular-nums">
             {countRejected}
           </span>
         </div>
@@ -284,26 +284,26 @@ export default function AdminRequisitionsPage() {
 
       {/* Error alert */}
       {actionError && (
-        <div className="p-3 rounded-lg bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-xs flex items-center justify-between gap-2 font-medium">
+        <div className="p-3 rounded-lg bg-[#FEE2E2] border border-[#FECACA] text-[#B91C1C] text-xs flex items-center justify-between gap-2 font-medium">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-[#DC2626] shrink-0" />
+            <AlertTriangle className="w-4 h-4 text-[#B91C1C] shrink-0" />
             <span>{actionError}</span>
           </div>
-          <button onClick={() => setActionError(null)} className="text-[#DC2626] hover:opacity-80">
+          <button onClick={() => setActionError(null)} className="text-[#B91C1C] hover:opacity-80">
             <X className="w-4 h-4" />
           </button>
         </div>
       )}
 
       {/* Filter and Search Bar */}
-      <div className="bg-white border border-[#E4E4E7] rounded-lg p-3 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div className="bg-white border border-[#E4DFD3] rounded-lg p-3 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         <div className="flex items-center gap-1 overflow-x-auto no-scrollbar text-xs tabular-nums">
           <button
             onClick={() => setActiveFilter("all")}
             className={`px-2.5 py-1.5 rounded-md font-medium shrink-0 ${
               activeFilter === "all"
-                ? "bg-[#09090B] text-white"
-                : "bg-[#FAFAFA] border border-[#E4E4E7] text-[#52525B] hover:text-[#09090B]"
+                ? "bg-[#1A1917] text-white"
+                : "bg-[#F7F5F0] border border-[#E4DFD3] text-[#57534E] hover:text-[#1A1917]"
             }`}
           >
             All ({requisitions.length})
@@ -312,8 +312,8 @@ export default function AdminRequisitionsPage() {
             onClick={() => setActiveFilter("pending")}
             className={`px-2.5 py-1.5 rounded-md font-medium shrink-0 ${
               activeFilter === "pending"
-                ? "bg-[#09090B] text-white"
-                : "bg-[#FAFAFA] border border-[#E4E4E7] text-[#52525B] hover:text-[#09090B]"
+                ? "bg-[#1A1917] text-white"
+                : "bg-[#F7F5F0] border border-[#E4DFD3] text-[#57534E] hover:text-[#1A1917]"
             }`}
           >
             Pending ({countPending})
@@ -322,8 +322,8 @@ export default function AdminRequisitionsPage() {
             onClick={() => setActiveFilter("approved")}
             className={`px-2.5 py-1.5 rounded-md font-medium shrink-0 ${
               activeFilter === "approved"
-                ? "bg-[#09090B] text-white"
-                : "bg-[#FAFAFA] border border-[#E4E4E7] text-[#52525B] hover:text-[#09090B]"
+                ? "bg-[#1A1917] text-white"
+                : "bg-[#F7F5F0] border border-[#E4DFD3] text-[#57534E] hover:text-[#1A1917]"
             }`}
           >
             Approved ({countApproved})
@@ -332,8 +332,8 @@ export default function AdminRequisitionsPage() {
             onClick={() => setActiveFilter("rejected")}
             className={`px-2.5 py-1.5 rounded-md font-medium shrink-0 ${
               activeFilter === "rejected"
-                ? "bg-[#09090B] text-white"
-                : "bg-[#FAFAFA] border border-[#E4E4E7] text-[#52525B] hover:text-[#09090B]"
+                ? "bg-[#1A1917] text-white"
+                : "bg-[#F7F5F0] border border-[#E4DFD3] text-[#57534E] hover:text-[#1A1917]"
             }`}
           >
             Rejected ({countRejected})
@@ -341,13 +341,13 @@ export default function AdminRequisitionsPage() {
         </div>
 
         <div className="relative w-full sm:w-64">
-          <Search className="w-3.5 h-3.5 text-[#71717A] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-[#78716C] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search courses or programs..."
-            className="w-full h-8 pl-8 pr-3 rounded-md border border-[#E4E4E7] bg-[#FAFAFA] text-xs text-[#09090B] placeholder-[#71717A] focus:outline-none focus:bg-white focus:border-[#0F766E]"
+            className="w-full h-8 pl-8 pr-3 rounded-md border border-[#E4DFD3] bg-[#F7F5F0] text-xs text-[#1A1917] placeholder-[#78716C] focus:outline-none focus:bg-white focus:border-[#0F6B5D]"
           />
         </div>
       </div>
@@ -355,11 +355,11 @@ export default function AdminRequisitionsPage() {
       {/* Requisitions List */}
       <div className="space-y-3" id="admin-requisitions-list">
         {loading ? (
-          <div className="bg-white border border-[#E4E4E7] rounded-lg p-8 text-center text-xs text-[#71717A]">
+          <div className="bg-white border border-[#E4DFD3] rounded-lg p-8 text-center text-xs text-[#78716C]">
             Loading requisitions...
           </div>
         ) : filteredRequisitions.length === 0 ? (
-          <div className="bg-white border border-[#E4E4E7] rounded-lg p-8 text-center text-xs text-[#71717A]">
+          <div className="bg-white border border-[#E4DFD3] rounded-lg p-8 text-center text-xs text-[#78716C]">
             No requisitions found.
           </div>
         ) : (
@@ -373,46 +373,46 @@ export default function AdminRequisitionsPage() {
               <div
                 key={req.id}
                 id={`admin-req-${req.id}`}
-                className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-4 space-y-3"
+                className="bg-white border border-[#E4DFD3] rounded-lg shadow-[0_1px_2px_rgba(26,25,23,0.04)] p-4 space-y-3"
               >
                 {/* Header Row */}
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E4E4E7] pb-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E4DFD3] pb-3">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-semibold text-sm text-[#09090B]">
+                    <span className="font-semibold text-sm text-[#1A1917]">
                       {req.course_name}
                     </span>
-                    <span className="text-xs text-[#71717A]">•</span>
-                    <span className="text-xs text-[#52525B]">
+                    <span className="text-xs text-[#78716C]">•</span>
+                    <span className="text-xs text-[#57534E]">
                       {programMeta?.en || req.program_type} ({req.format_duration})
                     </span>
 
                     {req.is_emergency_override && (
-                      <span className="px-2 py-0.5 rounded-md bg-[#FEF2F2] text-[#DC2626] text-[10.5px] font-medium border border-[#FECACA]">
+                      <span className="px-2 py-0.5 rounded-md bg-[#FEE2E2] text-[#B91C1C] text-[10.5px] font-medium border border-[#FECACA]">
                         Emergency Override
                       </span>
                     )}
 
                     {isPending && (
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#27272A] text-[11px] font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#71717A]" />
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#FEF3C7] border border-[#FDE68A] text-[#B45309] text-[11px] font-medium">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#B45309]" />
                         <span>Pending</span>
                       </span>
                     )}
                     {isApproved && (
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#27272A] text-[11px] font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E]" />
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#E6F4EE] border border-[#CDE7DC] text-[#0F6B5D] text-[11px] font-medium">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#0F6B5D]" />
                         <span>Approved</span>
                       </span>
                     )}
                     {isRejected && (
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#FEF2F2] border border-[#FECACA] text-[#DC2626] text-[11px] font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#DC2626]" />
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#FEE2E2] border border-[#FECACA] text-[#B91C1C] text-[11px] font-medium">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#B91C1C]" />
                         <span>Rejected</span>
                       </span>
                     )}
                   </div>
 
-                  <span className="text-[11px] text-[#71717A] font-mono tabular-nums">
+                  <span className="text-[11px] text-[#78716C] font-mono tabular-nums">
                     {req.id.slice(0, 14)}
                   </span>
                 </div>
@@ -420,52 +420,52 @@ export default function AdminRequisitionsPage() {
                 {/* Grid details */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs tabular-nums">
                   <div>
-                    <span className="text-[#71717A] block text-[11px]">Schedule</span>
-                    <span className="font-medium text-[#09090B]">
+                    <span className="text-[#78716C] block text-[11px]">Schedule</span>
+                    <span className="font-medium text-[#1A1917]">
                       {req.shoot_date} • {req.call_time}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[#71717A] block text-[11px]">Venue &amp; Framing</span>
-                    <span className="font-medium text-[#09090B]">
+                    <span className="text-[#78716C] block text-[11px]">Venue &amp; Framing</span>
+                    <span className="font-medium text-[#1A1917]">
                       {req.venue_name || "Venue"} | {FRAMING_LABELS[req.framing_type] || req.framing_type}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[#71717A] block text-[11px]">Coordinator Phone</span>
-                    <span className="font-mono font-medium text-[#09090B]">
+                    <span className="text-[#78716C] block text-[11px]">Coordinator Phone</span>
+                    <span className="font-mono font-medium text-[#1A1917]">
                       {req.coordinator_phone || "Phone"}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[#71717A] block text-[11px]">Notes</span>
-                    <span className="text-[#52525B] line-clamp-1">
+                    <span className="text-[#78716C] block text-[11px]">Notes</span>
+                    <span className="text-[#57534E] line-clamp-1">
                       {req.notes || "—"}
                     </span>
                   </div>
                 </div>
 
                 {req.is_emergency_override && req.override_reason && (
-                  <div className="p-2.5 rounded-md bg-[#FAFAFA] border border-[#E4E4E7] text-[#52525B] text-xs">
-                    <span className="font-medium text-[#09090B]">Override Reason: </span>
+                  <div className="p-2.5 rounded-md bg-[#F7F5F0] border border-[#E4DFD3] text-[#57534E] text-xs">
+                    <span className="font-medium text-[#1A1917]">Override Reason: </span>
                     <span>{req.override_reason}</span>
                   </div>
                 )}
 
                 {isRejected && req.rejection_reason && (
-                  <div className="p-2.5 rounded-md bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-xs">
+                  <div className="p-2.5 rounded-md bg-[#FEE2E2] border border-[#FECACA] text-[#B91C1C] text-xs">
                     <span className="font-medium">Rejection Reason: </span>
                     <span>{req.rejection_reason}</span>
                   </div>
                 )}
 
                 {isPending && (
-                  <div className="pt-2 border-t border-[#E4E4E7] flex items-center justify-end gap-2">
+                  <div className="pt-2 border-t border-[#E4DFD3] flex items-center justify-end gap-2">
                     <button
                       onClick={() => setApprovingReq(req)}
                       id={`approve-btn-${req.id}`}
                       disabled={actionLoading}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white text-xs font-medium cursor-pointer disabled:opacity-50"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0F6B5D] hover:bg-[#0B554A] text-white text-xs font-medium cursor-pointer disabled:opacity-50"
                     >
                       <Check className="w-3.5 h-3.5" />
                       <span>Approve &amp; Assign</span>
@@ -475,7 +475,7 @@ export default function AdminRequisitionsPage() {
                       onClick={() => handleOpenReject(req.id)}
                       id={`reject-btn-${req.id}`}
                       disabled={actionLoading}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-[#E4E4E7] bg-white hover:bg-[#FEF2F2] hover:border-[#FECACA] text-[#DC2626] text-xs font-medium cursor-pointer disabled:opacity-50"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-[#E4DFD3] bg-white hover:bg-[#FEE2E2] hover:border-[#FECACA] text-[#B91C1C] text-xs font-medium cursor-pointer disabled:opacity-50"
                     >
                       <X className="w-3.5 h-3.5" />
                       <span>Reject</span>
@@ -484,27 +484,27 @@ export default function AdminRequisitionsPage() {
                 )}
 
                 {isApproved && (
-                  <div className="pt-2 border-t border-[#E4E4E7] flex items-center justify-end gap-2">
+                  <div className="pt-2 border-t border-[#E4DFD3] flex items-center justify-end gap-2">
                     <button
                       onClick={() => handleViewSlip(req)}
                       id={`view-slip-btn-${req.id}`}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#E4E4E7] bg-white hover:bg-[#F4F4F5] text-[#09090B] text-xs font-medium cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#E4DFD3] bg-white hover:bg-[#EFECE4] text-[#1A1917] text-xs font-medium cursor-pointer"
                     >
-                      <FileText className="w-3.5 h-3.5 text-[#52525B]" />
+                      <FileText className="w-3.5 h-3.5 text-[#57534E]" />
                       <span>Shoot Slip</span>
                     </button>
                   </div>
                 )}
 
                 {rejectingId === req.id && (
-                  <div className="mt-2 p-3.5 rounded-lg border border-[#FECACA] bg-[#FEF2F2] space-y-2.5">
+                  <div className="mt-2 p-3.5 rounded-lg border border-[#FECACA] bg-[#FEE2E2] space-y-2.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium text-[#991B1B]">
+                      <span className="text-xs font-medium text-[#B91C1C]">
                         Rejection Reason (Required) *
                       </span>
                       <button
                         onClick={() => setRejectingId(null)}
-                        className="text-[#52525B] hover:text-[#09090B] text-xs"
+                        className="text-[#57534E] hover:text-[#1A1917] text-xs"
                       >
                         Cancel
                       </button>
@@ -516,7 +516,7 @@ export default function AdminRequisitionsPage() {
                       value={rejectionReason}
                       placeholder="Specify reason (e.g., Camera team fully booked on this date. Please reschedule.)..."
                       onChange={(e) => setRejectionReason(e.target.value)}
-                      className="w-full px-3 py-2 rounded-md border border-[#FECACA] bg-white text-xs text-[#09090B] focus:outline-none focus:border-[#DC2626]"
+                      className="w-full px-3 py-2 rounded-md border border-[#FECACA] bg-white text-xs text-[#1A1917] focus:outline-none focus:border-[#B91C1C]"
                       required
                     />
 
@@ -524,7 +524,7 @@ export default function AdminRequisitionsPage() {
                       <button
                         type="button"
                         onClick={() => setRejectingId(null)}
-                        className="px-3 py-1.5 rounded-md border border-[#E4E4E7] bg-white text-[#52525B] text-xs font-medium"
+                        className="px-3 py-1.5 rounded-md border border-[#E4DFD3] bg-white text-[#57534E] text-xs font-medium"
                       >
                         Cancel
                       </button>
@@ -533,7 +533,7 @@ export default function AdminRequisitionsPage() {
                         id={`confirm-reject-btn-${req.id}`}
                         onClick={() => handleConfirmReject(req.id)}
                         disabled={actionLoading}
-                        className="px-3.5 py-1.5 rounded-md bg-[#DC2626] hover:bg-[#B91C1C] text-white text-xs font-medium"
+                        className="px-3.5 py-1.5 rounded-md bg-[#B91C1C] hover:bg-[#B91C1C] text-white text-xs font-medium"
                       >
                         {actionLoading ? "Processing..." : "Confirm Reject"}
                       </button>
@@ -548,16 +548,16 @@ export default function AdminRequisitionsPage() {
 
       {/* Emergency Requisition Modal */}
       {showEmergencyModal && (
-        <div className="fixed inset-0 z-50 bg-[#09090B]/40 flex items-center justify-center p-4 overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-[#1A1917]/40 flex items-center justify-center p-4 overflow-y-auto">
           <motion.div
             initial={{ opacity: 0, scale: 0.985 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={MODAL_TRANSITION}
-            className="w-full max-w-lg bg-white rounded-lg shadow-[0_8px_24px_rgba(0,0,0,0.08)] border border-[#E4E4E7] p-5 space-y-4 my-8"
+            className="w-full max-w-lg bg-white rounded-lg shadow-[0_8px_24px_rgba(26,25,23,0.08)] border border-[#E4DFD3] p-5 space-y-4 my-8"
           >
-            <div className="flex items-center justify-between border-b border-[#E4E4E7] pb-3">
+            <div className="flex items-center justify-between border-b border-[#E4DFD3] pb-3">
               <div className="flex items-center gap-2">
-                <ShieldAlert className="w-4 h-4 text-[#0F766E]" />
+                <ShieldAlert className="w-4 h-4 text-[#0F6B5D]" />
                 <h3 className="text-base font-bold text-slate-900">
                   Create Emergency Override Requisition
                 </h3>

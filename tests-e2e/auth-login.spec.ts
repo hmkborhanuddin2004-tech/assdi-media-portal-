@@ -59,7 +59,7 @@ test.describe("S3-01 & S3-02: Auth, Role-Guard Middleware & User Management E2E"
     expect(hasHorizontalOverflow).toBe(false);
 
     // Verify Brand title is visible
-    await expect(page.getByText("আছ-সুন্নাহ স্কিল ডেভেলপমেন্ট ইনস্টিটিউট")).toBeVisible();
+    await expect(page.getByText("আস-সুন্নাহ স্কিল ডেভেলপমেন্ট ইনস্টিটিউট")).toBeVisible();
     await expect(page.getByText("সেন্ট্রাল মিডিয়া ম্যানেজমেন্ট পোর্টাল")).toBeVisible();
 
     // Verify public self-signup is disabled notice

@@ -109,13 +109,13 @@ export default function AdminMasterCalendarPage() {
   return (
     <div className="space-y-5 w-full max-w-full">
       {/* Flat Linear/Stripe Header */}
-      <div className="print:hidden flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4E4E7]">
-        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#09090B] tracking-tight">
+      <div className="print:hidden flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4DFD3]">
+        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#1A1917] tracking-tight">
           Calendar
         </h1>
 
         {bounds && (
-          <span className="text-xs text-[#71717A] font-mono tabular-nums">
+          <span className="text-xs text-[#78716C] font-mono tabular-nums">
             {activeWindow === "tomorrow"
               ? bounds.tomorrowStr
               : `${bounds.todayStr} – ${
@@ -128,9 +128,9 @@ export default function AdminMasterCalendarPage() {
       </div>
 
       {/* Filter Tabs & Search Bar */}
-      <div className="print:hidden bg-white border border-[#E4E4E7] rounded-lg flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-2.5">
+      <div className="print:hidden bg-white border border-[#E4DFD3] rounded-lg flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-2.5">
         {/* Tabs: Tomorrow, Next 3 Days, Next 7 Days */}
-        <div className="inline-flex p-1 bg-[#F4F4F5] border border-[#E4E4E7] rounded-md gap-1 shrink-0">
+        <div className="inline-flex p-1 bg-[#EFECE4] border border-[#E4DFD3] rounded-md gap-1 shrink-0">
           <LayoutGroup id="calendar-tabs">
             {(["tomorrow", "next_3_days", "next_7_days"] as CalendarWindow[]).map((win) => {
               const isActive = activeWindow === win;
@@ -146,23 +146,23 @@ export default function AdminMasterCalendarPage() {
                     <motion.div
                       layoutId="calendar-tab-active-pill"
                       transition={PILL_TRANSITION}
-                      className="absolute inset-0 rounded bg-white border border-[#E4E4E7] shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
+                      className="absolute inset-0 rounded bg-white border border-[#E4DFD3] shadow-[0_1px_2px_rgba(26,25,23,0.04)]"
                     />
                   )}
                   <Calendar
                     className={`relative z-10 w-3.5 h-3.5 shrink-0 ${
-                      isActive ? "text-[#0F766E]" : "text-[#71717A]"
+                      isActive ? "text-[#0F6B5D]" : "text-[#78716C]"
                     }`}
                   />
                   <span
                     className={`relative z-10 ${
-                      isActive ? "text-[#09090B]" : "text-[#52525B]"
+                      isActive ? "text-[#1A1917]" : "text-[#57534E]"
                     }`}
                   >
                     {meta.en}
                   </span>
                   {isActive && (
-                    <span className="relative z-10 ml-0.5 px-1.5 py-0.2 rounded bg-[#F4F4F5] text-[#52525B] text-[10px] font-medium tabular-nums">
+                    <span className="relative z-10 ml-0.5 px-1.5 py-0.2 rounded bg-[#EFECE4] text-[#57534E] text-[10px] font-medium tabular-nums">
                       {shoots.length}
                     </span>
                   )}
@@ -174,14 +174,14 @@ export default function AdminMasterCalendarPage() {
 
         {/* Search Input */}
         <div className="relative flex-1 sm:max-w-xs">
-          <Search className="w-3.5 h-3.5 text-[#71717A] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-[#78716C] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             id="calendar-search-input"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search courses, venues, crew..."
-            className="w-full h-8 pl-8 pr-3 text-xs rounded-md bg-[#FAFAFA] border border-[#E4E4E7] text-[#09090B] placeholder-[#71717A] focus:outline-none focus:bg-white focus:border-[#0F766E]"
+            className="w-full h-8 pl-8 pr-3 text-xs rounded-md bg-[#F7F5F0] border border-[#E4DFD3] text-[#1A1917] placeholder-[#78716C] focus:outline-none focus:bg-white focus:border-[#0F6B5D]"
           />
         </div>
       </div>
@@ -191,24 +191,24 @@ export default function AdminMasterCalendarPage() {
         {/* Left Column: Chronological Shoot Schedule Cards (7 cols) */}
         <div className="print:hidden lg:col-span-7 space-y-3">
           <div className="flex items-center justify-between px-0.5">
-            <h2 className="text-xs font-medium text-[#52525B] uppercase tracking-wider tabular-nums">
+            <h2 className="text-xs font-medium text-[#57534E] uppercase tracking-wider tabular-nums">
               Scheduled Shoots ({filteredShoots.length})
             </h2>
           </div>
 
           {loading ? (
-            <div className="bg-white border border-[#E4E4E7] rounded-lg p-12 text-center text-[#71717A] flex flex-col items-center justify-center gap-2">
-              <Loader2 className="w-5 h-5 animate-spin text-[#0F766E]" />
+            <div className="bg-white border border-[#E4DFD3] rounded-lg p-12 text-center text-[#78716C] flex flex-col items-center justify-center gap-2">
+              <Loader2 className="w-5 h-5 animate-spin text-[#0F6B5D]" />
               <span className="text-xs">Loading schedule...</span>
             </div>
           ) : filteredShoots.length === 0 ? (
-            <div className="bg-white border border-[#E4E4E7] rounded-lg p-12 text-center text-[#71717A] space-y-2">
-              <Calendar className="w-8 h-8 text-[#D4D4D8] mx-auto" />
+            <div className="bg-white border border-[#E4DFD3] rounded-lg p-12 text-center text-[#78716C] space-y-2">
+              <Calendar className="w-8 h-8 text-[#D5CFC2] mx-auto" />
               <div className="space-y-1">
-                <p className="text-sm font-medium text-[#09090B]">
+                <p className="text-sm font-medium text-[#1A1917]">
                   কোনো শুটিং শিডিউল পাওয়া যায়নি
                 </p>
-                <p className="text-xs text-[#71717A]">
+                <p className="text-xs text-[#78716C]">
                   No shoots scheduled for the selected window.
                 </p>
               </div>
@@ -224,31 +224,31 @@ export default function AdminMasterCalendarPage() {
                     onClick={() => handleSelectShoot(shoot)}
                     className={`bg-white p-4 rounded-lg border cursor-pointer relative transition-colors group ${
                       isSelected
-                        ? "border-[#0F766E] shadow-[0_1px_2px_rgba(0,0,0,0.06)]"
-                        : "border-[#E4E4E7] hover:border-[#D4D4D8] hover:bg-[#F9FAFB]"
+                        ? "border-[#0F6B5D] shadow-[0_1px_2px_rgba(26,25,23,0.06)]"
+                        : "border-[#E4DFD3] hover:border-[#D5CFC2] hover:bg-[#FBF9F5]"
                     }`}
                   >
-                    <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-[#E4E4E7]">
+                    <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-[#E4DFD3]">
                       <div className="flex items-center gap-2 tabular-nums">
-                        <span className="px-2 py-0.5 rounded bg-[#F4F4F5] border border-[#E4E4E7] text-[#09090B] text-xs font-mono font-medium">
+                        <span className="px-2 py-0.5 rounded bg-[#EFECE4] border border-[#E4DFD3] text-[#1A1917] text-xs font-mono font-medium">
                           {shoot.shoot_date}
                         </span>
-                        <span className="flex items-center gap-1 text-xs font-mono text-[#52525B]">
-                          <Clock className="w-3 h-3 text-[#71717A]" />
+                        <span className="flex items-center gap-1 text-xs font-mono text-[#57534E]">
+                          <Clock className="w-3 h-3 text-[#78716C]" />
                           <span>{shoot.call_time}</span>
                         </span>
                       </div>
 
                       <div className="flex items-center gap-1.5">
                         {shoot.is_emergency_override && (
-                          <span className="px-1.5 py-0.5 rounded bg-[#FEF2F2] border border-[#FECACA] text-[#DC2626] text-[10.5px] font-medium">
+                          <span className="px-1.5 py-0.5 rounded bg-[#FEE2E2] border border-[#FECACA] text-[#B91C1C] text-[10.5px] font-medium">
                             Override
                           </span>
                         )}
-                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#27272A] text-[11px] font-medium">
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#EFECE4] border border-[#E4DFD3] text-[#1A1917] text-[11px] font-medium">
                           <span
                             className={`w-1.5 h-1.5 rounded-full ${
-                              shoot.stage === "completed" ? "bg-[#0F766E]" : "bg-[#52525B]"
+                              shoot.stage === "completed" ? "bg-[#0F6B5D]" : "bg-[#57534E]"
                             }`}
                           />
                           <span>{shoot.stage_label}</span>
@@ -259,26 +259,26 @@ export default function AdminMasterCalendarPage() {
                     <div className="pt-3 space-y-1.5">
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <h3 className="text-sm font-semibold text-[#09090B]">
+                          <h3 className="text-sm font-semibold text-[#1A1917]">
                             {shoot.course_name}
                           </h3>
-                          <p className="text-xs text-[#52525B]">
+                          <p className="text-xs text-[#57534E]">
                             {shoot.program_type_label} • {shoot.format_duration}
                           </p>
                         </div>
 
-                        <span className="px-1.5 py-0.5 rounded bg-[#F4F4F5] border border-[#E4E4E7] text-[#52525B] text-[11px] font-mono tabular-nums shrink-0">
+                        <span className="px-1.5 py-0.5 rounded bg-[#EFECE4] border border-[#E4DFD3] text-[#57534E] text-[11px] font-mono tabular-nums shrink-0">
                           {shoot.course_code}
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-1.5 text-xs text-[#52525B]">
-                        <MapPin className="w-3.5 h-3.5 text-[#71717A] shrink-0" />
+                      <div className="flex items-center gap-1.5 text-xs text-[#57534E]">
+                        <MapPin className="w-3.5 h-3.5 text-[#78716C] shrink-0" />
                         <span>{shoot.venue_name}</span>
                       </div>
 
                       <div className="flex items-center gap-2 text-xs pt-0.5">
-                        <Users className="w-3.5 h-3.5 text-[#71717A] shrink-0" />
+                        <Users className="w-3.5 h-3.5 text-[#78716C] shrink-0" />
                         <div className="flex flex-wrap items-center gap-1.5">
                           {shoot.assignees.length > 0 ? (
                             shoot.assignees.map((member, idx) => {
@@ -286,17 +286,17 @@ export default function AdminMasterCalendarPage() {
                               return (
                                 <span
                                   key={idx}
-                                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#F4F4F5] border border-[#E4E4E7] text-[#09090B] text-[11px] font-medium"
+                                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#EFECE4] border border-[#E4DFD3] text-[#1A1917] text-[11px] font-medium"
                                 >
                                   {member.full_name}
                                   {isLead && (
-                                    <span className="text-[10px] text-[#0F766E]">Lead</span>
+                                    <span className="text-[10px] text-[#0F6B5D]">Lead</span>
                                   )}
                                 </span>
                               );
                             })
                           ) : (
-                            <span className="text-[#71717A] text-xs">
+                            <span className="text-[#78716C] text-xs">
                               {shoot.lead_name !== "Unassigned"
                                 ? `${shoot.lead_name} (Lead)`
                                 : "Unassigned"}
@@ -306,15 +306,15 @@ export default function AdminMasterCalendarPage() {
                       </div>
 
                       <div className="flex items-center gap-2 text-xs pt-0.5">
-                        <Camera className="w-3.5 h-3.5 text-[#71717A] shrink-0" />
-                        <span className="text-[#52525B] text-[11px] truncate font-mono tabular-nums">
+                        <Camera className="w-3.5 h-3.5 text-[#78716C] shrink-0" />
+                        <span className="text-[#57534E] text-[11px] truncate font-mono tabular-nums">
                           {shoot.gear_summary}
                         </span>
                       </div>
                     </div>
 
-                    <div className="mt-3 pt-2.5 border-t border-[#E4E4E7] flex items-center justify-between text-xs">
-                      <span className="text-[11px] text-[#71717A] font-mono tabular-nums">
+                    <div className="mt-3 pt-2.5 border-t border-[#E4DFD3] flex items-center justify-between text-xs">
+                      <span className="text-[11px] text-[#78716C] font-mono tabular-nums">
                         {shoot.slip.slip_number}
                       </span>
 
@@ -325,7 +325,7 @@ export default function AdminMasterCalendarPage() {
                             e.stopPropagation();
                             handleOpenMobileSlip(shoot);
                           }}
-                          className="lg:hidden inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#0F766E] text-white text-xs font-medium"
+                          className="lg:hidden inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#0F6B5D] text-white text-xs font-medium"
                         >
                           <FileText className="w-3 h-3" />
                           <span>View Slip</span>
@@ -333,7 +333,7 @@ export default function AdminMasterCalendarPage() {
 
                         <span
                           className={`hidden lg:inline-flex items-center gap-1 text-xs font-medium ${
-                            isSelected ? "text-[#0F766E]" : "text-[#71717A] group-hover:text-[#09090B]"
+                            isSelected ? "text-[#0F6B5D]" : "text-[#78716C] group-hover:text-[#1A1917]"
                           }`}
                         >
                           <span>{isSelected ? "Selected" : "Inspect slip"}</span>
@@ -352,11 +352,11 @@ export default function AdminMasterCalendarPage() {
         <div className="hidden lg:block lg:col-span-5 sticky top-20 print:block print:w-full print:static print:m-0 print:p-0">
           <div className="space-y-2.5">
             <div className="print:hidden flex items-center justify-between px-0.5">
-              <h2 className="text-xs font-medium text-[#52525B] uppercase tracking-wider">
+              <h2 className="text-xs font-medium text-[#57534E] uppercase tracking-wider">
                 Assignment Slip
               </h2>
               {selectedShoot && (
-                <span className="text-xs font-mono text-[#71717A] tabular-nums">
+                <span className="text-xs font-mono text-[#78716C] tabular-nums">
                   {selectedShoot.slip.slip_number}
                 </span>
               )}
@@ -365,12 +365,12 @@ export default function AdminMasterCalendarPage() {
             {selectedShoot ? (
               <div
                 id="calendar-shoot-slip-panel"
-                className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] overflow-hidden relative print:p-8 print:m-0 print:border-[#E4E4E7] print:shadow-none print:w-full"
+                className="bg-white border border-[#E4DFD3] rounded-lg shadow-[0_1px_2px_rgba(26,25,23,0.04)] overflow-hidden relative print:p-8 print:m-0 print:border-[#E4DFD3] print:shadow-none print:w-full"
               >
                 {/* Clean Institutional Header */}
-                <div className="bg-white border-b border-[#E4E4E7] px-4 py-3.5 flex items-center justify-between gap-2">
+                <div className="bg-white border-b border-[#E4DFD3] px-4 py-3.5 flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-8 h-8 rounded-md bg-[#FAFAFA] border border-[#E4E4E7] p-1 shrink-0 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-md bg-[#F7F5F0] border border-[#E4DFD3] p-1 shrink-0 flex items-center justify-center">
                       <Image
                         src="/images/assdi-logo.png"
                         alt="ASSDI Logo"
@@ -380,17 +380,17 @@ export default function AdminMasterCalendarPage() {
                       />
                     </div>
                     <div className="flex flex-col leading-tight min-w-0">
-                      <span className="font-semibold text-[13px] text-[#09090B]">
+                      <span className="font-semibold text-[13px] text-[#1A1917]">
                         ASSDI Media Department
                       </span>
-                      <span className="text-[10.5px] text-[#71717A] truncate">
+                      <span className="text-[10.5px] text-[#78716C] truncate">
                         As-Sunnah Skill Development Institute
                       </span>
                     </div>
                   </div>
                   <span
                     id="calendar-slip-number-badge"
-                    className="font-mono text-[11px] font-medium px-2 py-0.5 rounded bg-[#F4F4F5] border border-[#E4E4E7] text-[#09090B] tabular-nums shrink-0"
+                    className="font-mono text-[11px] font-medium px-2 py-0.5 rounded bg-[#EFECE4] border border-[#E4DFD3] text-[#1A1917] tabular-nums shrink-0"
                   >
                     <span className="sr-only">ASSDI MEDIA • SHOOT </span>SLIP {selectedShoot.slip.slip_number}
                   </span>
@@ -398,40 +398,40 @@ export default function AdminMasterCalendarPage() {
 
                 {/* Hairline Document Grid */}
                 <div className="p-4 space-y-3.5 print:p-6 print:m-0">
-                  <div className="border border-[#E4E4E7] rounded-lg divide-y divide-[#E4E4E7] overflow-hidden">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[#E4E4E7] bg-[#FAFAFA]">
+                  <div className="border border-[#E4DFD3] rounded-lg divide-y divide-[#E4DFD3] overflow-hidden">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[#E4DFD3] bg-[#F7F5F0]">
                       <div className="p-3 min-w-0">
-                        <div className="text-[10.5px] font-medium text-[#71717A] uppercase tracking-wider mb-0.5">
+                        <div className="text-[10.5px] font-medium text-[#78716C] uppercase tracking-wider mb-0.5">
                           Course &amp; Format
                         </div>
                         <div
                           id="calendar-slip-course"
-                          className="font-semibold text-xs sm:text-[13px] text-[#09090B] leading-snug"
+                          className="font-semibold text-xs sm:text-[13px] text-[#1A1917] leading-snug"
                         >
                           {selectedShoot.slip.course_title}
                         </div>
                       </div>
                       <div className="p-3">
-                        <div className="text-[10.5px] font-medium text-[#71717A] uppercase tracking-wider mb-0.5">
+                        <div className="text-[10.5px] font-medium text-[#78716C] uppercase tracking-wider mb-0.5">
                           Call Time &amp; Date
                         </div>
                         <div
                           id="calendar-slip-calltime"
-                          className="font-semibold text-xs sm:text-[13px] text-[#0F766E] font-mono tabular-nums"
+                          className="font-semibold text-xs sm:text-[13px] text-[#0F6B5D] font-mono tabular-nums"
                         >
                           {selectedShoot.slip.call_time_formatted}
                         </div>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[#E4E4E7] bg-white">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[#E4DFD3] bg-white">
                       <div className="p-3">
-                        <div className="text-[10.5px] font-medium text-[#71717A] uppercase tracking-wider mb-0.5">
+                        <div className="text-[10.5px] font-medium text-[#78716C] uppercase tracking-wider mb-0.5">
                           Venue
                         </div>
                         <div
                           id="calendar-slip-venue"
-                          className="font-medium text-xs text-[#09090B]"
+                          className="font-medium text-xs text-[#1A1917]"
                         >
                           {selectedShoot.slip.venue_name}
                         </div>
@@ -439,12 +439,12 @@ export default function AdminMasterCalendarPage() {
 
                       <div className="p-3">
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-[10.5px] font-medium text-[#71717A] uppercase tracking-wider">
+                          <span className="text-[10.5px] font-medium text-[#78716C] uppercase tracking-wider">
                             Assigned Gear
                           </span>
                           <Link
                             href="/admin/gear"
-                            className="print:hidden text-[10.5px] font-medium text-[#0F766E] hover:underline"
+                            className="print:hidden text-[10.5px] font-medium text-[#0F6B5D] hover:underline"
                           >
                             Edit Gear
                           </Link>
@@ -455,29 +455,29 @@ export default function AdminMasterCalendarPage() {
                               {selectedShoot.slip.assigned_gear.map((g, idx) => (
                                 <span
                                   key={idx}
-                                  className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#F4F4F5] border border-[#E4E4E7] text-[11px] font-medium text-[#09090B]"
+                                  className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#EFECE4] border border-[#E4DFD3] text-[11px] font-medium text-[#1A1917]"
                                 >
                                   <span>{g.name}</span>
-                                  <span className="font-mono text-[10px] text-[#71717A] tabular-nums">
+                                  <span className="font-mono text-[10px] text-[#78716C] tabular-nums">
                                     {g.serial_number}
                                   </span>
                                 </span>
                               ))}
                             </div>
                           ) : (
-                            <span className="text-[#71717A] text-xs">No gear assigned</span>
+                            <span className="text-[#78716C] text-xs">No gear assigned</span>
                           )}
                         </div>
                       </div>
                     </div>
 
                     <div className="p-3 bg-white">
-                      <div className="text-[10.5px] font-medium text-[#71717A] uppercase tracking-wider mb-1.5">
+                      <div className="text-[10.5px] font-medium text-[#78716C] uppercase tracking-wider mb-1.5">
                         Assigned Team &amp; Contacts
                       </div>
                       <div
                         id="calendar-slip-team-list"
-                        className="divide-y divide-[#E4E4E7] border border-[#E4E4E7] rounded-md"
+                        className="divide-y divide-[#E4DFD3] border border-[#E4DFD3] rounded-md"
                       >
                         {selectedShoot.slip.team_members.length > 0 ? (
                           selectedShoot.slip.team_members.map((m, idx) => (
@@ -486,25 +486,25 @@ export default function AdminMasterCalendarPage() {
                               className="flex items-center justify-between gap-2 px-2.5 py-1.5 text-xs bg-white"
                             >
                               <div className="flex items-center gap-1.5 min-w-0">
-                                <span className="font-medium text-[#09090B] truncate">
+                                <span className="font-medium text-[#1A1917] truncate">
                                   {m.name}
                                 </span>
                                 {m.is_lead && (
-                                  <span className="px-1.5 py-0.2 rounded bg-[#F4F4F5] text-[#27272A] border border-[#E4E4E7] text-[10px] font-medium">
+                                  <span className="px-1.5 py-0.2 rounded bg-[#EFECE4] text-[#1A1917] border border-[#E4DFD3] text-[10px] font-medium">
                                     Lead
                                   </span>
                                 )}
                               </div>
                               <a
                                 href={`tel:${m.phone.replace(/[^0-9+]/g, "")}`}
-                                className="font-mono text-[11px] text-[#52525B] hover:text-[#0F766E] tabular-nums shrink-0"
+                                className="font-mono text-[11px] text-[#57534E] hover:text-[#0F6B5D] tabular-nums shrink-0"
                               >
                                 {m.phone}
                               </a>
                             </div>
                           ))
                         ) : (
-                          <div className="px-2.5 py-1.5 text-xs text-[#71717A]">
+                          <div className="px-2.5 py-1.5 text-xs text-[#78716C]">
                             {selectedShoot.lead_name !== "Unassigned"
                               ? `${selectedShoot.lead_name} (${selectedShoot.lead_phone})`
                               : "No crew assigned"}
@@ -514,7 +514,7 @@ export default function AdminMasterCalendarPage() {
                     </div>
                   </div>
 
-                  <div className="px-3 py-2 rounded-md bg-[#FAFAFA] border border-[#E4E4E7] text-[11.5px] text-[#52525B]">
+                  <div className="px-3 py-2 rounded-md bg-[#F7F5F0] border border-[#E4DFD3] text-[11.5px] text-[#57534E]">
                     শুটিং শুরুর অন্তত ১৫ মিনিট আগে ভেন্যুতে উপস্থিত হয়ে গিয়ার চেক-আউট ও ব্যাটারি/কার্ড যাচাই নিশ্চিত করুন।
                   </div>
 
@@ -523,17 +523,17 @@ export default function AdminMasterCalendarPage() {
                     <Link
                       href="/admin/gear"
                       id="calendar-edit-gear-btn"
-                      className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-white hover:bg-[#F4F4F5] text-[#09090B] text-xs font-medium border border-[#E4E4E7]"
+                      className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-white hover:bg-[#EFECE4] text-[#1A1917] text-xs font-medium border border-[#E4DFD3]"
                     >
-                      <Camera className="w-3.5 h-3.5 text-[#52525B]" />
+                      <Camera className="w-3.5 h-3.5 text-[#57534E]" />
                       <span>Edit Gear</span>
                     </Link>
                     <button
                       onClick={handlePrintSlip}
                       id="calendar-download-pdf-btn"
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-white hover:bg-[#F4F4F5] text-[#09090B] text-xs font-medium border border-[#E4E4E7]"
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-white hover:bg-[#EFECE4] text-[#1A1917] text-xs font-medium border border-[#E4DFD3]"
                     >
-                      <Printer className="w-3.5 h-3.5 text-[#52525B]" />
+                      <Printer className="w-3.5 h-3.5 text-[#57534E]" />
                       <span>Download PDF</span>
                     </button>
 
@@ -542,7 +542,7 @@ export default function AdminMasterCalendarPage() {
                       target="_blank"
                       rel="noopener noreferrer"
                       id="calendar-share-whatsapp-btn"
-                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white text-xs font-medium"
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#0F6B5D] hover:bg-[#0B554A] text-white text-xs font-medium"
                     >
                       <Share2 className="w-3.5 h-3.5" />
                       <span>Share on WhatsApp</span>
@@ -551,8 +551,8 @@ export default function AdminMasterCalendarPage() {
                 </div>
               </div>
             ) : (
-              <div className="bg-white border border-[#E4E4E7] rounded-lg p-12 text-center text-[#71717A]">
-                <FileText className="w-7 h-7 text-[#D4D4D8] mx-auto mb-2" />
+              <div className="bg-white border border-[#E4DFD3] rounded-lg p-12 text-center text-[#78716C]">
+                <FileText className="w-7 h-7 text-[#D5CFC2] mx-auto mb-2" />
                 <p className="text-xs">Select a shoot from the list to inspect its slip.</p>
               </div>
             )}

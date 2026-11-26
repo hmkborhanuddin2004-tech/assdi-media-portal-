@@ -402,6 +402,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     window.location.assign("/api/auth/signout");
   };
 
+  if (pathname === "/login") {
+    return (
+      <MotionConfig reducedMotion="user">
+        <div className="min-h-screen bg-[#F7F5F0] text-[#1A1917] antialiased">
+          {children}
+        </div>
+      </MotionConfig>
+    );
+  }
+
   return (
     <MotionConfig reducedMotion="user">
       {/* Subtle 2px top progress bar during route transition */}
@@ -409,20 +419,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div
           id="route-transition-progress"
           aria-hidden="true"
-          className="fixed top-0 left-0 right-0 z-[70] h-[2px] bg-[#0F766E]/20 pointer-events-none overflow-hidden print:hidden"
+          className="fixed top-0 left-0 right-0 z-[70] h-[2px] bg-[#0F6B5D]/20 pointer-events-none overflow-hidden print:hidden"
         >
-          <div className="h-full w-1/3 bg-[#0F766E] transition-transform duration-150" />
+          <div className="h-full w-1/3 bg-[#0F6B5D] transition-transform duration-150" />
         </div>
       )}
 
-      <div className="min-h-screen bg-[#FAFAFA] text-[#09090B] flex flex-col md:flex-row md:items-start antialiased">
-        {/* Desktop Grounded Flat Sidebar (#F4F4F5 with 1px solid #E4E4E7 right border) */}
+      <div className="min-h-screen bg-[#F7F5F0] text-[#1A1917] flex flex-col md:flex-row md:items-start antialiased">
+        {/* Desktop Grounded Warm Stone Sidebar (#EFECE4 with 1px solid #E2DDD2 right border) */}
         <motion.aside
           id="desktop-sidebar"
           initial={false}
           animate={{ width: sidebarCollapsed ? 76 : 224 }}
           transition={PILL_TRANSITION}
-          className="print:hidden hidden md:flex md:flex-col shrink-0 bg-[#F4F4F5] border-r border-[#E4E4E7] sticky top-0 h-screen z-40 relative"
+          className="print:hidden hidden md:flex md:flex-col shrink-0 bg-[#EFECE4] border-r border-[#E2DDD2] sticky top-0 h-screen z-40 relative"
         >
           {/* Collapse Toggle Button */}
           <button
@@ -431,7 +441,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             onClick={toggleSidebarCollapsed}
             aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
             title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-            className="absolute -right-3 top-4 z-50 w-6 h-6 rounded-full bg-white border border-[#E4E4E7] shadow-[0_1px_2px_rgba(0,0,0,0.06)] flex items-center justify-center text-[#52525B] hover:text-[#09090B] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F766E]/30"
+            className="absolute -right-3 top-4 z-50 w-6 h-6 rounded-full bg-white border border-[#E4DFD3] shadow-[0_1px_2px_rgba(26,25,23,0.06)] flex items-center justify-center text-[#57534E] hover:text-[#1A1917] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F6B5D]/30"
           >
             {sidebarCollapsed ? (
               <ChevronRight className="w-3.5 h-3.5" />
@@ -442,10 +452,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
           <div className="flex flex-col h-full overflow-hidden">
             {/* Brand Header */}
-            <div className="h-14 px-3.5 border-b border-[#E4E4E7] flex items-center shrink-0 overflow-hidden">
+            <div className="h-14 px-3.5 border-b border-[#E2DDD2] flex items-center shrink-0 overflow-hidden">
               {!sidebarCollapsed ? (
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="w-6 h-6 rounded-md bg-white border border-[#E4E4E7] flex items-center justify-center shrink-0 overflow-hidden p-0.5">
+                  <div className="w-6 h-6 rounded-md bg-white border border-[#E4DFD3] flex items-center justify-center shrink-0 overflow-hidden p-0.5">
                     <Image
                       src="/images/assdi-logo.png"
                       alt="ASSDI Logo"
@@ -456,17 +466,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     />
                   </div>
                   <div className="min-w-0">
-                    <div className="text-[13.5px] font-semibold text-[#09090B] tracking-tight leading-none truncate">
+                    <div className="text-[13.5px] font-semibold text-[#1A1917] tracking-tight leading-none truncate">
                       ASSDI Media
                     </div>
-                    <div className="text-[11px] text-[#71717A] leading-tight mt-0.5 truncate">
+                    <div className="text-[11px] text-[#78716C] leading-tight mt-0.5 truncate">
                       {user ? ROLE_LABELS[user.role]?.en || user.role : "Media Portal"}
                     </div>
                   </div>
                 </div>
               ) : (
                 <div className="w-full flex items-center justify-center">
-                  <div className="w-7 h-7 rounded-md bg-white border border-[#E4E4E7] flex items-center justify-center overflow-hidden p-0.5">
+                  <div className="w-7 h-7 rounded-md bg-white border border-[#E4DFD3] flex items-center justify-center overflow-hidden p-0.5">
                     <Image
                       src="/images/assdi-logo.png"
                       alt="ASSDI Logo"
@@ -486,11 +496,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 {groupedNav.map((section) => (
                   <div key={section.title} className="space-y-0.5">
                     {!sidebarCollapsed && (
-                      <div className="px-2.5 pb-1 text-[11px] font-medium text-[#71717A] uppercase tracking-wider truncate">
+                      <div className="px-2.5 pb-1 text-[11px] font-medium text-[#78716C] uppercase tracking-wider truncate">
                         {section.title}
                       </div>
                     )}
-                    {sidebarCollapsed && <div className="my-1 border-t border-[#E4E4E7]" />}
+                    {sidebarCollapsed && <div className="my-1 border-t border-[#E2DDD2]" />}
                     {section.items.map((item) => {
                       const Icon = item.icon;
                       const isActive = activePath === item.href;
@@ -505,19 +515,19 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                             sidebarCollapsed ? "justify-center px-1" : "gap-2.5"
                           } ${
                             isActive
-                              ? "text-[#09090B] font-medium"
-                              : "text-[#52525B] hover:text-[#09090B] hover:bg-[#E4E4E7]/60"
+                              ? "text-[#1A1917] font-medium"
+                              : "text-[#57534E] hover:text-[#1A1917] hover:bg-[#E2DDD2]/60"
                           }`}
                         >
                           {isActive && (
                             <motion.div
                               layoutId="sidebar-active-pill"
                               transition={PILL_TRANSITION}
-                              className="absolute inset-0 rounded-md bg-white border border-[#E4E4E7] shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
+                              className="absolute inset-0 rounded-md bg-white border border-[#E4DFD3] shadow-[0_1px_2px_rgba(26,25,23,0.04)]"
                             >
                               <span
                                 data-active-indicator="true"
-                                className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r-full bg-[#0F766E]"
+                                className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r-full bg-[#0F6B5D]"
                               />
                             </motion.div>
                           )}
@@ -525,8 +535,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                           <Icon
                             className={`relative z-10 w-4 h-4 shrink-0 ${
                               isActive
-                                ? "text-[#0F766E]"
-                                : "text-[#71717A] group-hover:text-[#09090B]"
+                                ? "text-[#0F6B5D]"
+                                : "text-[#78716C] group-hover:text-[#1A1917]"
                             }`}
                           />
                           {!sidebarCollapsed && (
@@ -534,7 +544,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                           )}
 
                           {sidebarCollapsed && (
-                            <div className="opacity-0 group-hover:opacity-100 pointer-events-none absolute left-[calc(100%+10px)] top-1/2 -translate-y-1/2 z-50 whitespace-nowrap rounded-md bg-[#09090B] text-white text-[11px] font-medium px-2 py-1 shadow-sm transition-opacity duration-150">
+                            <div className="opacity-0 group-hover:opacity-100 pointer-events-none absolute left-[calc(100%+10px)] top-1/2 -translate-y-1/2 z-50 whitespace-nowrap rounded-md bg-[#1A1917] text-white text-[11px] font-medium px-2 py-1 shadow-sm transition-opacity duration-150">
                               {item.name}
                             </div>
                           )}
@@ -547,7 +557,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </nav>
 
             {/* Footer User Card */}
-            <div className="mt-auto p-2.5 border-t border-[#E4E4E7]">
+            <div className="mt-auto p-2.5 border-t border-[#E2DDD2]">
               {user ? (
                 <div
                   className={`flex items-center rounded-md px-2 py-1.5 ${
@@ -561,16 +571,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                           ? `${user.full_name} (${ROLE_LABELS[user.role]?.en || user.role})`
                           : undefined
                       }
-                      className="w-7 h-7 rounded-full bg-white border border-[#E4E4E7] text-[#09090B] flex items-center justify-center shrink-0 font-medium text-[11px]"
+                      className="w-7 h-7 rounded-full bg-white border border-[#E4DFD3] text-[#1A1917] flex items-center justify-center shrink-0 font-medium text-[11px]"
                     >
                       {user.full_name?.[0] || "U"}
                     </div>
                     {!sidebarCollapsed && (
                       <div className="flex flex-col text-[12px] leading-tight truncate">
-                        <span className="font-medium text-[#09090B] truncate">
+                        <span className="font-medium text-[#1A1917] truncate">
                           {user.full_name}
                         </span>
-                        <span className="text-[#71717A] text-[11px] truncate">
+                        <span className="text-[#78716C] text-[11px] truncate">
                           {ROLE_LABELS[user.role]?.en || user.role}
                         </span>
                       </div>
@@ -582,7 +592,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                       onClick={handleSignOut}
                       disabled={signingOut}
                       title="Sign out"
-                      className="p-1 rounded-md text-[#71717A] hover:text-[#DC2626] hover:bg-white disabled:opacity-50"
+                      className="p-1 rounded-md text-[#78716C] hover:text-[#B91C1C] hover:bg-white disabled:opacity-50"
                     >
                       <LogOut className="w-3.5 h-3.5" />
                     </button>
@@ -595,9 +605,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   }`}
                 >
                   <div className="flex items-center gap-2 min-w-0">
-                    <ShieldCheck className="w-4 h-4 text-[#0F766E] shrink-0" />
+                    <ShieldCheck className="w-4 h-4 text-[#0F6B5D] shrink-0" />
                     {!sidebarCollapsed && (
-                      <span className="text-[12px] font-medium text-[#52525B] truncate">
+                      <span className="text-[12px] font-medium text-[#57534E] truncate">
                         Guest Session
                       </span>
                     )}
@@ -607,7 +617,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                       href="/login"
                       prefetch={true}
                       onClick={() => handleNavigateStart("/login")}
-                      className="text-[12px] font-medium text-[#0F766E] hover:underline shrink-0"
+                      className="text-[12px] font-medium text-[#0F6B5D] hover:underline shrink-0"
                     >
                       Sign In
                     </Link>
@@ -621,10 +631,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {/* Mobile Header (390px) */}
         <header
           id="mobile-header"
-          className="print:hidden md:hidden sticky top-0 z-30 h-14 w-full bg-white border-b border-[#E4E4E7] flex items-center justify-between px-4"
+          className="print:hidden md:hidden sticky top-0 z-30 h-14 w-full bg-white border-b border-[#E2DDD2] flex items-center justify-between px-4"
         >
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-md bg-[#FAFAFA] border border-[#E4E4E7] p-0.5 flex items-center justify-center shrink-0 overflow-hidden">
+            <div className="w-7 h-7 rounded-md bg-[#F7F5F0] border border-[#E4DFD3] p-0.5 flex items-center justify-center shrink-0 overflow-hidden">
               <Image
                 src="/images/assdi-logo.png"
                 alt="ASSDI Logo"
@@ -635,8 +645,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               />
             </div>
             <div className="flex flex-col leading-none">
-              <span className="font-semibold text-[#09090B] text-[13px]">ASSDI Media</span>
-              <span className="text-[11px] text-[#71717A] mt-0.5">
+              <span className="font-semibold text-[#1A1917] text-[13px]">ASSDI Media</span>
+              <span className="text-[11px] text-[#78716C] mt-0.5">
                 {user ? ROLE_LABELS[user.role]?.en : "Media Portal"}
               </span>
             </div>
@@ -648,7 +658,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 type="button"
                 onClick={handleSignOut}
                 disabled={signingOut}
-                className="p-2 rounded-md text-[#52525B] hover:text-[#DC2626] hover:bg-[#F4F4F5] disabled:opacity-50"
+                className="p-2 rounded-md text-[#57534E] hover:text-[#B91C1C] hover:bg-[#EFECE4] disabled:opacity-50"
                 aria-label="Sign out"
               >
                 <LogOut className="w-4 h-4" />
@@ -658,7 +668,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 href="/login"
                 prefetch={true}
                 onClick={() => handleNavigateStart("/login")}
-                className="px-2.5 py-1.5 rounded-md text-[#0F766E] hover:bg-[#F4F4F5] text-xs font-medium"
+                className="px-2.5 py-1.5 rounded-md text-[#0F6B5D] hover:bg-[#EFECE4] text-xs font-medium"
               >
                 Sign In
               </Link>
@@ -667,7 +677,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-md text-[#09090B] hover:bg-[#F4F4F5]"
+              className="p-2 rounded-md text-[#1A1917] hover:bg-[#EFECE4]"
               aria-label="Toggle menu"
               aria-expanded={mobileMenuOpen}
             >
@@ -686,7 +696,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               exit={{ opacity: 0 }}
               transition={MODAL_TRANSITION}
               onClick={() => setMobileMenuOpen(false)}
-              className="md:hidden fixed inset-0 top-14 z-30 bg-[#09090B]/20"
+              className="md:hidden fixed inset-0 top-14 z-30 bg-[#1A1917]/20"
             >
               <motion.div
                 initial={{ opacity: 0, y: -4 }}
@@ -694,9 +704,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 exit={{ opacity: 0, y: -4 }}
                 transition={MODAL_TRANSITION}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_4px_16px_rgba(0,0,0,0.08)] m-3 p-3 space-y-1 max-h-[75vh] overflow-y-auto"
+                className="bg-white border border-[#E4DFD3] rounded-lg shadow-[0_4px_16px_rgba(26,25,23,0.08)] m-3 p-3 space-y-1 max-h-[75vh] overflow-y-auto"
               >
-                <div className="px-2 pb-1.5 text-[11px] font-medium text-[#71717A] uppercase tracking-wider">
+                <div className="px-2 pb-1.5 text-[11px] font-medium text-[#78716C] uppercase tracking-wider">
                   All Sections
                 </div>
                 {navItems.map((item) => {
@@ -713,24 +723,24 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                       }}
                       className={`flex items-center gap-3 px-3 py-2 rounded-md text-[13px] ${
                         isActive
-                          ? "bg-[#F4F4F5] text-[#09090B] font-medium border border-[#E4E4E7]"
-                          : "text-[#52525B] hover:bg-[#F4F4F5] hover:text-[#09090B]"
+                          ? "bg-[#EFECE4] text-[#1A1917] font-medium border border-[#E2DDD2]"
+                          : "text-[#57534E] hover:bg-[#EFECE4] hover:text-[#1A1917]"
                       }`}
                     >
-                      <Icon className={`w-4 h-4 ${isActive ? "text-[#0F766E]" : "text-[#71717A]"}`} />
+                      <Icon className={`w-4 h-4 ${isActive ? "text-[#0F6B5D]" : "text-[#78716C]"}`} />
                       <span>{item.name}</span>
                     </Link>
                   );
                 })}
 
                 {user && (
-                  <div className="pt-2 mt-2 border-t border-[#E4E4E7] flex items-center justify-between px-2">
-                    <span className="text-xs font-medium text-[#09090B]">{user.full_name}</span>
+                  <div className="pt-2 mt-2 border-t border-[#E2DDD2] flex items-center justify-between px-2">
+                    <span className="text-xs font-medium text-[#1A1917]">{user.full_name}</span>
                     <button
                       type="button"
                       onClick={handleSignOut}
                       disabled={signingOut}
-                      className="text-xs text-[#DC2626] hover:underline font-medium flex items-center gap-1 px-2 py-1 rounded-md"
+                      className="text-xs text-[#B91C1C] hover:underline font-medium flex items-center gap-1 px-2 py-1 rounded-md"
                     >
                       <LogOut className="w-3.5 h-3.5" />
                       <span>Sign Out</span>
@@ -749,17 +759,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         >
           {/* Flat Solid Topbar (Hidden on Login, Mobile & Print) */}
           {pathname !== "/login" && user && (
-            <header className="relative z-30 hidden md:flex items-center justify-between gap-4 h-14 px-6 bg-white border-b border-[#E4E4E7] sticky top-0 print:hidden">
+            <header className="relative z-30 hidden md:flex items-center justify-between gap-4 h-14 px-6 bg-white border-b border-[#E2DDD2] sticky top-0 print:hidden">
               <div className="flex items-center gap-2 text-[13px] min-w-0">
-                <span className="text-[#71717A]">ASSDI Media</span>
-                <span className="text-[#E4E4E7]">/</span>
-                <span className="font-medium text-[#09090B] truncate">{pageTitle}</span>
+                <span className="text-[#78716C]">ASSDI Media</span>
+                <span className="text-[#E2DDD2]">/</span>
+                <span className="font-medium text-[#1A1917] truncate">{pageTitle}</span>
               </div>
 
               <div className="flex items-center gap-3">
                 {activePath !== "/admin/tasks" && activePath !== "/admin/gear" && (
                   <div className="relative w-64">
-                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#71717A] pointer-events-none" />
+                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#78716C] pointer-events-none" />
                     <input
                       type="text"
                       placeholder={
@@ -771,7 +781,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                           ? "Search shoots..."
                           : "Search portal..."
                       }
-                      className="w-full h-8 pl-8 pr-3 text-[12.5px] rounded-md border border-[#E4E4E7] bg-[#FAFAFA] text-[#09090B] placeholder-[#71717A] focus:outline-none focus:bg-white focus:border-[#0F766E]"
+                      className="w-full h-8 pl-8 pr-3 text-[12.5px] rounded-md border border-[#E4DFD3] bg-[#F7F5F0] text-[#1A1917] placeholder-[#78716C] focus:outline-none focus:bg-white focus:border-[#0F6B5D]"
                       readOnly
                     />
                   </div>
@@ -786,9 +796,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     aria-expanded={profileMenuOpen}
                     aria-controls="topbar-profile-menu"
                     onClick={() => setProfileMenuOpen((prev) => !prev)}
-                    className="flex items-center gap-2 px-2 py-1 rounded-md hover:bg-[#F4F4F5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F766E]/30"
+                    className="flex items-center gap-2 px-2 py-1 rounded-md hover:bg-[#EFECE4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0F6B5D]/30"
                   >
-                    <div className="w-7 h-7 rounded-full bg-[#F4F4F5] border border-[#E4E4E7] text-[#09090B] flex items-center justify-center font-medium text-[11px] shrink-0">
+                    <div className="w-7 h-7 rounded-full bg-[#EFECE4] border border-[#E2DDD2] text-[#1A1917] flex items-center justify-center font-medium text-[11px] shrink-0">
                       {user.full_name
                         ? user.full_name
                             .split(" ")
@@ -799,10 +809,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                         : "U"}
                     </div>
                     <div className="flex flex-col text-left">
-                      <span className="font-medium text-[12.5px] text-[#09090B] leading-tight whitespace-nowrap">
+                      <span className="font-medium text-[12.5px] text-[#1A1917] leading-tight whitespace-nowrap">
                         {user.full_name}
                       </span>
-                      <span className="text-[10.5px] text-[#71717A] whitespace-nowrap">
+                      <span className="text-[10.5px] text-[#78716C] whitespace-nowrap">
                         {user.role === "admin"
                           ? "Media Head"
                           : user.role === "coordinator"
@@ -813,7 +823,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                       </span>
                     </div>
                     <ChevronDown
-                      className={`w-3.5 h-3.5 text-[#71717A] transition-transform duration-150 ${
+                      className={`w-3.5 h-3.5 text-[#78716C] transition-transform duration-150 ${
                         profileMenuOpen ? "rotate-180" : ""
                       }`}
                     />
@@ -830,29 +840,29 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                         id="topbar-profile-menu"
                         role="menu"
                         aria-labelledby="topbar-profile-trigger"
-                        className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.08)] absolute right-0 top-[calc(100%+6px)] w-[260px] p-2 z-50 space-y-2"
+                        className="bg-white border border-[#E4DFD3] rounded-lg shadow-[0_4px_12px_rgba(26,25,23,0.08)] absolute right-0 top-[calc(100%+6px)] w-[260px] p-2 z-50 space-y-2"
                       >
                         <div className="px-2 py-1.5 space-y-1">
-                          <div className="font-medium text-[13px] text-[#09090B] leading-tight truncate">
+                          <div className="font-medium text-[13px] text-[#1A1917] leading-tight truncate">
                             {user.full_name}
                           </div>
-                          <div className="text-[11.5px] text-[#52525B] truncate">{user.email}</div>
+                          <div className="text-[11.5px] text-[#57534E] truncate">{user.email}</div>
                           <div className="pt-0.5">
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-[#F4F4F5] text-[#27272A] border border-[#E4E4E7]">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium bg-[#EFECE4] text-[#1A1917] border border-[#E2DDD2]">
                               {ROLE_LABELS[user.role]?.en || user.role}
                             </span>
                           </div>
                           {user.role === "coordinator" && (
-                            <div className="text-[11px] text-[#52525B] bg-[#FAFAFA] rounded-md px-2 py-1 border border-[#E4E4E7] truncate">
+                            <div className="text-[11px] text-[#57534E] bg-[#F7F5F0] rounded-md px-2 py-1 border border-[#E4DFD3] truncate">
                               Course:{" "}
-                              <span className="font-medium text-[#09090B]">
+                              <span className="font-medium text-[#1A1917]">
                                 {user.course_name || "Assigned Course"}
                               </span>
                             </div>
                           )}
                         </div>
 
-                        <div className="border-t border-[#E4E4E7]" />
+                        <div className="border-t border-[#E2DDD2]" />
 
                         <div className="space-y-0.5">
                           <Link
@@ -864,9 +874,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                               handleNavigateStart(homeHref);
                               setProfileMenuOpen(false);
                             }}
-                            className="flex items-center gap-2 w-full px-2.5 py-1.5 rounded-md text-[12.5px] font-medium text-[#09090B] hover:bg-[#F4F4F5]"
+                            className="flex items-center gap-2 w-full px-2.5 py-1.5 rounded-md text-[12.5px] font-medium text-[#1A1917] hover:bg-[#EFECE4]"
                           >
-                            <LayoutDashboard className="w-3.5 h-3.5 text-[#52525B] shrink-0" />
+                            <LayoutDashboard className="w-3.5 h-3.5 text-[#57534E] shrink-0" />
                             <span>Dashboard</span>
                           </Link>
 
@@ -876,7 +886,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                             role="menuitem"
                             disabled={signingOut}
                             onClick={handleSignOut}
-                            className="flex items-center gap-2 w-full px-2.5 py-1.5 rounded-md text-[12.5px] font-medium text-[#DC2626] hover:bg-[#FEF2F2] disabled:opacity-50"
+                            className="flex items-center gap-2 w-full px-2.5 py-1.5 rounded-md text-[12.5px] font-medium text-[#B91C1C] hover:bg-[#FEE2E2] disabled:opacity-50"
                           >
                             <LogOut className="w-3.5 h-3.5 shrink-0" />
                             <span>{signingOut ? "Signing out..." : "Sign Out"}</span>
@@ -905,7 +915,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <nav
           id="mobile-bottom-nav"
           aria-label="Mobile Navigation"
-          className="print:hidden md:hidden fixed bottom-0 left-0 right-0 z-40 h-15 bg-white border-t border-[#E4E4E7] px-1 py-1 flex items-center justify-around"
+          className="print:hidden md:hidden fixed bottom-0 left-0 right-0 z-40 h-15 bg-white border-t border-[#E2DDD2] px-1 py-1 flex items-center justify-around"
         >
           <LayoutGroup id="assdi-mobile-nav">
             {mobileNav.map((item) => {
@@ -918,11 +928,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     key="mobile-nav-more"
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                     aria-expanded={mobileMenuOpen}
-                    className="relative flex flex-col items-center justify-center flex-1 py-1 min-w-[56px] text-[10.5px] font-medium text-[#52525B] hover:text-[#09090B]"
+                    className="relative flex flex-col items-center justify-center flex-1 py-1 min-w-[56px] text-[10.5px] font-medium text-[#57534E] hover:text-[#1A1917]"
                   >
                     <div
                       className={`w-8 h-6 rounded-md flex items-center justify-center ${
-                        mobileMenuOpen ? "bg-[#F4F4F5] text-[#0F766E]" : ""
+                        mobileMenuOpen ? "bg-[#EFECE4] text-[#0F6B5D]" : ""
                       }`}
                     >
                       <Icon className="w-4 h-4" />
@@ -940,8 +950,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   onClick={() => handleNavigateStart(item.href)}
                   className={`relative flex flex-col items-center justify-center flex-1 py-1 min-w-[56px] text-[10.5px] ${
                     isActive
-                      ? "text-[#0F766E] font-medium"
-                      : "text-[#52525B] hover:text-[#09090B]"
+                      ? "text-[#0F6B5D] font-medium"
+                      : "text-[#57534E] hover:text-[#1A1917]"
                   }`}
                 >
                   <div className="relative w-8 h-6 flex items-center justify-center">
@@ -949,12 +959,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                       <motion.div
                         layoutId="mobile-nav-active-pill"
                         transition={PILL_TRANSITION}
-                        className="absolute inset-0 rounded-md bg-[#F4F4F5] border border-[#E4E4E7]"
+                        className="absolute inset-0 rounded-md bg-[#EFECE4] border border-[#E2DDD2]"
                       />
                     )}
                     <Icon
                       className={`relative z-10 w-4 h-4 ${
-                        isActive ? "text-[#0F766E]" : "text-[#71717A]"
+                        isActive ? "text-[#0F6B5D]" : "text-[#78716C]"
                       }`}
                     />
                   </div>

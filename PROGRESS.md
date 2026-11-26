@@ -3,7 +3,19 @@
 ## Current Status
 - **Active Step:** All Steps (Step 1 through Step 9) Completed & 100% Verified
 - **Completed Features:** 19 / 19 (S1-01, S2-01, S2-02, S3-01, S3-02, S4-01, S4-02, S4-03, S5-01, S5-02, S6-01, S6-02, S6-03, S6-04, S7-01, S8-01, S8-02, S8-03, S9-01)
-- **Visual System:** Linear / Stripe / Notion Institutional UI Overhaul (100% Verified)
+- **Visual System:** Warm Alabaster Cream (`#F7F5F0`) + Warm Stone (`#EFECE4`) + Deep Forest Emerald (`#0F6B5D`) Institutional Theme (100% Verified)
+
+## Warm Alabaster Cream + Deep Forest Emerald Refinement
+- **3-Layer Warm Institutional Palette:**
+  - Updated `src/app/globals.css`, `src/app/layout.tsx`, `src/components/shell/AppShell.tsx`, `FrostedSkeleton.tsx`, and all portal routes/modals to `#F7F5F0` warm cream canvas, `#EFECE4` warm stone sidebar & tinted headers (`#E2DDD2` border), crisp `#FFFFFF` cards (`#E4DFD3` border, `rgba(26,25,23,0.04)` shadow), `#1A1917`/`#57534E`/`#78716C` warm charcoal typography, and `#0F6B5D` (`hover #0B554A`) accent.
+  - Applied subtle status tints: warm amber (`#FEF3C7`/`#B45309`) for pending, soft sage (`#E6F4EE`/`#0F6B5D`) for available/approved/delivered, and soft rose (`#FEE2E2`/`#B91C1C`) strictly for override/maintenance/rejected/errors.
+- **Standalone `/login` & Bangla Spelling Fix:**
+  - Corrected `"আছ-সুন্নাহ স্কিল ডেভেলপমেন্ট ইনস্টিটিউট"` → `"আস-সুন্নাহ স্কিল ডেভেলপমেন্ট ইনস্টিটিউট"` across `src/app/login/page.tsx`, `src/app/page.tsx`, and E2E specs.
+  - Updated `AppShell.tsx` so `/login` renders standalone centered on `#F7F5F0` with no sidebar, header, or bottom navigation.
+- **Verification Gates (100% Green):**
+  - `pnpm typecheck && pnpm lint && pnpm build` exited 0 (`✔ No ESLint warnings or errors`, 40 routes).
+  - `pnpm test` passed all **182/182** unit/DB tests; `pnpm test:e2e` passed all **50/50** Playwright E2E tests (Desktop `1280x800` & Mobile `390x844`).
+  - Visually verified `/login`, `/admin/dashboard`, `/admin/gear`, and `/coordinator/requests` screenshots in `docs/screenshots/`.
 
 ## Linear / Stripe / Notion Institutional UI Overhaul
 - **Solid Institutional Palette & Zero AI-Slop:**

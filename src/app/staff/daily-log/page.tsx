@@ -166,8 +166,8 @@ export default function StaffDailyLogPage() {
   return (
     <div className="space-y-5 w-full max-w-full">
       {/* Flat Linear/Stripe Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4E4E7]">
-        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#09090B] tracking-tight">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4DFD3]">
+        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#1A1917] tracking-tight">
           Daily Logs
         </h1>
 
@@ -175,17 +175,17 @@ export default function StaffDailyLogPage() {
           <Link
             href="/staff/tasks"
             id="staff-my-tasks-link"
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-[#E4E4E7] bg-white hover:bg-[#F4F4F5] text-[#09090B] text-xs font-medium"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-[#E4DFD3] bg-white hover:bg-[#EFECE4] text-[#1A1917] text-xs font-medium"
           >
-            <Layers className="w-3.5 h-3.5 text-[#71717A]" />
+            <Layers className="w-3.5 h-3.5 text-[#78716C]" />
             <span>My Tasks</span>
           </Link>
           <Link
             href="/staff/intern-status"
             id="staff-intern-status-link"
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-[#E4E4E7] bg-white hover:bg-[#F4F4F5] text-[#09090B] text-xs font-medium"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-[#E4DFD3] bg-white hover:bg-[#EFECE4] text-[#1A1917] text-xs font-medium"
           >
-            <UserCheck className="w-3.5 h-3.5 text-[#71717A]" />
+            <UserCheck className="w-3.5 h-3.5 text-[#78716C]" />
             <span>Intern Status</span>
           </Link>
         </div>
@@ -197,12 +197,12 @@ export default function StaffDailyLogPage() {
           id="staff-log-status-banner"
           className={`p-3 rounded-lg text-xs font-medium flex items-center gap-2 ${
             statusMessage.type === "success"
-              ? "bg-[#F4F4F5] border border-[#E4E4E7] text-[#09090B]"
+              ? "bg-[#EFECE4] border border-[#E4DFD3] text-[#1A1917]"
               : "bg-red-50 border border-red-200 text-red-700"
           }`}
         >
           {statusMessage.type === "success" ? (
-            <CheckCircle2 className="w-4 h-4 text-[#0F766E] shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-[#0F6B5D] shrink-0" />
           ) : (
             <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
           )}
@@ -211,19 +211,19 @@ export default function StaffDailyLogPage() {
       )}
 
       {/* Main Worklog Submission Card */}
-      <div className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-5 space-y-5">
-        <div className="flex items-center justify-between border-b border-[#E4E4E7] pb-3.5">
+      <div className="bg-white border border-[#E4DFD3] rounded-lg shadow-[0_1px_2px_rgba(26,25,23,0.04)] p-5 space-y-5">
+        <div className="flex items-center justify-between border-b border-[#E4DFD3] pb-3.5">
           <div className="space-y-0.5">
-            <h2 className="text-sm font-semibold text-[#09090B]">
+            <h2 className="text-sm font-semibold text-[#1A1917]">
               Submit Daily Worklog
             </h2>
-            <p className="text-xs text-[#71717A]">
+            <p className="text-xs text-[#78716C]">
               Category, hours worked, and work summary
             </p>
           </div>
           <div className="text-right">
-            <span className="text-[11px] text-[#71717A] block">Logged in as</span>
-            <span className="text-xs font-medium text-[#09090B] block">
+            <span className="text-[11px] text-[#78716C] block">Logged in as</span>
+            <span className="text-xs font-medium text-[#1A1917] block">
               {currentUser?.full_name || "Permanent Staff"}
             </span>
           </div>
@@ -232,7 +232,7 @@ export default function StaffDailyLogPage() {
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* 1. Selectable Category */}
           <div className="space-y-2">
-            <label className="block text-xs font-medium text-[#52525B]">
+            <label className="block text-xs font-medium text-[#57534E]">
               Category
             </label>
             <div className="flex flex-wrap gap-2" id="staff-category-pills">
@@ -246,8 +246,8 @@ export default function StaffDailyLogPage() {
                     data-category={cat.value}
                     className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium border transition-colors duration-150 cursor-pointer ${
                       isSelected
-                        ? "bg-[#0F766E] border-[#0F766E] text-white"
-                        : "bg-white hover:bg-[#F4F4F5] text-[#52525B] border-[#E4E4E7]"
+                        ? "bg-[#0F6B5D] border-[#0F6B5D] text-white"
+                        : "bg-white hover:bg-[#EFECE4] text-[#57534E] border-[#E4DFD3]"
                     }`}
                   >
                     {getCategoryIcon(cat.value)}
@@ -263,12 +263,12 @@ export default function StaffDailyLogPage() {
             <div className="space-y-1.5">
               <label
                 htmlFor="staff-hours-input"
-                className="block text-xs font-medium text-[#52525B]"
+                className="block text-xs font-medium text-[#57534E]"
               >
                 Hours Worked
               </label>
               <div className="relative">
-                <Clock className="w-4 h-4 text-[#71717A] absolute left-3 top-2.5 pointer-events-none" />
+                <Clock className="w-4 h-4 text-[#78716C] absolute left-3 top-2.5 pointer-events-none" />
                 <input
                   id="staff-hours-input"
                   type="number"
@@ -279,9 +279,9 @@ export default function StaffDailyLogPage() {
                   onChange={(e) => setHoursSpent(e.target.value)}
                   placeholder="e.g. 6.5"
                   required
-                  className="w-full pl-9 pr-12 py-2 rounded-lg border border-[#E4E4E7] text-xs sm:text-sm font-medium text-[#09090B] tabular-nums focus:border-[#0F766E] focus:outline-none"
+                  className="w-full pl-9 pr-12 py-2 rounded-lg border border-[#E4DFD3] text-xs sm:text-sm font-medium text-[#1A1917] tabular-nums focus:border-[#0F6B5D] focus:outline-none"
                 />
-                <span className="absolute right-3 top-2.5 text-xs font-medium text-[#71717A] pointer-events-none">
+                <span className="absolute right-3 top-2.5 text-xs font-medium text-[#78716C] pointer-events-none">
                   hrs
                 </span>
               </div>
@@ -290,7 +290,7 @@ export default function StaffDailyLogPage() {
             <div className="space-y-1.5">
               <label
                 htmlFor="staff-task-select"
-                className="block text-xs font-medium text-[#52525B]"
+                className="block text-xs font-medium text-[#57534E]"
               >
                 Associated Task (Optional)
               </label>
@@ -298,7 +298,7 @@ export default function StaffDailyLogPage() {
                 id="staff-task-select"
                 value={selectedTaskId}
                 onChange={(e) => setSelectedTaskId(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-[#E4E4E7] text-xs sm:text-sm text-[#09090B] focus:border-[#0F766E] focus:outline-none bg-white cursor-pointer"
+                className="w-full px-3 py-2 rounded-lg border border-[#E4DFD3] text-xs sm:text-sm text-[#1A1917] focus:border-[#0F6B5D] focus:outline-none bg-white cursor-pointer"
               >
                 <option value="">— কোনো নির্দিষ্ট টাস্ক নেই (General Work) —</option>
                 {tasks.map((task) => (
@@ -314,7 +314,7 @@ export default function StaffDailyLogPage() {
           <div className="space-y-1.5">
             <label
               htmlFor="staff-notes-input"
-              className="block text-xs font-medium text-[#52525B]"
+              className="block text-xs font-medium text-[#57534E]"
             >
               Short Work Summary
             </label>
@@ -325,7 +325,7 @@ export default function StaffDailyLogPage() {
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Captured B-roll of the main courtyard, interviewed 3 senior staff..."
               required
-              className="w-full p-3 rounded-lg border border-[#E4E4E7] text-xs sm:text-sm text-[#09090B] focus:border-[#0F766E] focus:outline-none leading-relaxed placeholder:text-[#71717A]"
+              className="w-full p-3 rounded-lg border border-[#E4DFD3] text-xs sm:text-sm text-[#1A1917] focus:border-[#0F6B5D] focus:outline-none leading-relaxed placeholder:text-[#78716C]"
             />
           </div>
 
@@ -334,7 +334,7 @@ export default function StaffDailyLogPage() {
             type="submit"
             id="staff-submit-log-btn"
             disabled={submitting}
-            className="w-full sm:w-auto py-2.5 px-5 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white text-xs sm:text-sm font-medium transition-colors duration-150 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            className="w-full sm:w-auto py-2.5 px-5 rounded-lg bg-[#0F6B5D] hover:bg-[#0B554A] text-white text-xs sm:text-sm font-medium transition-colors duration-150 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
           >
             {submitting ? (
               <>
@@ -352,18 +352,18 @@ export default function StaffDailyLogPage() {
       </div>
 
       {/* Project Lead Quick Link */}
-      <div className="bg-white border border-[#E4E4E7] rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="bg-white border border-[#E4DFD3] rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="space-y-0.5">
-          <h3 className="text-xs font-semibold text-[#09090B]">
+          <h3 className="text-xs font-semibold text-[#1A1917]">
             Intern Raw Footage Status
           </h3>
-          <p className="text-[11px] text-[#71717A]">
+          <p className="text-[11px] text-[#78716C]">
             Project Leads can verify and update intern raw footage uploads.
           </p>
         </div>
         <Link
           href="/staff/intern-status"
-          className="inline-flex items-center gap-1 text-xs font-medium text-[#0F766E] hover:underline"
+          className="inline-flex items-center gap-1 text-xs font-medium text-[#0F6B5D] hover:underline"
         >
           <span>Open Intern Status</span>
           <ChevronRight className="w-3.5 h-3.5" />
@@ -373,28 +373,28 @@ export default function StaffDailyLogPage() {
       {/* Recent Submitted Logs List */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-[#09090B] flex items-center gap-2">
-            <FileText className="w-4 h-4 text-[#71717A]" />
+          <h2 className="text-sm font-semibold text-[#1A1917] flex items-center gap-2">
+            <FileText className="w-4 h-4 text-[#78716C]" />
             <span>Recent Daily Logs</span>
-            <span className="px-2 py-0.5 rounded bg-[#F4F4F5] border border-[#E4E4E7] text-[#52525B] text-xs font-medium tabular-nums">
+            <span className="px-2 py-0.5 rounded bg-[#EFECE4] border border-[#E4DFD3] text-[#57534E] text-xs font-medium tabular-nums">
               {recentLogs.length}
             </span>
           </h2>
         </div>
 
         {loading ? (
-          <div className="p-8 text-center text-xs text-[#71717A] bg-white border border-[#E4E4E7] rounded-lg">
-            <Loader2 className="w-5 h-5 animate-spin mx-auto mb-2 text-[#0F766E]" />
+          <div className="p-8 text-center text-xs text-[#78716C] bg-white border border-[#E4DFD3] rounded-lg">
+            <Loader2 className="w-5 h-5 animate-spin mx-auto mb-2 text-[#0F6B5D]" />
             <span>লগ ডাটা লোড হচ্ছে...</span>
           </div>
         ) : recentLogs.length === 0 ? (
-          <div className="p-8 text-center text-xs text-[#71717A] bg-white border border-[#E4E4E7] rounded-lg">
+          <div className="p-8 text-center text-xs text-[#78716C] bg-white border border-[#E4DFD3] rounded-lg">
             এখনও কোনো কাজের লগ সাবমিট করা হয়নি।
           </div>
         ) : (
-          <div className="overflow-x-auto bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+          <div className="overflow-x-auto bg-white border border-[#E4DFD3] rounded-lg shadow-[0_1px_2px_rgba(26,25,23,0.04)]">
             <table className="w-full text-left text-[13px]" id="staff-recent-logs-table">
-              <thead className="bg-[#FAFAFA] text-[#71717A] text-xs font-medium border-b border-[#E4E4E7]">
+              <thead className="bg-[#EFECE4] text-[#57534E] text-xs font-medium border-b border-[#E2DDD2]">
                 <tr>
                   <th className="py-2.5 px-4 font-medium">Date</th>
                   <th className="py-2.5 px-4 font-medium">Category</th>
@@ -403,14 +403,14 @@ export default function StaffDailyLogPage() {
                   <th className="py-2.5 px-4 font-medium">Summary Notes</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#E4E4E7]">
+              <tbody className="divide-y divide-[#E4DFD3]">
                 {recentLogs.map((log) => (
-                  <tr key={log.id} className="h-12 hover:bg-[#F9FAFB] transition-colors duration-150">
-                    <td className="py-2.5 px-4 font-medium text-[#09090B] whitespace-nowrap tabular-nums">
+                  <tr key={log.id} className="h-12 hover:bg-[#FBF9F5] transition-colors duration-150">
+                    <td className="py-2.5 px-4 font-medium text-[#1A1917] whitespace-nowrap tabular-nums">
                       {log.log_date}
                     </td>
                     <td className="py-2.5 px-4">
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#27272A] font-medium text-[11px]">
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#EFECE4] border border-[#E4DFD3] text-[#1A1917] font-medium text-[11px]">
                         {log.work_category ? (
                           <>
                             {getCategoryIcon(log.work_category)}
@@ -425,13 +425,13 @@ export default function StaffDailyLogPage() {
                         )}
                       </span>
                     </td>
-                    <td className="py-2.5 px-4 font-semibold text-[#09090B] whitespace-nowrap tabular-nums">
+                    <td className="py-2.5 px-4 font-semibold text-[#1A1917] whitespace-nowrap tabular-nums">
                       {log.hours_spent} hrs
                     </td>
-                    <td className="py-2.5 px-4 text-[#52525B] whitespace-nowrap">
+                    <td className="py-2.5 px-4 text-[#57534E] whitespace-nowrap">
                       {log.course_name || log.task_title || "—"}
                     </td>
-                    <td className="py-2.5 px-4 text-[#52525B] max-w-md line-clamp-2">
+                    <td className="py-2.5 px-4 text-[#57534E] max-w-md line-clamp-2">
                       {log.notes}
                     </td>
                   </tr>

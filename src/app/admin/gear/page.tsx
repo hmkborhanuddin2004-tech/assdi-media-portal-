@@ -485,8 +485,8 @@ export default function AdminGearPage() {
   return (
     <div className="w-full space-y-5 pb-12">
       {/* Flat Linear/Stripe Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4E4E7]">
-        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#09090B] tracking-tight">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4DFD3]">
+        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#1A1917] tracking-tight">
           Gear Stock
         </h1>
 
@@ -497,9 +497,9 @@ export default function AdminGearPage() {
               if (defaultItem) handleOpenCheckout(defaultItem);
             }}
             data-testid="header-checkout-btn"
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-white border border-[#E4E4E7] text-[#09090B] hover:bg-[#F4F4F5]"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium bg-white border border-[#E4DFD3] text-[#1A1917] hover:bg-[#EFECE4]"
           >
-            <Camera className="w-3.5 h-3.5 text-[#52525B]" />
+            <Camera className="w-3.5 h-3.5 text-[#57534E]" />
             <span>Check-Out</span>
           </button>
 
@@ -509,7 +509,7 @@ export default function AdminGearPage() {
               setShowAddModal(true);
             }}
             data-testid="add-gear-btn"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium bg-[#0F766E] hover:bg-[#0D645D] text-white"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium bg-[#0F6B5D] hover:bg-[#0B554A] text-white"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add Gear</span>
@@ -521,13 +521,13 @@ export default function AdminGearPage() {
       {successToast && (
         <div
           data-testid="success-toast"
-          className="bg-white border border-[#E4E4E7] text-[#09090B] rounded-lg p-3 flex items-center justify-between text-xs shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
+          className="bg-white border border-[#E4DFD3] text-[#1A1917] rounded-lg p-3 flex items-center justify-between text-xs shadow-[0_1px_2px_rgba(26,25,23,0.04)]"
         >
           <div className="flex items-center gap-2 font-medium">
-            <CheckCircle2 className="w-4 h-4 text-[#0F766E] shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-[#0F6B5D] shrink-0" />
             <span>{successToast}</span>
           </div>
-          <button onClick={() => setSuccessToast(null)} className="text-[#71717A] hover:text-[#09090B]">
+          <button onClick={() => setSuccessToast(null)} className="text-[#78716C] hover:text-[#1A1917]">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -538,12 +538,12 @@ export default function AdminGearPage() {
         <div
           id="double-booking-alert"
           data-testid="double-booking-alert-banner"
-          className="bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] rounded-lg p-3.5 flex items-start justify-between gap-3"
+          className="bg-[#FEE2E2] border border-[#FECACA] text-[#B91C1C] rounded-lg p-3.5 flex items-start justify-between gap-3"
         >
           <div className="flex items-start gap-2.5">
-            <AlertTriangle className="w-4 h-4 text-[#DC2626] shrink-0 mt-0.5" />
+            <AlertTriangle className="w-4 h-4 text-[#B91C1C] shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <div className="text-xs font-semibold text-[#991B1B] leading-snug">
+              <div className="text-xs font-semibold text-[#B91C1C] leading-snug">
                 {doubleBookingAlert.message}
               </div>
               <p className="text-[11px] text-[#B91C1C]">
@@ -563,46 +563,46 @@ export default function AdminGearPage() {
 
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-        <div className="bg-white border border-[#E4E4E7] rounded-lg p-3.5">
-          <div className="text-xs font-medium text-[#71717A]">Total Gear</div>
-          <div className="text-2xl font-semibold text-[#09090B] mt-1 tabular-nums">{totalCount}</div>
+        <div className="bg-white border border-[#E4DFD3] rounded-lg p-3.5">
+          <div className="text-xs font-medium text-[#78716C]">Total Gear</div>
+          <div className="text-2xl font-semibold text-[#1A1917] mt-1 tabular-nums">{totalCount}</div>
         </div>
 
-        <div className="bg-white border border-[#E4E4E7] rounded-lg p-3.5">
-          <div className="text-xs font-medium text-[#71717A] flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E]" />
+        <div className="bg-white border border-[#E4DFD3] rounded-lg p-3.5">
+          <div className="text-xs font-medium text-[#78716C] flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#0F6B5D]" />
             <span>Available</span>
           </div>
-          <div className="text-2xl font-semibold text-[#09090B] mt-1 tabular-nums">{availableCount}</div>
+          <div className="text-2xl font-semibold text-[#1A1917] mt-1 tabular-nums">{availableCount}</div>
         </div>
 
-        <div className="bg-white border border-[#E4E4E7] rounded-lg p-3.5">
-          <div className="text-xs font-medium text-[#71717A] flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#52525B]" />
+        <div className="bg-white border border-[#E4DFD3] rounded-lg p-3.5">
+          <div className="text-xs font-medium text-[#78716C] flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#57534E]" />
             <span>In Use</span>
           </div>
-          <div className="text-2xl font-semibold text-[#09090B] mt-1 tabular-nums">{inUseCount}</div>
+          <div className="text-2xl font-semibold text-[#1A1917] mt-1 tabular-nums">{inUseCount}</div>
         </div>
 
-        <div className="bg-white border border-[#E4E4E7] rounded-lg p-3.5">
-          <div className="text-xs font-medium text-[#71717A] flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#DC2626]" />
+        <div className="bg-white border border-[#E4DFD3] rounded-lg p-3.5">
+          <div className="text-xs font-medium text-[#78716C] flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#B91C1C]" />
             <span>Maintenance</span>
           </div>
-          <div className="text-2xl font-semibold text-[#09090B] mt-1 tabular-nums">{maintenanceCount}</div>
+          <div className="text-2xl font-semibold text-[#1A1917] mt-1 tabular-nums">{maintenanceCount}</div>
         </div>
       </div>
 
       {/* Filter Tabs, Search & Category Selector */}
-      <div className="bg-white border border-[#E4E4E7] rounded-lg p-3 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+      <div className="bg-white border border-[#E4DFD3] rounded-lg p-3 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
         <div className="flex items-center gap-1 overflow-x-auto no-scrollbar tabular-nums">
           <button
             onClick={() => setStatusFilter("all")}
             data-testid="filter-status-all"
             className={`px-2.5 py-1.5 rounded-md text-xs font-medium shrink-0 ${
               statusFilter === "all"
-                ? "bg-[#09090B] text-white"
-                : "bg-[#FAFAFA] border border-[#E4E4E7] text-[#52525B] hover:text-[#09090B]"
+                ? "bg-[#1A1917] text-white"
+                : "bg-[#F7F5F0] border border-[#E4DFD3] text-[#57534E] hover:text-[#1A1917]"
             }`}
           >
             All ({totalCount})
@@ -612,8 +612,8 @@ export default function AdminGearPage() {
             data-testid="filter-status-available"
             className={`px-2.5 py-1.5 rounded-md text-xs font-medium shrink-0 ${
               statusFilter === "available"
-                ? "bg-[#09090B] text-white"
-                : "bg-[#FAFAFA] border border-[#E4E4E7] text-[#52525B] hover:text-[#09090B]"
+                ? "bg-[#1A1917] text-white"
+                : "bg-[#F7F5F0] border border-[#E4DFD3] text-[#57534E] hover:text-[#1A1917]"
             }`}
           >
             Available ({availableCount})
@@ -623,8 +623,8 @@ export default function AdminGearPage() {
             data-testid="filter-status-in_use"
             className={`px-2.5 py-1.5 rounded-md text-xs font-medium shrink-0 ${
               statusFilter === "in_use"
-                ? "bg-[#09090B] text-white"
-                : "bg-[#FAFAFA] border border-[#E4E4E7] text-[#52525B] hover:text-[#09090B]"
+                ? "bg-[#1A1917] text-white"
+                : "bg-[#F7F5F0] border border-[#E4DFD3] text-[#57534E] hover:text-[#1A1917]"
             }`}
           >
             In Use ({inUseCount})
@@ -634,8 +634,8 @@ export default function AdminGearPage() {
             data-testid="filter-status-maintenance"
             className={`px-2.5 py-1.5 rounded-md text-xs font-medium shrink-0 ${
               statusFilter === "maintenance"
-                ? "bg-[#09090B] text-white"
-                : "bg-[#FAFAFA] border border-[#E4E4E7] text-[#52525B] hover:text-[#09090B]"
+                ? "bg-[#1A1917] text-white"
+                : "bg-[#F7F5F0] border border-[#E4DFD3] text-[#57534E] hover:text-[#1A1917]"
             }`}
           >
             Maintenance ({maintenanceCount})
@@ -644,18 +644,18 @@ export default function AdminGearPage() {
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
           <div className="relative flex-1 sm:w-56">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#71717A]" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#78716C]" />
             <input
               type="text"
               placeholder="Search model or serial..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-8 pl-8 pr-7 text-xs rounded-md bg-[#FAFAFA] border border-[#E4E4E7] text-[#09090B] placeholder-[#71717A] focus:outline-none focus:bg-white focus:border-[#0F766E]"
+              className="w-full h-8 pl-8 pr-7 text-xs rounded-md bg-[#F7F5F0] border border-[#E4DFD3] text-[#1A1917] placeholder-[#78716C] focus:outline-none focus:bg-white focus:border-[#0F6B5D]"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#71717A] hover:text-[#09090B]"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#78716C] hover:text-[#1A1917]"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -666,7 +666,7 @@ export default function AdminGearPage() {
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
             data-testid="filter-category-select"
-            className="h-8 px-2.5 text-xs rounded-md bg-[#FAFAFA] border border-[#E4E4E7] text-[#09090B] font-medium focus:outline-none focus:bg-white focus:border-[#0F766E]"
+            className="h-8 px-2.5 text-xs rounded-md bg-[#F7F5F0] border border-[#E4DFD3] text-[#1A1917] font-medium focus:outline-none focus:bg-white focus:border-[#0F6B5D]"
           >
             <option value="all">All Categories</option>
             {GEAR_CATEGORIES.map((cat) => (
@@ -679,20 +679,20 @@ export default function AdminGearPage() {
       </div>
 
       {/* Master Inventory Table */}
-      <div className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] overflow-hidden">
-        <div className="px-4 py-3 border-b border-[#E4E4E7] bg-[#FAFAFA] flex items-center justify-between">
-          <h2 className="text-xs font-medium text-[#52525B] uppercase tracking-wider">
+      <div className="bg-white border border-[#E4DFD3] rounded-lg shadow-[0_1px_2px_rgba(26,25,23,0.04)] overflow-hidden">
+        <div className="px-4 py-3 border-b border-[#E4DFD3] bg-[#F7F5F0] flex items-center justify-between">
+          <h2 className="text-xs font-medium text-[#57534E] uppercase tracking-wider">
             Master Inventory
           </h2>
-          <span className="text-xs font-medium text-[#71717A] tabular-nums">
+          <span className="text-xs font-medium text-[#78716C] tabular-nums">
             {filteredGear.length} items
           </span>
         </div>
 
         {loading ? (
-          <div className="p-12 text-center text-xs text-[#71717A]">Loading inventory...</div>
+          <div className="p-12 text-center text-xs text-[#78716C]">Loading inventory...</div>
         ) : filteredGear.length === 0 ? (
-          <div className="p-12 text-center text-xs text-[#71717A]">
+          <div className="p-12 text-center text-xs text-[#78716C]">
             No equipment matches your filters.
           </div>
         ) : (
@@ -701,7 +701,7 @@ export default function AdminGearPage() {
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse" data-testid="gear-master-table">
                 <thead>
-                  <tr className="border-b border-[#E4E4E7] bg-[#FAFAFA] text-[12px] font-medium text-[#71717A]">
+                  <tr className="border-b border-[#E2DDD2] bg-[#EFECE4] text-[12px] font-medium text-[#57534E]">
                     <th className="py-2.5 px-4 font-medium">Gear &amp; Model</th>
                     <th className="py-2.5 px-4 font-medium">Serial No.</th>
                     <th className="py-2.5 px-4 font-medium">Status</th>
@@ -709,39 +709,44 @@ export default function AdminGearPage() {
                     <th className="py-2.5 px-4 font-medium text-right">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#E4E4E7] text-[13px] text-[#09090B]">
+                <tbody className="divide-y divide-[#E4DFD3] text-[13px] text-[#1A1917]">
                   {filteredGear.map((item) => {
                     const statusConfig = GEAR_STATUS_LABELS[item.status];
                     const isAvailable = item.status === "available";
                     const isInUse = item.status === "in_use";
                     const isMaintenance = item.status === "maintenance";
                     const dotColor = isAvailable
-                      ? "bg-[#0F766E]"
+                      ? "bg-[#0F6B5D]"
                       : isInUse
-                      ? "bg-[#52525B]"
-                      : "bg-[#DC2626]";
+                      ? "bg-[#57534E]"
+                      : "bg-[#B91C1C]";
+                    const badgeStyle = isAvailable
+                      ? "bg-[#E6F4EE] text-[#0F6B5D] border-[#CDE7DC]"
+                      : isInUse
+                      ? "bg-[#EFECE4] text-[#57534E] border-[#E4DFD3]"
+                      : "bg-[#FEE2E2] text-[#B91C1C] border-[#FECACA]";
 
                     return (
                       <tr
                         key={item.id}
                         data-testid={`gear-row-${item.serial_number}`}
-                        className="h-12 hover:bg-[#F9FAFB]"
+                        className="h-12 hover:bg-[#FBF9F5]"
                       >
                         <td className="py-2.5 px-4">
-                          <div className="font-medium text-[#09090B]">{item.name}</div>
-                          <div className="text-[11px] text-[#71717A]">
+                          <div className="font-medium text-[#1A1917]">{item.name}</div>
+                          <div className="text-[11px] text-[#78716C]">
                             {GEAR_CATEGORY_LABELS[item.category]?.en || item.category}
                           </div>
                         </td>
 
-                        <td className="py-2.5 px-4 font-mono text-xs text-[#52525B] tabular-nums">
+                        <td className="py-2.5 px-4 font-mono text-xs text-[#57534E] tabular-nums">
                           {item.serial_number}
                         </td>
 
                         <td className="py-2.5 px-4">
                           <span
                             data-testid={`status-badge-${item.serial_number}`}
-                            className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium bg-[#F4F4F5] text-[#27272A] border border-[#E4E4E7]"
+                            className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-medium border ${badgeStyle}`}
                           >
                             <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`} />
                             <span>{statusConfig.en}</span>
@@ -750,9 +755,9 @@ export default function AdminGearPage() {
 
                         <td className="py-2.5 px-4 text-xs">
                           {isInUse && item.assigned_to ? (
-                            <span className="text-[#09090B]">{item.assigned_to}</span>
+                            <span className="text-[#1A1917]">{item.assigned_to}</span>
                           ) : isMaintenance ? (
-                            <span className="text-[#DC2626]">
+                            <span className="text-[#B91C1C]">
                               {item.assigned_to ||
                                 (item.maintenance_note
                                   ? `Note: ${item.maintenance_note}`
@@ -769,7 +774,7 @@ export default function AdminGearPage() {
                               <button
                                 onClick={() => handleOpenCheckout(item)}
                                 data-testid={`btn-checkout-${item.serial_number}`}
-                                className="px-3 py-1.5 rounded-md text-xs font-medium bg-[#0F766E] hover:bg-[#0D645D] text-white"
+                                className="px-3 py-1.5 rounded-md text-xs font-medium bg-[#0F6B5D] hover:bg-[#0B554A] text-white"
                               >
                                 Check-Out
                               </button>
@@ -779,7 +784,7 @@ export default function AdminGearPage() {
                               <button
                                 onClick={() => handleOpenCheckin(item)}
                                 data-testid={`btn-checkin-${item.serial_number}`}
-                                className="px-3 py-1.5 rounded-md text-xs font-medium bg-white hover:bg-[#F4F4F5] text-[#09090B] border border-[#E4E4E7]"
+                                className="px-3 py-1.5 rounded-md text-xs font-medium bg-white hover:bg-[#EFECE4] text-[#1A1917] border border-[#E4DFD3]"
                               >
                                 Check-In
                               </button>
@@ -789,7 +794,7 @@ export default function AdminGearPage() {
                               <button
                                 onClick={() => handleMarkReady(item)}
                                 data-testid={`btn-markready-${item.serial_number}`}
-                                className="px-3 py-1.5 rounded-md text-xs font-medium bg-white hover:bg-[#F4F4F5] text-[#0F766E] border border-[#E4E4E7]"
+                                className="px-3 py-1.5 rounded-md text-xs font-medium bg-white hover:bg-[#EFECE4] text-[#0F6B5D] border border-[#E4DFD3]"
                               >
                                 Mark Ready
                               </button>
@@ -799,7 +804,7 @@ export default function AdminGearPage() {
                               onClick={() => handleOpenEdit(item)}
                               data-testid={`btn-edit-${item.serial_number}`}
                               title="Edit Gear"
-                              className="p-1.5 rounded-md text-[#71717A] hover:text-[#09090B] hover:bg-[#F4F4F5] border border-[#E4E4E7]"
+                              className="p-1.5 rounded-md text-[#78716C] hover:text-[#1A1917] hover:bg-[#EFECE4] border border-[#E4DFD3]"
                             >
                               <Edit2 className="w-3.5 h-3.5" />
                             </button>
@@ -813,17 +818,17 @@ export default function AdminGearPage() {
             </div>
 
             {/* Mobile (390px) View */}
-            <div className="md:hidden divide-y divide-[#E4E4E7]" data-testid="gear-mobile-cards">
+            <div className="md:hidden divide-y divide-[#E4DFD3]" data-testid="gear-mobile-cards">
               {filteredGear.map((item) => {
                 const statusConfig = GEAR_STATUS_LABELS[item.status];
                 const isAvailable = item.status === "available";
                 const isInUse = item.status === "in_use";
                 const isMaintenance = item.status === "maintenance";
                 const dotColor = isAvailable
-                  ? "bg-[#0F766E]"
+                  ? "bg-[#0F6B5D]"
                   : isInUse
-                  ? "bg-[#52525B]"
-                  : "bg-[#DC2626]";
+                  ? "bg-[#57534E]"
+                  : "bg-[#B91C1C]";
 
                 return (
                   <div
@@ -833,32 +838,38 @@ export default function AdminGearPage() {
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <div className="font-medium text-[#09090B] text-[13px]">{item.name}</div>
-                        <div className="text-[11px] text-[#71717A] font-mono tabular-nums mt-0.5">
+                        <div className="font-medium text-[#1A1917] text-[13px]">{item.name}</div>
+                        <div className="text-[11px] text-[#78716C] font-mono tabular-nums mt-0.5">
                           {item.serial_number} · {GEAR_CATEGORY_LABELS[item.category]?.en}
                         </div>
                       </div>
                       <span
                         data-testid={`mobile-status-badge-${item.serial_number}`}
-                        className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium bg-[#F4F4F5] text-[#27272A] border border-[#E4E4E7] shrink-0"
+                        className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium border shrink-0 ${
+                          isAvailable
+                            ? "bg-[#E6F4EE] text-[#0F6B5D] border-[#CDE7DC]"
+                            : isInUse
+                            ? "bg-[#EFECE4] text-[#57534E] border-[#E4DFD3]"
+                            : "bg-[#FEE2E2] text-[#B91C1C] border-[#FECACA]"
+                        }`}
                       >
                         <span className={`w-1.5 h-1.5 rounded-full ${dotColor}`} />
                         <span>{statusConfig.en}</span>
                       </span>
                     </div>
 
-                    <div className="text-xs text-[#52525B] bg-[#FAFAFA] rounded-md px-2.5 py-2 border border-[#E4E4E7]">
+                    <div className="text-xs text-[#57534E] bg-[#F7F5F0] rounded-md px-2.5 py-2 border border-[#E4DFD3]">
                       {isInUse && item.assigned_to ? (
-                        <span className="font-medium text-[#09090B]">{item.assigned_to}</span>
+                        <span className="font-medium text-[#1A1917]">{item.assigned_to}</span>
                       ) : isMaintenance ? (
-                        <span className="text-[#DC2626] font-medium">
+                        <span className="text-[#B91C1C] font-medium">
                           {item.assigned_to ||
                             (item.maintenance_note
                               ? `Note: ${item.maintenance_note}`
                               : "Under Maintenance")}
                         </span>
                       ) : (
-                        <span className="text-[#71717A]">Not assigned</span>
+                        <span className="text-[#78716C]">Not assigned</span>
                       )}
                     </div>
 
@@ -866,7 +877,7 @@ export default function AdminGearPage() {
                       <button
                         onClick={() => handleOpenEdit(item)}
                         data-testid={`btn-mobile-edit-${item.serial_number}`}
-                        className="py-1.5 px-2.5 rounded-md text-xs font-medium bg-white hover:bg-[#F4F4F5] text-[#52525B] border border-[#E4E4E7] flex items-center gap-1"
+                        className="py-1.5 px-2.5 rounded-md text-xs font-medium bg-white hover:bg-[#EFECE4] text-[#57534E] border border-[#E4DFD3] flex items-center gap-1"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
                         <span>Edit</span>
@@ -876,7 +887,7 @@ export default function AdminGearPage() {
                         <button
                           onClick={() => handleOpenCheckout(item)}
                           data-testid={`btn-mobile-checkout-${item.serial_number}`}
-                          className="flex-1 py-1.5 rounded-md text-xs font-medium bg-[#0F766E] hover:bg-[#0D645D] text-white text-center"
+                          className="flex-1 py-1.5 rounded-md text-xs font-medium bg-[#0F6B5D] hover:bg-[#0B554A] text-white text-center"
                         >
                           Check-Out
                         </button>
@@ -886,7 +897,7 @@ export default function AdminGearPage() {
                         <button
                           onClick={() => handleOpenCheckin(item)}
                           data-testid={`btn-mobile-checkin-${item.serial_number}`}
-                          className="flex-1 py-1.5 rounded-md text-xs font-medium bg-white hover:bg-[#F4F4F5] text-[#09090B] border border-[#E4E4E7] text-center"
+                          className="flex-1 py-1.5 rounded-md text-xs font-medium bg-white hover:bg-[#EFECE4] text-[#1A1917] border border-[#E4DFD3] text-center"
                         >
                           Check-In
                         </button>
@@ -896,7 +907,7 @@ export default function AdminGearPage() {
                         <button
                           onClick={() => handleMarkReady(item)}
                           data-testid={`btn-mobile-markready-${item.serial_number}`}
-                          className="flex-1 py-1.5 rounded-md text-xs font-medium bg-white hover:bg-[#F4F4F5] text-[#0F766E] border border-[#E4E4E7] text-center"
+                          className="flex-1 py-1.5 rounded-md text-xs font-medium bg-white hover:bg-[#EFECE4] text-[#0F6B5D] border border-[#E4DFD3] text-center"
                         >
                           Mark Ready
                         </button>
@@ -914,11 +925,11 @@ export default function AdminGearPage() {
       <div
         id="quick-return-panel"
         data-testid="quick-return-panel"
-        className="bg-white border border-[#E4E4E7] rounded-lg p-4 space-y-3"
+        className="bg-white border border-[#E4DFD3] rounded-lg p-4 space-y-3"
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <h3 className="text-sm font-bold text-slate-900 tracking-tight flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-[#0F766E]" />
+            <CheckCircle2 className="w-4 h-4 text-[#0F6B5D]" />
             Quick Return Condition Check-In
           </h3>
           <span className="text-[11px] text-slate-500">
@@ -934,7 +945,7 @@ export default function AdminGearPage() {
                 value={quickSelectedGearId}
                 onChange={(e) => setQuickSelectedGearId(e.target.value)}
                 data-testid="quick-gear-select"
-                className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F6B5D]/30 focus:border-[#0F6B5D]"
               >
                 {inUseItems.length === 0 ? (
                   <option value="">বর্তমানে কোনো সরঞ্জাম In Use নেই</option>
@@ -955,7 +966,7 @@ export default function AdminGearPage() {
                 checked={quickBatteryOk}
                 onChange={(e) => setQuickBatteryOk(e.target.checked)}
                 data-testid="quick-checkbox-battery"
-                className="w-4 h-4 rounded text-[#0F766E] focus:ring-[#0F766E]"
+                className="w-4 h-4 rounded text-[#0F6B5D] focus:ring-[#0F6B5D]"
               />
               <Battery className="w-4 h-4 text-emerald-600" />
               <span>Battery OK</span>
@@ -968,7 +979,7 @@ export default function AdminGearPage() {
                 checked={quickSdCardOk}
                 onChange={(e) => setQuickSdCardOk(e.target.checked)}
                 data-testid="quick-checkbox-sd"
-                className="w-4 h-4 rounded text-[#0F766E] focus:ring-[#0F766E]"
+                className="w-4 h-4 rounded text-[#0F6B5D] focus:ring-[#0F6B5D]"
               />
               <HardDrive className="w-4 h-4 text-emerald-600" />
               <span>SD Card OK</span>
@@ -982,7 +993,7 @@ export default function AdminGearPage() {
                 value={quickDamageNote}
                 onChange={(e) => setQuickDamageNote(e.target.value)}
                 data-testid="quick-input-damage-note"
-                className="w-full px-3.5 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                className="w-full px-3.5 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F6B5D]/30 focus:border-[#0F6B5D]"
               />
             </div>
 
@@ -991,7 +1002,7 @@ export default function AdminGearPage() {
               type="submit"
               disabled={isQuickCheckingIn || !quickSelectedGearId}
               data-testid="quick-submit-checkin-btn"
-              className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#0F766E] hover:bg-[#0D655E] disabled:bg-slate-300 disabled:cursor-not-allowed text-white shadow-sm transition-all shrink-0 active:scale-95"
+              className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#0F6B5D] hover:bg-[#0D655E] disabled:bg-slate-300 disabled:cursor-not-allowed text-white shadow-sm transition-all shrink-0 active:scale-95"
             >
               {isQuickCheckingIn ? "প্রসেসিং..." : "Complete Check-In"}
             </button>
@@ -1003,11 +1014,11 @@ export default function AdminGearPage() {
       {/* MODAL 1: Task-based Check-Out Modal                                   */}
       {/* ---------------------------------------------------------------------- */}
       {showCheckoutModal && checkoutGearItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#09090B]/40">
-          <div className="bg-white rounded-lg border border-[#E4E4E7] shadow-[0_8px_24px_rgba(0,0,0,0.08)] w-full max-w-lg overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1A1917]/40">
+          <div className="bg-white rounded-lg border border-[#E4DFD3] shadow-[0_8px_24px_rgba(26,25,23,0.08)] w-full max-w-lg overflow-hidden">
             <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/60">
               <div className="flex items-center gap-2">
-                <Camera className="w-5 h-5 text-[#0F766E]" />
+                <Camera className="w-5 h-5 text-[#0F6B5D]" />
                 <h3 className="text-sm font-bold text-slate-900">
                   সরঞ্জাম চেক-আউট (Check-Out Equipment)
                 </h3>
@@ -1049,7 +1060,7 @@ export default function AdminGearPage() {
                       }
                     }}
                     data-testid="checkout-gear-select"
-                    className="w-full px-2.5 py-1.5 text-xs rounded-lg bg-white border border-emerald-300 text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#0F766E]"
+                    className="w-full px-2.5 py-1.5 text-xs rounded-lg bg-white border border-emerald-300 text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#0F6B5D]"
                   >
                     {gearList.map((g) => (
                       <option key={g.id} value={g.id}>
@@ -1081,7 +1092,7 @@ export default function AdminGearPage() {
                   value={checkoutTaskId}
                   onChange={(e) => setCheckoutTaskId(e.target.value)}
                   data-testid="checkout-task-select"
-                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F6B5D]/30 focus:border-[#0F6B5D]"
                   required
                 >
                   {activeTasks.length === 0 ? (
@@ -1108,7 +1119,7 @@ export default function AdminGearPage() {
                     value={checkoutLeadId}
                     onChange={(e) => setCheckoutLeadId(e.target.value)}
                     data-testid="checkout-lead-select"
-                    className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                    className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F6B5D]/30 focus:border-[#0F6B5D]"
                     required
                   >
                     {staffMembers.length === 0 ? (
@@ -1131,7 +1142,7 @@ export default function AdminGearPage() {
                     onChange={(e) => setCheckoutTeamLabel(e.target.value)}
                     data-testid="checkout-team-label"
                     placeholder="e.g. Team A"
-                    className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                    className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F6B5D]/30 focus:border-[#0F6B5D]"
                   />
                 </div>
               </div>
@@ -1200,7 +1211,7 @@ export default function AdminGearPage() {
                   type="submit"
                   disabled={isCheckingOut}
                   data-testid="checkout-submit-btn"
-                  className="px-4 py-2 text-xs font-semibold bg-[#0F766E] hover:bg-[#0D655E] text-white rounded-xl shadow-sm transition-all"
+                  className="px-4 py-2 text-xs font-semibold bg-[#0F6B5D] hover:bg-[#0D655E] text-white rounded-xl shadow-sm transition-all"
                 >
                   {isCheckingOut ? "যাচাই ও চেক-আউট হচ্ছে..." : "চেক-আউট নিশ্চিত করুন"}
                 </button>
@@ -1214,8 +1225,8 @@ export default function AdminGearPage() {
       {/* MODAL 2: Return & Condition Check-In Modal                             */}
       {/* ---------------------------------------------------------------------- */}
       {showCheckinModal && checkinGearItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#09090B]/40">
-          <div className="bg-white rounded-lg border border-[#E4E4E7] shadow-[0_8px_24px_rgba(0,0,0,0.08)] w-full max-w-lg overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1A1917]/40">
+          <div className="bg-white rounded-lg border border-[#E4DFD3] shadow-[0_8px_24px_rgba(26,25,23,0.08)] w-full max-w-lg overflow-hidden">
             <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/60">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-5 h-5 text-emerald-600" />
@@ -1238,7 +1249,7 @@ export default function AdminGearPage() {
                   Serial: {checkinGearItem.serial_number}
                 </div>
                 {checkinGearItem.assigned_to && (
-                  <div className="text-[11px] text-[#0F766E] font-medium pt-1">
+                  <div className="text-[11px] text-[#0F6B5D] font-medium pt-1">
                     বর্তমান অ্যাসাইনমেন্ট: {checkinGearItem.assigned_to}
                   </div>
                 )}
@@ -1260,7 +1271,7 @@ export default function AdminGearPage() {
                       checked={checkinBatteryOk}
                       onChange={(e) => setCheckinBatteryOk(e.target.checked)}
                       data-testid="checkin-battery-ok"
-                      className="w-4 h-4 rounded text-[#0F766E] focus:ring-[#0F766E]"
+                      className="w-4 h-4 rounded text-[#0F6B5D] focus:ring-[#0F6B5D]"
                     />
                     <Battery className="w-4 h-4 text-emerald-600" />
                     <span className="text-xs font-medium text-slate-800">Battery OK</span>
@@ -1272,7 +1283,7 @@ export default function AdminGearPage() {
                       checked={checkinSdCardOk}
                       onChange={(e) => setCheckinSdCardOk(e.target.checked)}
                       data-testid="checkin-sd-ok"
-                      className="w-4 h-4 rounded text-[#0F766E] focus:ring-[#0F766E]"
+                      className="w-4 h-4 rounded text-[#0F6B5D] focus:ring-[#0F6B5D]"
                     />
                     <HardDrive className="w-4 h-4 text-emerald-600" />
                     <span className="text-xs font-medium text-slate-800">SD Card OK</span>
@@ -1291,7 +1302,7 @@ export default function AdminGearPage() {
                   onChange={(e) => setCheckinConditionNote(e.target.value)}
                   data-testid="checkin-condition-note"
                   placeholder="Damage Note / Remarks... (e.g. Minor scratches, lens cleaned, battery 100%)"
-                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F6B5D]/30 focus:border-[#0F6B5D]"
                 />
               </div>
 
@@ -1342,7 +1353,7 @@ export default function AdminGearPage() {
                   className={`px-4 py-2 text-xs font-semibold rounded-xl text-white shadow-sm transition-all ${
                     checkinMarkMaintenance
                       ? "bg-rose-600 hover:bg-rose-700"
-                      : "bg-[#0F766E] hover:bg-[#0D655E]"
+                      : "bg-[#0F6B5D] hover:bg-[#0D655E]"
                   }`}
                 >
                   {isCheckingIn
@@ -1361,11 +1372,11 @@ export default function AdminGearPage() {
       {/* MODAL 3: Add New Gear Item Modal (Admin Only)                         */}
       {/* ---------------------------------------------------------------------- */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#09090B]/40">
-          <div className="bg-white rounded-lg border border-[#E4E4E7] shadow-[0_8px_24px_rgba(0,0,0,0.08)] w-full max-w-md overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1A1917]/40">
+          <div className="bg-white rounded-lg border border-[#E4DFD3] shadow-[0_8px_24px_rgba(26,25,23,0.08)] w-full max-w-md overflow-hidden">
             <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/60">
               <div className="flex items-center gap-2">
-                <Plus className="w-5 h-5 text-[#0F766E]" />
+                <Plus className="w-5 h-5 text-[#0F6B5D]" />
                 <h3 className="text-sm font-bold text-slate-900">
                   নতুন সরঞ্জাম যোগ করুন (Add New Gear)
                 </h3>
@@ -1400,7 +1411,7 @@ export default function AdminGearPage() {
                   onChange={(e) => setAddName(e.target.value)}
                   placeholder="e.g. Sony FX3 Cinema Body"
                   data-testid="input-gear-name"
-                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F6B5D]/30 focus:border-[#0F6B5D]"
                   required
                 />
               </div>
@@ -1412,7 +1423,7 @@ export default function AdminGearPage() {
                   value={addCategory}
                   onChange={(e) => setAddCategory(e.target.value as GearCategory)}
                   data-testid="select-gear-category"
-                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F6B5D]/30 focus:border-[#0F6B5D]"
                   required
                 >
                   {GEAR_CATEGORIES.map((cat) => (
@@ -1434,7 +1445,7 @@ export default function AdminGearPage() {
                   onChange={(e) => setAddSerial(e.target.value)}
                   placeholder="e.g. SN-FX3-02"
                   data-testid="input-gear-serial"
-                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 font-mono text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 font-mono text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F6B5D]/30 focus:border-[#0F6B5D]"
                   required
                 />
               </div>
@@ -1446,7 +1457,7 @@ export default function AdminGearPage() {
                   value={addStatus}
                   onChange={(e) => setAddStatus(e.target.value as GearStatus)}
                   data-testid="select-gear-status"
-                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F6B5D]/30 focus:border-[#0F6B5D]"
                 >
                   <option value="available">Available (উপলব্ধ)</option>
                   <option value="maintenance">Maintenance (রক্ষণাবেক্ষণে)</option>
@@ -1480,7 +1491,7 @@ export default function AdminGearPage() {
                   type="submit"
                   disabled={isAdding}
                   data-testid="submit-add-gear-btn"
-                  className="px-4 py-2 text-xs font-semibold bg-[#0F766E] hover:bg-[#0D655E] text-white rounded-xl shadow-sm transition-all"
+                  className="px-4 py-2 text-xs font-semibold bg-[#0F6B5D] hover:bg-[#0D655E] text-white rounded-xl shadow-sm transition-all"
                 >
                   {isAdding ? "যোগ হচ্ছে..." : "সংরক্ষণ করুন (Save Gear)"}
                 </button>
@@ -1496,12 +1507,12 @@ export default function AdminGearPage() {
       {showEditModal && editGearItem && (
         <div
           data-testid="edit-gear-modal"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#09090B]/40"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1A1917]/40"
         >
-          <div className="bg-white rounded-lg border border-[#E4E4E7] shadow-[0_8px_24px_rgba(0,0,0,0.08)] w-full max-w-md overflow-hidden">
+          <div className="bg-white rounded-lg border border-[#E4DFD3] shadow-[0_8px_24px_rgba(26,25,23,0.08)] w-full max-w-md overflow-hidden">
             <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/60">
               <div className="flex items-center gap-2">
-                <Edit2 className="w-5 h-5 text-[#0F766E]" />
+                <Edit2 className="w-5 h-5 text-[#0F6B5D]" />
                 <h3 className="text-sm font-bold text-slate-900">
                   সরঞ্জাম সম্পাদনা করুন (Edit Gear Item)
                 </h3>
@@ -1536,7 +1547,7 @@ export default function AdminGearPage() {
                   onChange={(e) => setEditName(e.target.value)}
                   placeholder="e.g. Sony FX3 Cinema Body"
                   data-testid="input-edit-gear-name"
-                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F6B5D]/30 focus:border-[#0F6B5D]"
                   required
                 />
               </div>
@@ -1548,7 +1559,7 @@ export default function AdminGearPage() {
                   value={editCategory}
                   onChange={(e) => setEditCategory(e.target.value as GearCategory)}
                   data-testid="select-edit-gear-category"
-                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F6B5D]/30 focus:border-[#0F6B5D]"
                   required
                 >
                   {GEAR_CATEGORIES.map((cat) => (
@@ -1570,7 +1581,7 @@ export default function AdminGearPage() {
                   onChange={(e) => setEditSerial(e.target.value)}
                   placeholder="e.g. SN-FX3-01"
                   data-testid="input-edit-gear-serial"
-                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 font-mono text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 font-mono text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F6B5D]/30 focus:border-[#0F6B5D]"
                   required
                 />
               </div>
@@ -1582,7 +1593,7 @@ export default function AdminGearPage() {
                   value={editStatus}
                   onChange={(e) => setEditStatus(e.target.value as GearStatus)}
                   data-testid="select-edit-gear-status"
-                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E]"
+                  className="w-full px-3 py-2 text-xs rounded-xl bg-white border border-slate-200 text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0F6B5D]/30 focus:border-[#0F6B5D]"
                 >
                   <option value="available">Available (উপলব্ধ)</option>
                   <option value="in_use">In Use (ব্যবহৃত)</option>
@@ -1617,7 +1628,7 @@ export default function AdminGearPage() {
                   type="submit"
                   disabled={isEditing}
                   data-testid="submit-edit-gear-btn"
-                  className="px-4 py-2 text-xs font-semibold bg-[#0F766E] hover:bg-[#0D655E] text-white rounded-xl shadow-sm transition-all"
+                  className="px-4 py-2 text-xs font-semibold bg-[#0F6B5D] hover:bg-[#0D655E] text-white rounded-xl shadow-sm transition-all"
                 >
                   {isEditing ? "আপডেট হচ্ছে..." : "আপডেট নিশ্চিত করুন (Update Gear)"}
                 </button>

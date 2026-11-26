@@ -38,7 +38,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="bn" className={`${inter.variable} ${hindSiliguri.variable}`}>
-      <body className="min-h-screen bg-[#FAFAFA] text-[#09090B] antialiased overflow-x-hidden">
+      <body className="min-h-screen bg-[#F7F5F0] text-[#1A1917] antialiased overflow-x-hidden">
         <AppShell>{children}</AppShell>
       </body>
     </html>

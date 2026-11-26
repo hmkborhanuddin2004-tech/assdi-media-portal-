@@ -4,42 +4,43 @@
 
 @layer base {
   :root {
-    --background: 0 0% 98%; /* #FAFAFA */
-    --foreground: 240 10% 4%; /* #09090B */
-    --ink: #09090b;
-    --ink-2: #52525b;
-    --muted-ink: #71717a;
+    --background: 43 33% 95%; /* #F7F5F0 */
+    --foreground: 30 9% 10%; /* #1A1917 */
+    --ink: #1a1917;
+    --ink-2: #57534e;
+    --muted-ink: #78716c;
     --surface: #ffffff;
-    --sidebar-bg: #f4f4f5;
-    --border-hairline: #e4e4e7;
-    --teal: #0f766e;
-    --teal-hover: #0d645d;
+    --sidebar-bg: #efece4;
+    --border-hairline: #e4dfd3;
+    --border-sidebar: #e2ddd2;
+    --teal: #0f6b5d;
+    --teal-hover: #0b554a;
 
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 4%;
+    --card-foreground: 30 9% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 4%;
+    --popover-foreground: 30 9% 10%;
 
-    /* Disciplined Brand Accent: Deep Forest Emerald #0F766E */
-    --primary: 175 77% 26%;
+    /* Disciplined Brand Accent: Deep Forest Emerald #0F6B5D */
+    --primary: 171 75% 24%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 5% 96%;
-    --secondary-foreground: 240 6% 10%;
+    --secondary: 44 26% 92%; /* #EFECE4 */
+    --secondary-foreground: 30 9% 10%;
 
-    --muted: 240 5% 96%;
-    --muted-foreground: 240 4% 46%;
+    --muted: 44 26% 92%;
+    --muted-foreground: 25 5% 45%; /* #78716C */
 
-    --accent: 240 5% 96%;
-    --accent-foreground: 240 6% 10%;
+    --accent: 44 26% 92%;
+    --accent-foreground: 30 9% 10%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 0 74% 42%; /* #B91C1C */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 6% 90%; /* #E4E4E7 */
-    --input: 240 6% 90%;
-    --ring: 175 77% 26%;
+    --border: 42 26% 86%; /* #E4DFD3 */
+    --input: 42 26% 86%;
+    --ring: 171 75% 24%;
 
     --radius: 0.5rem;
   }
@@ -57,8 +58,8 @@
   body {
     max-width: 100vw;
     overflow-x: clip;
-    color: #09090b;
-    background-color: #fafafa;
+    color: #1a1917;
+    background-color: #f7f5f0;
     font-family: var(--font-inter), var(--font-hind), system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -87,9 +88,9 @@
 /* Institutional surface primitives */
 .surface-card {
   background-color: #ffffff;
-  border: 1px solid #e4e4e7;
+  border: 1px solid #e4dfd3;
   border-radius: 8px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 2px rgba(26, 25, 23, 0.04);
 }
 
 .tabular-nums {

@@ -107,20 +107,20 @@ export default function CoordinatorRequestsPage() {
   return (
     <div className="space-y-5 w-full max-w-full pb-10">
       {/* Flat Linear/Stripe Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4E4E7]">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4DFD3]">
         <div>
-          <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#09090B] tracking-tight">
+          <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#1A1917] tracking-tight">
             My Requests
           </h1>
           {user?.course_name && (
-            <p className="text-xs text-[#71717A] mt-0.5">{user.course_name}</p>
+            <p className="text-xs text-[#78716C] mt-0.5">{user.course_name}</p>
           )}
         </div>
 
         <Link
           href="/coordinator/new"
           id="coordinator-new-req-btn"
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white text-xs font-medium shrink-0"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#0F6B5D] hover:bg-[#0B554A] text-white text-xs font-medium shrink-0"
         >
           <FilePlus2 className="w-3.5 h-3.5" />
           <span>New Requisition</span>
@@ -133,8 +133,8 @@ export default function CoordinatorRequestsPage() {
           onClick={() => setActiveFilter("all")}
           className={`px-2.5 py-1.5 rounded-md font-medium shrink-0 ${
             activeFilter === "all"
-              ? "bg-[#09090B] text-white"
-              : "bg-white border border-[#E4E4E7] text-[#52525B] hover:text-[#09090B]"
+              ? "bg-[#1A1917] text-white"
+              : "bg-white border border-[#E4DFD3] text-[#57534E] hover:text-[#1A1917]"
           }`}
         >
           All ({countAll})
@@ -143,8 +143,8 @@ export default function CoordinatorRequestsPage() {
           onClick={() => setActiveFilter("pending")}
           className={`px-2.5 py-1.5 rounded-md font-medium shrink-0 ${
             activeFilter === "pending"
-              ? "bg-[#09090B] text-white"
-              : "bg-white border border-[#E4E4E7] text-[#52525B] hover:text-[#09090B]"
+              ? "bg-[#1A1917] text-white"
+              : "bg-white border border-[#E4DFD3] text-[#57534E] hover:text-[#1A1917]"
           }`}
         >
           Pending ({countPending})
@@ -154,8 +154,8 @@ export default function CoordinatorRequestsPage() {
           id="filter-approved"
           className={`px-2.5 py-1.5 rounded-md font-medium shrink-0 ${
             activeFilter === "approved"
-              ? "bg-[#09090B] text-white"
-              : "bg-white border border-[#E4E4E7] text-[#52525B] hover:text-[#09090B]"
+              ? "bg-[#1A1917] text-white"
+              : "bg-white border border-[#E4DFD3] text-[#57534E] hover:text-[#1A1917]"
           }`}
         >
           Approved ({countApproved})
@@ -165,8 +165,8 @@ export default function CoordinatorRequestsPage() {
           id="filter-shoot-done"
           className={`px-2.5 py-1.5 rounded-md font-medium shrink-0 ${
             activeFilter === "shoot_done"
-              ? "bg-[#09090B] text-white"
-              : "bg-white border border-[#E4E4E7] text-[#52525B] hover:text-[#09090B]"
+              ? "bg-[#1A1917] text-white"
+              : "bg-white border border-[#E4DFD3] text-[#57534E] hover:text-[#1A1917]"
           }`}
         >
           Shoot Done ({countShootDone})
@@ -176,8 +176,8 @@ export default function CoordinatorRequestsPage() {
           id="filter-delivered"
           className={`px-2.5 py-1.5 rounded-md font-medium shrink-0 ${
             activeFilter === "delivered"
-              ? "bg-[#09090B] text-white"
-              : "bg-white border border-[#E4E4E7] text-[#52525B] hover:text-[#09090B]"
+              ? "bg-[#1A1917] text-white"
+              : "bg-white border border-[#E4DFD3] text-[#57534E] hover:text-[#1A1917]"
           }`}
         >
           Delivered ({countDelivered})
@@ -186,8 +186,8 @@ export default function CoordinatorRequestsPage() {
           onClick={() => setActiveFilter("rejected")}
           className={`px-2.5 py-1.5 rounded-md font-medium shrink-0 ${
             activeFilter === "rejected"
-              ? "bg-[#09090B] text-white"
-              : "bg-white border border-[#E4E4E7] text-[#52525B] hover:text-[#09090B]"
+              ? "bg-[#1A1917] text-white"
+              : "bg-white border border-[#E4DFD3] text-[#57534E] hover:text-[#1A1917]"
           }`}
         >
           Rejected ({countRejected})
@@ -197,11 +197,11 @@ export default function CoordinatorRequestsPage() {
       {/* Requisitions List */}
       <div className="space-y-3" id="requisitions-container">
         {loading ? (
-          <div className="bg-white border border-[#E4E4E7] rounded-lg p-8 text-center text-xs text-[#71717A]">
+          <div className="bg-white border border-[#E4DFD3] rounded-lg p-8 text-center text-xs text-[#78716C]">
             Loading requests...
           </div>
         ) : filtered.length === 0 ? (
-          <div className="bg-white border border-[#E4E4E7] rounded-lg p-8 text-center text-xs text-[#71717A]">
+          <div className="bg-white border border-[#E4DFD3] rounded-lg p-8 text-center text-xs text-[#78716C]">
             No requisitions found in this view.
           </div>
         ) : (
@@ -218,48 +218,48 @@ export default function CoordinatorRequestsPage() {
               <div
                 key={req.id}
                 id={`req-card-${req.id}`}
-                className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-4 space-y-3"
+                className="bg-white border border-[#E4DFD3] rounded-lg shadow-[0_1px_2px_rgba(26,25,23,0.04)] p-4 space-y-3"
               >
                 {/* Header Row */}
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E4E4E7] pb-3">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E4DFD3] pb-3">
                   <div className="flex items-center gap-2 flex-wrap">
                     {isDelivered && (
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#09090B] text-[11px] font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E]" />
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#E6F4EE] border border-[#CDE7DC] text-[#0F6B5D] text-[11px] font-medium">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#0F6B5D]" />
                         <span>Delivered (সম্পন্ন)</span>
                       </span>
                     )}
                     {isShootDone && (
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#27272A] text-[11px] font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#52525B]" />
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#EFECE4] border border-[#E4DFD3] text-[#57534E] text-[11px] font-medium">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#57534E]" />
                         <span>Shoot Done (পোস্ট-প্রোডাকশন)</span>
                       </span>
                     )}
                     {isApproved && (
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#27272A] text-[11px] font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E]" />
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#E6F4EE] border border-[#CDE7DC] text-[#0F6B5D] text-[11px] font-medium">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#0F6B5D]" />
                         <span>Approved (অনুমোদিত)</span>
                       </span>
                     )}
                     {isPending && (
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#27272A] text-[11px] font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#71717A]" />
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#FEF3C7] border border-[#FDE68A] text-[#B45309] text-[11px] font-medium">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#B45309]" />
                         <span>Pending (বিবেচনাধীন)</span>
                       </span>
                     )}
                     {isRejected && (
-                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#FEF2F2] border border-[#FECACA] text-[#DC2626] text-[11px] font-medium">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#DC2626]" />
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#FEE2E2] border border-[#FECACA] text-[#B91C1C] text-[11px] font-medium">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#B91C1C]" />
                         <span>Rejected (বাতিলকৃত)</span>
                       </span>
                     )}
 
-                    <span className="text-[13px] font-medium text-[#09090B]">
+                    <span className="text-[13px] font-medium text-[#1A1917]">
                       {req.notes || `${req.course_name} • ${programMeta?.en || req.program_type}`}
                     </span>
                   </div>
 
-                  <span className="text-[11px] text-[#71717A] font-mono tabular-nums">
+                  <span className="text-[11px] text-[#78716C] font-mono tabular-nums">
                     {req.id.slice(0, 12)}
                   </span>
                 </div>
@@ -267,37 +267,37 @@ export default function CoordinatorRequestsPage() {
                 {/* Grid details */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs tabular-nums">
                   <div>
-                    <span className="text-[#71717A] block text-[11px]">Schedule</span>
-                    <span className="font-medium text-[#09090B]">
+                    <span className="text-[#78716C] block text-[11px]">Schedule</span>
+                    <span className="font-medium text-[#1A1917]">
                       {req.shoot_date} • {req.call_time}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[#71717A] block text-[11px]">Venue</span>
-                    <span className="font-medium text-[#09090B]">
+                    <span className="text-[#78716C] block text-[11px]">Venue</span>
+                    <span className="font-medium text-[#1A1917]">
                       {req.venue_name || "Venue"}
                     </span>
                   </div>
                   <div>
-                    <span className="text-[#71717A] block text-[11px]">Format</span>
-                    <span className="font-medium text-[#09090B]">
+                    <span className="text-[#78716C] block text-[11px]">Format</span>
+                    <span className="font-medium text-[#1A1917]">
                       {req.format_duration} ({FRAMING_LABELS[req.framing_type] || req.framing_type})
                     </span>
                   </div>
                   <div>
-                    <span className="text-[#71717A] block text-[11px]">Delivery / Status</span>
+                    <span className="text-[#78716C] block text-[11px]">Delivery / Status</span>
                     {isDelivered && req.final_drive_url ? (
                       <a
                         href={req.final_drive_url}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1 text-[#0F766E] hover:underline font-medium"
+                        className="inline-flex items-center gap-1 text-[#0F6B5D] hover:underline font-medium"
                       >
                         <span>Google Drive Link</span>
                         <ExternalLink className="w-3 h-3" />
                       </a>
                     ) : (
-                      <span className="text-[#52525B]">
+                      <span className="text-[#57534E]">
                         {isPending ? "Awaiting approval" : isApproved ? "Crew assigned" : "In progress"}
                       </span>
                     )}
@@ -307,9 +307,9 @@ export default function CoordinatorRequestsPage() {
                 {isRejected && req.rejection_reason && (
                   <div
                     id={`rejection-reason-${req.id}`}
-                    className="p-3 rounded-md bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-xs flex items-start gap-2"
+                    className="p-3 rounded-md bg-[#FEE2E2] border border-[#FECACA] text-[#B91C1C] text-xs flex items-start gap-2"
                   >
-                    <AlertCircle className="w-4 h-4 text-[#DC2626] shrink-0 mt-0.5" />
+                    <AlertCircle className="w-4 h-4 text-[#B91C1C] shrink-0 mt-0.5" />
                     <div>
                       <span className="font-medium">Reason: </span>
                       <span>{req.rejection_reason}</span>

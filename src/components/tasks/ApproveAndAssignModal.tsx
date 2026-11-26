@@ -239,7 +239,7 @@ export function ApproveAndAssignModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#09090B]/40"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#1A1917]/40"
       id="approve-modal-backdrop"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -249,18 +249,18 @@ export function ApproveAndAssignModal({
         initial={{ opacity: 0, scale: 0.985 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={MODAL_TRANSITION}
-        className="w-full max-w-2xl bg-white rounded-lg shadow-[0_8px_24px_rgba(0,0,0,0.08)] border border-[#E4E4E7] overflow-hidden flex flex-col max-h-[92vh]"
+        className="w-full max-w-2xl bg-white rounded-lg shadow-[0_8px_24px_rgba(26,25,23,0.08)] border border-[#E4DFD3] overflow-hidden flex flex-col max-h-[92vh]"
         id="approve-assign-modal-card"
       >
         {/* Modal Header */}
-        <div className="px-5 py-3.5 border-b border-[#E4E4E7] flex items-center justify-between bg-[#FAFAFA]">
+        <div className="px-5 py-3.5 border-b border-[#E4DFD3] flex items-center justify-between bg-[#F7F5F0]">
           <div className="flex items-center gap-2.5">
-            <Users className="w-4 h-4 text-[#0F766E]" />
+            <Users className="w-4 h-4 text-[#0F6B5D]" />
             <div>
-              <h3 className="text-sm font-semibold text-[#09090B]">
+              <h3 className="text-sm font-semibold text-[#1A1917]">
                 রিকুইজিশন অনুমোদন ও টিম অ্যাসাইনমেন্ট
               </h3>
-              <p className="text-[11px] text-[#71717A]">
+              <p className="text-[11px] text-[#78716C]">
                 {requisition.course_name} • {requisition.format_duration} • {requisition.shoot_date}
               </p>
             </div>
@@ -309,7 +309,7 @@ export function ApproveAndAssignModal({
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
               <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                <Users className="w-4 h-4 text-[#0F766E]" />
+                <Users className="w-4 h-4 text-[#0F6B5D]" />
                 <span>শুটিং টিম মেম্বার নির্বাচন (২–৩ জন)</span>
               </label>
               <span className="text-[11px] font-semibold text-slate-500">
@@ -333,7 +333,7 @@ export function ApproveAndAssignModal({
                       onClick={() => toggleAssignee(candidate.id)}
                       className={`p-3 rounded-xl border text-xs cursor-pointer transition-all flex items-center justify-between ${
                         isSelected
-                          ? "border-[#0F766E] bg-emerald-50/60 shadow-xs"
+                          ? "border-[#0F6B5D] bg-emerald-50/60 shadow-xs"
                           : "border-slate-200 hover:border-slate-300 bg-white"
                       }`}
                     >
@@ -365,7 +365,7 @@ export function ApproveAndAssignModal({
                             title={isLead ? "টিম লিড" : "লিড বানাতে ক্লিক করুন"}
                             className={`px-2 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 transition-all ${
                               isLead
-                                ? "bg-[#0F766E] text-white shadow-xs"
+                                ? "bg-[#0F6B5D] text-white shadow-xs"
                                 : "bg-slate-100 hover:bg-slate-200 text-slate-600"
                             }`}
                           >
@@ -377,7 +377,7 @@ export function ApproveAndAssignModal({
                           onClick={() => toggleAssignee(candidate.id)}
                           className={`w-4 h-4 rounded flex items-center justify-center border transition-colors ${
                             isSelected
-                              ? "bg-[#0F766E] border-[#0F766E] text-white"
+                              ? "bg-[#0F6B5D] border-[#0F6B5D] text-white"
                               : "border-slate-300 bg-white"
                           }`}
                         >
@@ -394,7 +394,7 @@ export function ApproveAndAssignModal({
           {/* 2. Live Deadline Selection */}
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-              <Calendar className="w-4 h-4 text-[#0F766E]" />
+              <Calendar className="w-4 h-4 text-[#0F6B5D]" />
               <span>কাজের ডেডলাইন (Deadline)</span>
             </label>
             <input
@@ -402,7 +402,7 @@ export function ApproveAndAssignModal({
               id="task-deadline-input"
               value={deadlineAt}
               onChange={(e) => setDeadlineAt(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0F766E]/20 focus:border-[#0F766E]"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0F6B5D]/20 focus:border-[#0F6B5D]"
               required
             />
           </div>
@@ -411,7 +411,7 @@ export function ApproveAndAssignModal({
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
               <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                <Camera className="w-4 h-4 text-[#0F766E]" />
+                <Camera className="w-4 h-4 text-[#0F6B5D]" />
                 <span>শুটিং সরঞ্জাম / গিয়ার নির্বাচন</span>
               </label>
               <span className="text-[11px] font-semibold text-slate-500">
@@ -441,7 +441,7 @@ export function ApproveAndAssignModal({
                         isMaintenance
                           ? "opacity-50 cursor-not-allowed bg-slate-50 border-slate-200"
                           : isSelected
-                          ? "border-[#0F766E] bg-emerald-50/60 shadow-xs cursor-pointer"
+                          ? "border-[#0F6B5D] bg-emerald-50/60 shadow-xs cursor-pointer"
                           : "border-slate-200 hover:border-slate-300 bg-white cursor-pointer"
                       }`}
                     >
@@ -462,7 +462,7 @@ export function ApproveAndAssignModal({
                       <div
                         className={`w-4 h-4 rounded flex items-center justify-center border transition-colors ${
                           isSelected
-                            ? "bg-[#0F766E] border-[#0F766E] text-white"
+                            ? "bg-[#0F6B5D] border-[#0F6B5D] text-white"
                             : "border-slate-300 bg-white"
                         }`}
                       >
@@ -489,7 +489,7 @@ export function ApproveAndAssignModal({
               type="submit"
               id="confirm-approve-assign-btn"
               disabled={submitting || loadingData}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#0F766E] hover:bg-[#115E59] text-white text-xs sm:text-sm font-semibold transition-all shadow-xs disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#0F6B5D] hover:bg-[#0B554A] text-white text-xs sm:text-sm font-semibold transition-all shadow-xs disabled:opacity-50"
             >
               {submitting ? (
                 <>

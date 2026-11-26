@@ -222,11 +222,11 @@ export default function InternDailyLogPage() {
   return (
     <div className="space-y-5 w-full max-w-xl mx-auto pb-8">
       {/* Flat Linear/Stripe Header */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-[#E4E4E7]">
-        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#09090B] tracking-tight">
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-[#E4DFD3]">
+        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#1A1917] tracking-tight">
           Daily Log
         </h1>
-        <span className="text-xs font-medium text-[#71717A]">
+        <span className="text-xs font-medium text-[#78716C]">
           {currentUser?.full_name || "Intern"}
         </span>
       </div>
@@ -234,29 +234,29 @@ export default function InternDailyLogPage() {
       {/* Today's Shoot Card */}
       <div
         id="intern-today-shoot-card"
-        className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-4 space-y-1.5"
+        className="bg-white border border-[#E4DFD3] rounded-lg shadow-[0_1px_2px_rgba(26,25,23,0.04)] p-4 space-y-1.5"
       >
         <div className="flex items-center justify-between">
-          <span className="text-[11px] font-medium text-[#71717A] uppercase tracking-wider block">
+          <span className="text-[11px] font-medium text-[#78716C] uppercase tracking-wider block">
             Today&apos;s Shoot
           </span>
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#27272A] text-[10px] font-medium">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E]" />
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#EFECE4] border border-[#E4DFD3] text-[#1A1917] text-[10px] font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#0F6B5D]" />
             Assigned
           </span>
         </div>
         {todayShootTask ? (
           <div>
-            <div className="text-sm font-semibold text-[#09090B]">
+            <div className="text-sm font-semibold text-[#1A1917]">
               {todayShootTask.course_name} • <span className="tabular-nums">{todayShootTask.call_time || "09:00 AM"}</span>
             </div>
-            <div className="text-xs text-[#52525B] flex items-center gap-1 mt-0.5">
-              <MapPin className="w-3.5 h-3.5 text-[#71717A]" />
+            <div className="text-xs text-[#57534E] flex items-center gap-1 mt-0.5">
+              <MapPin className="w-3.5 h-3.5 text-[#78716C]" />
               <span>{todayShootTask.venue_name || "50 Katha Campus"}</span>
             </div>
           </div>
         ) : (
-          <div className="text-xs text-[#52525B]">
+          <div className="text-xs text-[#57534E]">
             The Art of Creation • 09:00 AM | 50 Katha Campus
           </div>
         )}
@@ -264,12 +264,12 @@ export default function InternDailyLogPage() {
 
       {/* Draft Restored Notice Banner */}
       {draftRestored && (
-        <div className="p-3 rounded-lg bg-[#FAFAFA] border border-[#E4E4E7] text-[#09090B] font-medium text-xs flex items-center justify-between gap-2">
+        <div className="p-3 rounded-lg bg-[#F7F5F0] border border-[#E4DFD3] text-[#1A1917] font-medium text-xs flex items-center justify-between gap-2">
           <span>অফলাইন ড্রাফট রিস্টোর করা হয়েছে।</span>
           <button
             type="button"
             onClick={handleClearDraft}
-            className="text-[11px] font-medium text-[#52525B] hover:text-[#09090B] flex items-center gap-1 cursor-pointer"
+            className="text-[11px] font-medium text-[#57534E] hover:text-[#1A1917] flex items-center gap-1 cursor-pointer"
           >
             <RotateCcw className="w-3 h-3" />
             <span>মুছে ফেলুন</span>
@@ -283,12 +283,12 @@ export default function InternDailyLogPage() {
           id="intern-log-status-banner"
           className={`p-3 rounded-lg text-xs font-medium flex items-center gap-2 ${
             statusMessage.type === "success"
-              ? "bg-[#F4F4F5] border border-[#E4E4E7] text-[#09090B]"
+              ? "bg-[#EFECE4] border border-[#E4DFD3] text-[#1A1917]"
               : "bg-red-50 border border-red-200 text-red-700"
           }`}
         >
           {statusMessage.type === "success" ? (
-            <CheckCircle2 className="w-4 h-4 text-[#0F766E] shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-[#0F6B5D] shrink-0" />
           ) : (
             <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
           )}
@@ -297,10 +297,10 @@ export default function InternDailyLogPage() {
       )}
 
       {/* Main Intern Daily Log Form */}
-      <div className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-4 sm:p-5 space-y-4">
-        <div className="border-b border-[#E4E4E7] pb-3">
-          <h2 className="text-sm font-semibold text-[#09090B]">Intern Daily Log</h2>
-          <p className="text-[11px] text-[#71717A] mt-0.5">
+      <div className="bg-white border border-[#E4DFD3] rounded-lg shadow-[0_1px_2px_rgba(26,25,23,0.04)] p-4 sm:p-5 space-y-4">
+        <div className="border-b border-[#E4DFD3] pb-3">
+          <h2 className="text-sm font-semibold text-[#1A1917]">Intern Daily Log</h2>
+          <p className="text-[11px] text-[#78716C] mt-0.5">
             সময়কাল, লোকেশন এবং র-ফুটেজ ড্রাইভে জমা দেওয়ার তথ্য দিন
           </p>
         </div>
@@ -310,7 +310,7 @@ export default function InternDailyLogPage() {
           <div className="space-y-1">
             <label
               htmlFor="intern-task-select"
-              className="block text-xs font-medium text-[#52525B]"
+              className="block text-xs font-medium text-[#57534E]"
             >
               নির্ধারিত শুটিং / টাস্ক (Task Reference)
             </label>
@@ -318,7 +318,7 @@ export default function InternDailyLogPage() {
               id="intern-task-select"
               value={selectedTaskId}
               onChange={(e) => setSelectedTaskId(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-[#E4E4E7] text-xs sm:text-sm text-[#09090B] focus:border-[#0F766E] focus:outline-none bg-white cursor-pointer"
+              className="w-full px-3 py-2 rounded-lg border border-[#E4DFD3] text-xs sm:text-sm text-[#1A1917] focus:border-[#0F6B5D] focus:outline-none bg-white cursor-pointer"
             >
               {assignedTasks.map((t) => (
                 <option key={t.id} value={t.id}>
@@ -333,12 +333,12 @@ export default function InternDailyLogPage() {
           <div className="space-y-1">
             <label
               htmlFor="intern-hours-input"
-              className="block text-xs font-medium text-[#52525B]"
+              className="block text-xs font-medium text-[#57534E]"
             >
-              Hours <span className="text-[#71717A] font-normal">/ কাজের সময়কাল</span>
+              Hours <span className="text-[#78716C] font-normal">/ কাজের সময়কাল</span>
             </label>
             <div className="relative">
-              <Clock className="w-4 h-4 text-[#71717A] absolute left-3 top-2.5 pointer-events-none" />
+              <Clock className="w-4 h-4 text-[#78716C] absolute left-3 top-2.5 pointer-events-none" />
               <input
                 id="intern-hours-input"
                 type="number"
@@ -349,9 +349,9 @@ export default function InternDailyLogPage() {
                 onChange={(e) => setHours(e.target.value)}
                 placeholder="4.5"
                 required
-                className="w-full pl-9 pr-12 py-2 rounded-lg border border-[#E4E4E7] text-xs sm:text-sm font-medium text-[#09090B] tabular-nums focus:border-[#0F766E] focus:outline-none"
+                className="w-full pl-9 pr-12 py-2 rounded-lg border border-[#E4DFD3] text-xs sm:text-sm font-medium text-[#1A1917] tabular-nums focus:border-[#0F6B5D] focus:outline-none"
               />
-              <span className="absolute right-3 top-2.5 text-xs font-medium text-[#71717A] pointer-events-none">
+              <span className="absolute right-3 top-2.5 text-xs font-medium text-[#78716C] pointer-events-none">
                 hrs
               </span>
             </div>
@@ -359,9 +359,9 @@ export default function InternDailyLogPage() {
 
           {/* Indoor / Outdoor Toggle Buttons */}
           <div className="space-y-1.5">
-            <label className="block text-xs font-medium text-[#52525B]">
+            <label className="block text-xs font-medium text-[#57534E]">
               Indoor / Outdoor{" "}
-              <span className="text-[#71717A] font-normal">/ শুটিংয়ের লোকেশন</span>
+              <span className="text-[#78716C] font-normal">/ শুটিংয়ের লোকেশন</span>
             </label>
             <div className="grid grid-cols-2 gap-2 text-xs">
               <button
@@ -370,8 +370,8 @@ export default function InternDailyLogPage() {
                 onClick={() => setLocationType("indoor")}
                 className={`py-2 px-3 rounded-lg border font-medium flex items-center justify-center gap-1.5 transition-colors duration-150 cursor-pointer ${
                   locationType === "indoor"
-                    ? "bg-[#0F766E] text-white border-[#0F766E]"
-                    : "bg-white text-[#52525B] border-[#E4E4E7] hover:bg-[#F4F4F5]"
+                    ? "bg-[#0F6B5D] text-white border-[#0F6B5D]"
+                    : "bg-white text-[#57534E] border-[#E4DFD3] hover:bg-[#EFECE4]"
                 }`}
               >
                 <MapPin className="w-3.5 h-3.5" />
@@ -383,8 +383,8 @@ export default function InternDailyLogPage() {
                 onClick={() => setLocationType("outdoor")}
                 className={`py-2 px-3 rounded-lg border font-medium flex items-center justify-center gap-1.5 transition-colors duration-150 cursor-pointer ${
                   locationType === "outdoor"
-                    ? "bg-[#0F766E] text-white border-[#0F766E]"
-                    : "bg-white text-[#52525B] border-[#E4E4E7] hover:bg-[#F4F4F5]"
+                    ? "bg-[#0F6B5D] text-white border-[#0F6B5D]"
+                    : "bg-white text-[#57534E] border-[#E4DFD3] hover:bg-[#EFECE4]"
                 }`}
               >
                 <MapPin className="w-3.5 h-3.5" />
@@ -396,13 +396,13 @@ export default function InternDailyLogPage() {
           {/* Raw Footage Uploaded to Drive: Switch Toggle */}
           <div
             id="intern-footage-toggle-container"
-            className="p-3 rounded-lg bg-[#FAFAFA] border border-[#E4E4E7] flex items-center justify-between gap-3"
+            className="p-3 rounded-lg bg-[#F7F5F0] border border-[#E4DFD3] flex items-center justify-between gap-3"
           >
             <div className="space-y-0.5">
-              <span className="text-xs font-semibold text-[#09090B] block">
+              <span className="text-xs font-semibold text-[#1A1917] block">
                 Raw Footage Uploaded to Drive
               </span>
-              <span className="text-[11px] text-[#71717A] block">
+              <span className="text-[11px] text-[#78716C] block">
                 {footageUploaded
                   ? "সাবমিট করলে টাস্ক বোর্ডে 'Raw Uploaded' স্ট্যাটাস আপডেট হবে"
                   : "ড্রাইভে ফুটেজ কপি করার পর সুইচ অন করুন"}
@@ -416,7 +416,7 @@ export default function InternDailyLogPage() {
                 onChange={(e) => setFootageUploaded(e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-10 h-5 bg-[#E4E4E7] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-[#E4E4E7] after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#0F766E]"></div>
+              <div className="w-10 h-5 bg-[#E4DFD3] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-[#E4DFD3] after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#0F6B5D]"></div>
             </label>
           </div>
 
@@ -424,10 +424,10 @@ export default function InternDailyLogPage() {
           <div className="space-y-1">
             <label
               htmlFor="intern-notes-input"
-              className="block text-xs font-medium text-[#52525B]"
+              className="block text-xs font-medium text-[#57534E]"
             >
               Task Summary{" "}
-              <span className="text-[#71717A] font-normal">/ কাজের বিবরণ</span>
+              <span className="text-[#78716C] font-normal">/ কাজের বিবরণ</span>
             </label>
             <textarea
               id="intern-notes-input"
@@ -436,7 +436,7 @@ export default function InternDailyLogPage() {
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Some B-roll of the main courtyard, interviewed 3..."
               required
-              className="w-full p-3 rounded-lg border border-[#E4E4E7] text-xs sm:text-sm text-[#09090B] focus:border-[#0F766E] focus:outline-none leading-relaxed placeholder:text-[#71717A]"
+              className="w-full p-3 rounded-lg border border-[#E4DFD3] text-xs sm:text-sm text-[#1A1917] focus:border-[#0F6B5D] focus:outline-none leading-relaxed placeholder:text-[#78716C]"
             />
           </div>
 
@@ -445,7 +445,7 @@ export default function InternDailyLogPage() {
             type="submit"
             id="intern-submit-log-btn"
             disabled={submitting}
-            className="w-full py-2.5 px-4 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white text-xs sm:text-sm font-medium transition-colors duration-150 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            className="w-full py-2.5 px-4 rounded-lg bg-[#0F6B5D] hover:bg-[#0B554A] text-white text-xs sm:text-sm font-medium transition-colors duration-150 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
           >
             {submitting ? (
               <>
@@ -464,12 +464,12 @@ export default function InternDailyLogPage() {
 
       {/* Recent Submitted Logs for Intern */}
       <div className="space-y-2 pt-1">
-        <h3 className="text-xs font-semibold text-[#09090B] flex items-center gap-1.5">
-          <FileText className="w-3.5 h-3.5 text-[#71717A]" />
+        <h3 className="text-xs font-semibold text-[#1A1917] flex items-center gap-1.5">
+          <FileText className="w-3.5 h-3.5 text-[#78716C]" />
           <span>Recent Submitted Logs ({recentLogs.length})</span>
         </h3>
         {recentLogs.length === 0 ? (
-          <div className="p-4 text-center text-xs text-[#71717A] bg-white rounded-lg border border-[#E4E4E7]">
+          <div className="p-4 text-center text-xs text-[#78716C] bg-white rounded-lg border border-[#E4DFD3]">
             এখনও কোনো লগ সাবমিট করা হয়নি।
           </div>
         ) : (
@@ -477,26 +477,26 @@ export default function InternDailyLogPage() {
             {recentLogs.slice(0, 5).map((log) => (
               <div
                 key={log.id}
-                className="p-3 rounded-lg border border-[#E4E4E7] bg-white text-xs space-y-1"
+                className="p-3 rounded-lg border border-[#E4DFD3] bg-white text-xs space-y-1"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-semibold text-[#09090B] tabular-nums">
+                  <span className="font-semibold text-[#1A1917] tabular-nums">
                     {log.log_date} • {log.hours_spent} hrs
                   </span>
-                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#27272A] text-[10px] font-medium">
+                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#EFECE4] border border-[#E4DFD3] text-[#1A1917] text-[10px] font-medium">
                     <span
                       className={`w-1.5 h-1.5 rounded-full ${
-                        log.raw_footage_uploaded ? "bg-[#0F766E]" : "bg-[#71717A]"
+                        log.raw_footage_uploaded ? "bg-[#0F6B5D]" : "bg-[#78716C]"
                       }`}
                     />
                     {log.raw_footage_uploaded ? "Raw Uploaded" : "Pending Raw"}
                   </span>
                 </div>
-                <div className="text-[11px] text-[#71717A]">
+                <div className="text-[11px] text-[#78716C]">
                   {log.shoot_location_type === "outdoor" ? "Outdoor" : "Indoor"}
                   {log.course_name ? ` • ${log.course_name}` : ""}
                 </div>
-                <p className="text-[#52525B] line-clamp-2 text-[11px]">
+                <p className="text-[#57534E] line-clamp-2 text-[11px]">
                   {log.notes}
                 </p>
               </div>

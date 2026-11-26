@@ -36,11 +36,11 @@ const STAGE_CONFIG: Record<
   },
   shoot_assigned: {
     title: "Shoot Assigned",
-    dotColor: "bg-[#71717A]",
+    dotColor: "bg-[#78716C]",
   },
   shoot_done: {
     title: "Shoot Done",
-    dotColor: "bg-[#52525B]",
+    dotColor: "bg-[#57534E]",
   },
   editing: {
     title: "Editing",
@@ -48,11 +48,11 @@ const STAGE_CONFIG: Record<
   },
   review: {
     title: "Review",
-    dotColor: "bg-[#09090B]",
+    dotColor: "bg-[#1A1917]",
   },
   completed: {
     title: "Completed",
-    dotColor: "bg-[#0F766E]",
+    dotColor: "bg-[#0F6B5D]",
   },
 };
 
@@ -207,20 +207,20 @@ export default function AdminTasksKanbanPage() {
   return (
     <div className="space-y-5 w-full max-w-full overflow-x-hidden">
       {/* Flat Linear/Stripe Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#E4E4E7]">
-        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#09090B] tracking-tight">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#E4DFD3]">
+        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#1A1917] tracking-tight">
           Task Board
         </h1>
 
         <div className="relative w-full sm:w-72">
-          <Search className="w-3.5 h-3.5 text-[#71717A] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-[#78716C] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             id="task-board-search-input"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search courses, gear, staff..."
-            className="w-full h-8 pl-8 pr-3 rounded-md border border-[#E4E4E7] bg-white text-xs text-[#09090B] placeholder:text-[#71717A] focus:outline-none focus:border-[#0F766E]"
+            className="w-full h-8 pl-8 pr-3 rounded-md border border-[#E4DFD3] bg-white text-xs text-[#1A1917] placeholder:text-[#78716C] focus:outline-none focus:border-[#0F6B5D]"
           />
         </div>
       </div>
@@ -231,8 +231,8 @@ export default function AdminTasksKanbanPage() {
           onClick={() => setSelectedMobileStage("all")}
           className={`px-2.5 py-1.5 rounded-md text-xs font-medium shrink-0 ${
             selectedMobileStage === "all"
-              ? "bg-[#09090B] text-white"
-              : "bg-white border border-[#E4E4E7] text-[#52525B]"
+              ? "bg-[#1A1917] text-white"
+              : "bg-white border border-[#E4DFD3] text-[#57534E]"
           }`}
         >
           All ({tasks.length})
@@ -246,8 +246,8 @@ export default function AdminTasksKanbanPage() {
               onClick={() => setSelectedMobileStage(stg)}
               className={`px-2.5 py-1.5 rounded-md text-xs font-medium shrink-0 flex items-center gap-1.5 tabular-nums ${
                 selectedMobileStage === stg
-                  ? "bg-[#09090B] text-white"
-                  : "bg-white border border-[#E4E4E7] text-[#52525B]"
+                  ? "bg-[#1A1917] text-white"
+                  : "bg-white border border-[#E4DFD3] text-[#57534E]"
               }`}
             >
               <span className={`w-1.5 h-1.5 rounded-full ${conf.dotColor}`} />
@@ -261,8 +261,8 @@ export default function AdminTasksKanbanPage() {
 
       {/* 6-Column Kanban Board */}
       {loading ? (
-        <div className="p-12 text-center text-xs text-[#71717A] bg-white border border-[#E4E4E7] rounded-lg">
-          <Loader2 className="w-5 h-5 animate-spin mx-auto text-[#0F766E] mb-2" />
+        <div className="p-12 text-center text-xs text-[#78716C] bg-white border border-[#E4DFD3] rounded-lg">
+          <Loader2 className="w-5 h-5 animate-spin mx-auto text-[#0F6B5D] mb-2" />
           <span>Loading task board...</span>
         </div>
       ) : (
@@ -279,23 +279,23 @@ export default function AdminTasksKanbanPage() {
               <div
                 key={stageKey}
                 id={`kanban-column-${stageKey}`}
-                className="bg-[#F4F4F5] border border-[#E4E4E7] rounded-lg p-2.5 flex flex-col min-h-[480px]"
+                className="bg-[#EFECE4] border border-[#E4DFD3] rounded-lg p-2.5 flex flex-col min-h-[480px]"
               >
-                <div className="flex items-center justify-between px-1 pb-2.5 mb-2 border-b border-[#E4E4E7]">
+                <div className="flex items-center justify-between px-1 pb-2.5 mb-2 border-b border-[#E4DFD3]">
                   <div className="flex items-center gap-1.5">
                     <span className={`w-1.5 h-1.5 rounded-full ${columnConfig.dotColor}`} />
-                    <h2 className="text-xs font-semibold text-[#09090B]">
+                    <h2 className="text-xs font-semibold text-[#1A1917]">
                       {columnConfig.title}
                     </h2>
                   </div>
-                  <span className="text-[11px] font-medium text-[#71717A] tabular-nums">
+                  <span className="text-[11px] font-medium text-[#78716C] tabular-nums">
                     {columnTasks.length}
                   </span>
                 </div>
 
                 <div className="space-y-2 flex-1 overflow-y-auto max-h-[70vh]">
                   {columnTasks.length === 0 ? (
-                    <div className="p-4 text-center text-[11px] text-[#71717A] border border-dashed border-[#D4D4D8] rounded-md">
+                    <div className="p-4 text-center text-[11px] text-[#78716C] border border-dashed border-[#D5CFC2] rounded-md">
                       Empty
                     </div>
                   ) : (
@@ -318,18 +318,18 @@ export default function AdminTasksKanbanPage() {
                         <div
                           key={task.id}
                           id={`task-card-${task.id}`}
-                          className="bg-white border border-[#E4E4E7] hover:border-[#D4D4D8] rounded-lg p-3 shadow-[0_1px_2px_rgba(0,0,0,0.03)] space-y-2 text-xs"
+                          className="bg-white border border-[#E4DFD3] hover:border-[#D5CFC2] rounded-lg p-3 shadow-[0_1px_2px_rgba(26,25,23,0.03)] space-y-2 text-xs"
                         >
                           <div>
-                            <h3 className="font-medium text-[#09090B] leading-snug">
+                            <h3 className="font-medium text-[#1A1917] leading-snug">
                               {task.course_name}
                             </h3>
-                            <p className="text-[11px] text-[#71717A] tabular-nums mt-0.5">
+                            <p className="text-[11px] text-[#78716C] tabular-nums mt-0.5">
                               {task.format_duration} • {task.shoot_date}
                             </p>
                           </div>
 
-                          <div className="space-y-1 text-[11px] text-[#52525B]">
+                          <div className="space-y-1 text-[11px] text-[#57534E]">
                             {task.assignees.length > 0 && (
                               <div className="truncate">
                                 {isEditing
@@ -339,24 +339,24 @@ export default function AdminTasksKanbanPage() {
                             )}
 
                             {task.raw_footage_uploaded && (
-                              <div className="flex items-center gap-1 text-[#0F766E] font-medium">
+                              <div className="flex items-center gap-1 text-[#0F6B5D] font-medium">
                                 <Check className="w-3 h-3" />
                                 <span>Raw Uploaded</span>
                               </div>
                             )}
 
                             {isReview && (
-                              <div className="text-[#09090B] font-medium">Lead Review</div>
+                              <div className="text-[#1A1917] font-medium">Lead Review</div>
                             )}
 
                             {isCompleted && (
-                              <div className="text-[#0F766E] font-medium">Delivered</div>
+                              <div className="text-[#0F6B5D] font-medium">Delivered</div>
                             )}
 
                             {!isCompleted && task.deadline_at && (
                               <div
                                 className={`flex items-center gap-1 tabular-nums ${
-                                  task.is_overdue ? "text-[#DC2626] font-medium" : "text-[#71717A]"
+                                  task.is_overdue ? "text-[#B91C1C] font-medium" : "text-[#78716C]"
                                 }`}
                               >
                                 <Clock className="w-3 h-3 shrink-0" />
@@ -371,19 +371,19 @@ export default function AdminTasksKanbanPage() {
                               target="_blank"
                               rel="noreferrer"
                               id={`drive-link-btn-${task.id}`}
-                              className="w-full inline-flex items-center justify-center gap-1.5 py-1.5 rounded-md bg-[#0F766E] hover:bg-[#0D645D] text-white text-[11px] font-medium"
+                              className="w-full inline-flex items-center justify-center gap-1.5 py-1.5 rounded-md bg-[#0F6B5D] hover:bg-[#0B554A] text-white text-[11px] font-medium"
                             >
                               <span>Google Drive Link</span>
                               <ExternalLink className="w-3 h-3" />
                             </a>
                           )}
 
-                          <div className="pt-2 border-t border-[#E4E4E7] flex items-center justify-between gap-1">
+                          <div className="pt-2 border-t border-[#E4DFD3] flex items-center justify-between gap-1">
                             {!isPending && (
                               <button
                                 onClick={() => handleOpenSlip(task.id)}
                                 id={`slip-btn-${task.id}`}
-                                className="text-[11px] font-medium text-[#52525B] hover:text-[#0F766E] flex items-center gap-1 py-0.5"
+                                className="text-[11px] font-medium text-[#57534E] hover:text-[#0F6B5D] flex items-center gap-1 py-0.5"
                                 title="View Shoot Assignment Slip"
                               >
                                 <FileText className="w-3 h-3" />
@@ -395,7 +395,7 @@ export default function AdminTasksKanbanPage() {
                               <button
                                 onClick={() => handleOpenApproveModal(task)}
                                 id={`pending-approve-btn-${task.id}`}
-                                className="w-full py-1.5 rounded-md bg-[#0F766E] hover:bg-[#0D645D] text-white text-[11px] font-medium flex items-center justify-center gap-1"
+                                className="w-full py-1.5 rounded-md bg-[#0F6B5D] hover:bg-[#0B554A] text-white text-[11px] font-medium flex items-center justify-center gap-1"
                               >
                                 <Check className="w-3 h-3" />
                                 <span>Approve &amp; Assign</span>
@@ -409,7 +409,7 @@ export default function AdminTasksKanbanPage() {
                                     onClick={() => handleStageTransition(task.id, prevStage)}
                                     disabled={updatingTaskId === task.id}
                                     title={`Move to ${STAGE_CONFIG[prevStage].title}`}
-                                    className="p-1 rounded bg-[#F4F4F5] hover:bg-[#E4E4E7] text-[#52525B] border border-[#E4E4E7]"
+                                    className="p-1 rounded bg-[#EFECE4] hover:bg-[#E4DFD3] text-[#57534E] border border-[#E4DFD3]"
                                   >
                                     <ChevronLeft className="w-3 h-3" />
                                   </button>
@@ -420,10 +420,10 @@ export default function AdminTasksKanbanPage() {
                                     disabled={updatingTaskId === task.id}
                                     id={`next-stage-btn-${task.id}`}
                                     title={`Move to ${STAGE_CONFIG[nextStage].title}`}
-                                    className="px-2 py-0.5 rounded bg-white hover:bg-[#F4F4F5] text-[#09090B] border border-[#E4E4E7] font-medium text-[10.5px] flex items-center gap-0.5"
+                                    className="px-2 py-0.5 rounded bg-white hover:bg-[#EFECE4] text-[#1A1917] border border-[#E4DFD3] font-medium text-[10.5px] flex items-center gap-0.5"
                                   >
                                     <span>{STAGE_CONFIG[nextStage].title}</span>
-                                    <ChevronRight className="w-3 h-3 text-[#71717A]" />
+                                    <ChevronRight className="w-3 h-3 text-[#78716C]" />
                                   </button>
                                 )}
                               </div>
@@ -443,7 +443,7 @@ export default function AdminTasksKanbanPage() {
       {/* Google Drive URL Input Modal for Completed Stage */}
       {completingTaskId && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#09090B]/40"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1A1917]/40"
           onClick={(e) => {
             if (e.target === e.currentTarget) setCompletingTaskId(null);
           }}
@@ -452,11 +452,11 @@ export default function AdminTasksKanbanPage() {
             initial={{ opacity: 0, scale: 0.985 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={MODAL_TRANSITION}
-            className="w-full max-w-md bg-white rounded-lg shadow-[0_4px_24px_rgba(0,0,0,0.08)] border border-[#E4E4E7] p-5 space-y-4"
+            className="w-full max-w-md bg-white rounded-lg shadow-[0_4px_24px_rgba(26,25,23,0.08)] border border-[#E4DFD3] p-5 space-y-4"
           >
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <Video className="w-4 h-4 text-[#0F766E]" />
+                <Video className="w-4 h-4 text-[#0F6B5D]" />
                 <span>টাস্ক সম্পন্ন ও ডেলিভারি লিংক</span>
               </h3>
               <button
@@ -490,7 +490,7 @@ export default function AdminTasksKanbanPage() {
                   setDriveUrlError(null);
                 }}
                 placeholder="https://drive.google.com/drive/folders/..."
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0F766E]/20 focus:border-[#0F766E]"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0F6B5D]/20 focus:border-[#0F6B5D]"
                 required
               />
               <p className="text-[11px] text-slate-500">
@@ -518,7 +518,7 @@ export default function AdminTasksKanbanPage() {
                   }
                   handleStageTransition(completingTaskId, "completed", driveUrlInput);
                 }}
-                className="px-5 py-2 rounded-xl bg-[#0F766E] hover:bg-[#115E59] text-white text-xs font-semibold shadow-xs"
+                className="px-5 py-2 rounded-xl bg-[#0F6B5D] hover:bg-[#0B554A] text-white text-xs font-semibold shadow-xs"
               >
                 টাস্ক সম্পন্ন করুন
               </button>

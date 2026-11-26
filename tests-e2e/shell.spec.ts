@@ -30,6 +30,21 @@ test.describe("S1-01 Responsive Application Shell & Design Tokens", () => {
     // Check failed requests
     expect(failedRequests).toEqual([]);
 
+    // Verify /login renders standalone (NO left sidebar) with brand title & 0 overflow
+    await expect(page.getByText("আস-সুন্নাহ স্কিল ডেভেলপমেন্ট ইনস্টিটিউট")).toBeVisible();
+    await expect(page.locator("#desktop-sidebar")).toHaveCount(0);
+
+    const loginOverflow = await page.evaluate(() => {
+      return document.documentElement.scrollWidth > window.innerWidth || document.body.scrollWidth > window.innerWidth;
+    });
+    expect(loginOverflow).toBe(false);
+
+    // Sign in to verify authenticated AppShell responsive layout
+    await page.fill("#login-email", "admin@assdi.org");
+    await page.fill("#login-password", "assdi123");
+    await page.click("#login-submit-button");
+    await page.waitForURL("**/admin/dashboard", { timeout: 10000 });
+
     // Gate requirement: 0 horizontal overflow
     const hasHorizontalOverflow = await page.evaluate(() => {
       const docWidth = document.documentElement.scrollWidth;
@@ -62,9 +77,6 @@ test.describe("S1-01 Responsive Application Shell & Design Tokens", () => {
       const mobileBottomNav = page.locator("#mobile-bottom-nav");
       await expect(mobileBottomNav).toBeHidden();
     }
-
-    // Verify Brand title is rendered
-    await expect(page.getByText("আছ-সুন্নাহ স্কিল ডেভেলপমেন্ট ইনস্টিটিউট")).toBeVisible();
   });
 
   test("notification bell is removed and top-right profile dropdown opens, closes on Escape/outside click, and signs out cleanly", async ({

@@ -93,8 +93,8 @@ export default function AdminReportsPage() {
   return (
     <div className="space-y-5 w-full max-w-full">
       {/* Flat Linear/Stripe Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4E4E7]">
-        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#09090B] tracking-tight">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4DFD3]">
+        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#1A1917] tracking-tight">
           Reports
         </h1>
 
@@ -103,7 +103,7 @@ export default function AdminReportsPage() {
           id="report-export-csv-btn"
           onClick={handleExportCsv}
           disabled={exporting || loading}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white text-xs font-medium cursor-pointer disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#0F6B5D] hover:bg-[#0B554A] text-white text-xs font-medium cursor-pointer disabled:opacity-50"
         >
           {exporting ? (
             <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -115,13 +115,13 @@ export default function AdminReportsPage() {
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-white border border-[#E4E4E7] rounded-lg p-3 flex flex-wrap items-center gap-3">
+      <div className="bg-white border border-[#E4DFD3] rounded-lg p-3 flex flex-wrap items-center gap-3">
         <div className="relative min-w-[180px]">
           <select
             id="report-name-filter"
             value={selectedMember}
             onChange={(e) => setSelectedMember(e.target.value)}
-            className="w-full h-8 text-xs font-medium text-[#09090B] px-3 rounded-md border border-[#E4E4E7] bg-[#FAFAFA] focus:bg-white focus:border-[#0F766E] focus:outline-none cursor-pointer"
+            className="w-full h-8 text-xs font-medium text-[#1A1917] px-3 rounded-md border border-[#E4DFD3] bg-[#F7F5F0] focus:bg-white focus:border-[#0F6B5D] focus:outline-none cursor-pointer"
           >
             <option value="all">Name: All Members</option>
             {teamMembers.map((m) => (
@@ -137,7 +137,7 @@ export default function AdminReportsPage() {
             id="report-role-filter"
             value={selectedRole}
             onChange={(e) => setSelectedRole(e.target.value)}
-            className="w-full h-8 text-xs font-medium text-[#09090B] px-3 rounded-md border border-[#E4E4E7] bg-[#FAFAFA] focus:bg-white focus:border-[#0F766E] focus:outline-none cursor-pointer"
+            className="w-full h-8 text-xs font-medium text-[#1A1917] px-3 rounded-md border border-[#E4DFD3] bg-[#F7F5F0] focus:bg-white focus:border-[#0F6B5D] focus:outline-none cursor-pointer"
           >
             <option value="all">Role: Staff / Intern</option>
             <option value="staff">Staff Only</option>
@@ -150,7 +150,7 @@ export default function AdminReportsPage() {
             id="report-period-filter"
             value={selectedPeriod}
             onChange={(e) => setSelectedPeriod(e.target.value)}
-            className="w-full h-8 text-xs font-medium text-[#09090B] px-3 rounded-md border border-[#E4E4E7] bg-[#FAFAFA] focus:bg-white focus:border-[#0F766E] focus:outline-none cursor-pointer"
+            className="w-full h-8 text-xs font-medium text-[#1A1917] px-3 rounded-md border border-[#E4DFD3] bg-[#F7F5F0] focus:bg-white focus:border-[#0F6B5D] focus:outline-none cursor-pointer"
           >
             <option value="monthly">Period: Monthly (Nov 2026)</option>
             <option value="weekly">Period: Weekly</option>
@@ -161,46 +161,46 @@ export default function AdminReportsPage() {
       </div>
 
       {loading ? (
-        <div className="bg-white border border-[#E4E4E7] rounded-lg p-12 text-center text-xs text-[#71717A]">
-          <Loader2 className="w-5 h-5 animate-spin mx-auto mb-2 text-[#0F766E]" />
+        <div className="bg-white border border-[#E4DFD3] rounded-lg p-12 text-center text-xs text-[#78716C]">
+          <Loader2 className="w-5 h-5 animate-spin mx-auto mb-2 text-[#0F6B5D]" />
           <span>Calculating analytics...</span>
         </div>
       ) : report ? (
         <>
           {/* Top 3 Metric Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4" id="report-kpi-cards">
-            <div className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-4 space-y-1">
-              <span className="text-xs font-medium text-[#71717A] block">
+            <div className="bg-white border border-[#E4DFD3] rounded-lg shadow-[0_1px_2px_rgba(26,25,23,0.04)] p-4 space-y-1">
+              <span className="text-xs font-medium text-[#78716C] block">
                 Completed Projects
               </span>
               <div
                 id="kpi-completed-projects"
-                className="text-2xl font-semibold text-[#09090B] tabular-nums"
+                className="text-2xl font-semibold text-[#1A1917] tabular-nums"
               >
                 {report.completed_projects_count}
               </div>
             </div>
 
-            <div className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-4 space-y-1">
-              <span className="text-xs font-medium text-[#71717A] block">
+            <div className="bg-white border border-[#E4DFD3] rounded-lg shadow-[0_1px_2px_rgba(26,25,23,0.04)] p-4 space-y-1">
+              <span className="text-xs font-medium text-[#78716C] block">
                 Total Field &amp; Editing Hours
               </span>
               <div
                 id="kpi-total-hours"
-                className="text-2xl font-semibold text-[#09090B] tabular-nums"
+                className="text-2xl font-semibold text-[#1A1917] tabular-nums"
               >
                 {report.total_field_and_edit_hours}{" "}
-                <span className="text-sm font-medium text-[#71717A]">hrs</span>
+                <span className="text-sm font-medium text-[#78716C]">hrs</span>
               </div>
             </div>
 
-            <div className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-4 space-y-1">
-              <span className="text-xs font-medium text-[#71717A] block">
+            <div className="bg-white border border-[#E4DFD3] rounded-lg shadow-[0_1px_2px_rgba(26,25,23,0.04)] p-4 space-y-1">
+              <span className="text-xs font-medium text-[#78716C] block">
                 On-Time Deadlines
               </span>
               <div
                 id="kpi-on-time-deadlines"
-                className="text-2xl font-semibold text-[#09090B] tabular-nums"
+                className="text-2xl font-semibold text-[#1A1917] tabular-nums"
               >
                 {report.on_time_deadlines_pct}%
               </div>
@@ -210,17 +210,17 @@ export default function AdminReportsPage() {
           {/* Main 2-Column Content Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
             {/* Left 8 Cols: Team Performance Report Table */}
-            <div className="lg:col-span-8 bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] overflow-hidden">
-              <div className="px-4 py-3 border-b border-[#E4E4E7] bg-[#FAFAFA] flex items-center justify-between">
-                <h2 className="text-xs font-medium text-[#52525B] uppercase tracking-wider">
+            <div className="lg:col-span-8 bg-white border border-[#E4DFD3] rounded-lg shadow-[0_1px_2px_rgba(26,25,23,0.04)] overflow-hidden">
+              <div className="px-4 py-3 border-b border-[#E4DFD3] bg-[#F7F5F0] flex items-center justify-between">
+                <h2 className="text-xs font-medium text-[#57534E] uppercase tracking-wider">
                   Team Performance
                 </h2>
-                <span className="text-xs text-[#71717A] tabular-nums">{report.period_label}</span>
+                <span className="text-xs text-[#78716C] tabular-nums">{report.period_label}</span>
               </div>
 
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-[13px]" id="team-performance-table">
-                  <thead className="bg-[#FAFAFA] text-[#71717A] text-[12px] font-medium border-b border-[#E4E4E7]">
+                  <thead className="bg-[#EFECE4] text-[#57534E] text-[12px] font-medium border-b border-[#E2DDD2]">
                     <tr>
                       <th className="py-2.5 px-4 font-medium">Member</th>
                       <th className="py-2.5 px-4 font-medium">Role</th>
@@ -230,30 +230,30 @@ export default function AdminReportsPage() {
                       <th className="py-2.5 px-4 font-medium text-right">Deadline</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#E4E4E7]">
+                  <tbody className="divide-y divide-[#E4DFD3]">
                     {report.team_performance.map((m) => (
-                      <tr key={m.member_id} className="h-12 hover:bg-[#F9FAFB]">
-                        <td className="py-2.5 px-4 font-medium text-[#09090B] whitespace-nowrap">
+                      <tr key={m.member_id} className="h-12 hover:bg-[#FBF9F5]">
+                        <td className="py-2.5 px-4 font-medium text-[#1A1917] whitespace-nowrap">
                           {m.full_name}
                         </td>
                         <td className="py-2.5 px-4 whitespace-nowrap">
-                          <span className="inline-block px-2 py-0.5 rounded-md text-[11px] font-medium bg-[#F4F4F5] text-[#27272A] border border-[#E4E4E7]">
+                          <span className="inline-block px-2 py-0.5 rounded-md text-[11px] font-medium bg-[#EFECE4] text-[#1A1917] border border-[#E4DFD3]">
                             {m.role === "staff" ? "Staff" : "Intern"}
                           </span>
                         </td>
-                        <td className="py-2.5 px-4 text-center font-medium text-[#09090B] tabular-nums">
+                        <td className="py-2.5 px-4 text-center font-medium text-[#1A1917] tabular-nums">
                           {m.projects_count}
                         </td>
-                        <td className="py-2.5 px-4 text-center text-[#52525B] whitespace-nowrap tabular-nums">
+                        <td className="py-2.5 px-4 text-center text-[#57534E] whitespace-nowrap tabular-nums">
                           {m.field_hours}h
                         </td>
-                        <td className="py-2.5 px-4 text-center text-[#52525B] whitespace-nowrap tabular-nums">
+                        <td className="py-2.5 px-4 text-center text-[#57534E] whitespace-nowrap tabular-nums">
                           {m.edit_hours}h
                         </td>
                         <td className="py-2.5 px-4 text-right font-medium whitespace-nowrap tabular-nums">
                           <span
                             className={
-                              m.deadline_pct >= 90 ? "text-[#0F766E]" : "text-[#52525B]"
+                              m.deadline_pct >= 90 ? "text-[#0F6B5D]" : "text-[#57534E]"
                             }
                           >
                             {m.deadline_pct}%
@@ -267,19 +267,19 @@ export default function AdminReportsPage() {
             </div>
 
             {/* Right 4 Cols: Directory Roles */}
-            <div className="lg:col-span-4 bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-4 space-y-4">
-              <div className="border-b border-[#E4E4E7] pb-3 flex items-center justify-between">
-                <h3 className="text-[13px] font-semibold text-[#09090B]">
+            <div className="lg:col-span-4 bg-white border border-[#E4DFD3] rounded-lg shadow-[0_1px_2px_rgba(26,25,23,0.04)] p-4 space-y-4">
+              <div className="border-b border-[#E4DFD3] pb-3 flex items-center justify-between">
+                <h3 className="text-[13px] font-semibold text-[#1A1917]">
                   Directory Roles
                 </h3>
-                <span className="text-xs text-[#71717A] font-mono">/admin/users</span>
+                <span className="text-xs text-[#78716C] font-mono">/admin/users</span>
               </div>
 
               <div className="flex flex-wrap gap-1.5">
                 {["Media Head", "Coordinator", "Staff", "Intern"].map((roleLabel) => (
                   <span
                     key={roleLabel}
-                    className="px-2.5 py-1 rounded-md bg-[#F4F4F5] text-[#27272A] border border-[#E4E4E7] text-xs font-medium"
+                    className="px-2.5 py-1 rounded-md bg-[#EFECE4] text-[#1A1917] border border-[#E4DFD3] text-xs font-medium"
                   >
                     {roleLabel}
                   </span>
@@ -290,7 +290,7 @@ export default function AdminReportsPage() {
                 <Link
                   href="/admin/users"
                   id="admin-add-user-btn"
-                  className="inline-flex items-center justify-center gap-1.5 w-full py-2 px-3.5 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white text-xs font-medium"
+                  className="inline-flex items-center justify-center gap-1.5 w-full py-2 px-3.5 rounded-lg bg-[#0F6B5D] hover:bg-[#0B554A] text-white text-xs font-medium"
                 >
                   <UserPlus className="w-3.5 h-3.5" />
                   <span>Add User &amp; Assign Role</span>
@@ -300,7 +300,7 @@ export default function AdminReportsPage() {
           </div>
         </>
       ) : (
-        <div className="bg-white border border-[#E4E4E7] rounded-lg p-12 text-center text-xs text-[#71717A]">
+        <div className="bg-white border border-[#E4DFD3] rounded-lg p-12 text-center text-xs text-[#78716C]">
           Failed to load report data.
         </div>
       )}

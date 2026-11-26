@@ -213,32 +213,32 @@ export default function CoordinatorNewRequisitionPage() {
   return (
     <div className="space-y-5 w-full max-w-full pb-10">
       {/* Flat Linear/Stripe Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4E4E7]">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4DFD3]">
         <div>
-          <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#09090B] tracking-tight">
+          <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#1A1917] tracking-tight">
             New Requisition
           </h1>
           {assignedCourse?.name && (
-            <p className="text-xs text-[#71717A] mt-0.5">{assignedCourse.name}</p>
+            <p className="text-xs text-[#78716C] mt-0.5">{assignedCourse.name}</p>
           )}
         </div>
 
         <Link
           href="/coordinator/requests"
           id="view-my-requests-link"
-          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-[#E4E4E7] bg-white hover:bg-[#F4F4F5] text-[#09090B] text-xs font-medium shrink-0"
+          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-[#E4DFD3] bg-white hover:bg-[#EFECE4] text-[#1A1917] text-xs font-medium shrink-0"
         >
           <span>My Requests</span>
-          <ChevronRight className="w-3.5 h-3.5 text-[#71717A]" />
+          <ChevronRight className="w-3.5 h-3.5 text-[#78716C]" />
         </Link>
       </div>
 
       {/* Main 2-Column Responsive Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         {/* Left Column: Requisition Form */}
-        <div className="lg:col-span-7 bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-5 sm:p-6 space-y-5">
-          <div className="border-b border-[#E4E4E7] pb-3.5">
-            <h2 className="text-sm font-semibold text-[#09090B]">
+        <div className="lg:col-span-7 bg-white border border-[#E4DFD3] rounded-lg shadow-[0_1px_2px_rgba(26,25,23,0.04)] p-5 sm:p-6 space-y-5">
+          <div className="border-b border-[#E4DFD3] pb-3.5">
+            <h2 className="text-sm font-semibold text-[#1A1917]">
               Shoot Request Details
             </h2>
           </div>
@@ -261,9 +261,9 @@ export default function CoordinatorNewRequisitionPage() {
           {formSuccess && (
             <div
               id="form-success"
-              className="p-3 rounded-lg bg-[#F4F4F5] border border-[#E4E4E7] text-[#09090B] text-xs flex items-center gap-2"
+              className="p-3 rounded-lg bg-[#EFECE4] border border-[#E4DFD3] text-[#1A1917] text-xs flex items-center gap-2"
             >
-              <CheckCircle2 className="w-4 h-4 text-[#0F766E] shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-[#0F6B5D] shrink-0" />
               <span className="font-medium">{formSuccess}</span>
             </div>
           )}
@@ -273,7 +273,7 @@ export default function CoordinatorNewRequisitionPage() {
             <div className="space-y-1.5">
               <label
                 htmlFor="course_id"
-                className="block text-xs font-medium text-[#52525B]"
+                className="block text-xs font-medium text-[#57534E]"
               >
                 Course Name
               </label>
@@ -284,7 +284,7 @@ export default function CoordinatorNewRequisitionPage() {
                   name="course_id"
                   value={courseId}
                   onChange={(e) => setCourseId(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-[#E4E4E7] bg-white text-xs sm:text-sm font-medium text-[#09090B] focus:outline-none focus:border-[#0F766E]"
+                  className="w-full px-3 py-2 rounded-lg border border-[#E4DFD3] bg-white text-xs sm:text-sm font-medium text-[#1A1917] focus:outline-none focus:border-[#0F6B5D]"
                   required
                 >
                   {courses.map((course) => (
@@ -300,9 +300,9 @@ export default function CoordinatorNewRequisitionPage() {
                     id="course_name_locked"
                     readOnly
                     value={assignedCourse?.name || "কোর্স লোড হচ্ছে..."}
-                    className="w-full px-3 py-2 pr-9 rounded-lg border border-[#E4E4E7] bg-[#F4F4F5] text-xs sm:text-sm font-medium text-[#52525B] cursor-not-allowed"
+                    className="w-full px-3 py-2 pr-9 rounded-lg border border-[#E4DFD3] bg-[#EFECE4] text-xs sm:text-sm font-medium text-[#57534E] cursor-not-allowed"
                   />
-                  <Lock className="w-3.5 h-3.5 text-[#71717A] absolute right-3 top-1/2 -translate-y-1/2" />
+                  <Lock className="w-3.5 h-3.5 text-[#78716C] absolute right-3 top-1/2 -translate-y-1/2" />
                   <input type="hidden" id="course_id" name="course_id" value={courseId} />
                 </div>
               )}
@@ -312,7 +312,7 @@ export default function CoordinatorNewRequisitionPage() {
             <div className="space-y-2">
               <label
                 htmlFor="program_type"
-                className="block text-xs font-medium text-[#52525B]"
+                className="block text-xs font-medium text-[#57534E]"
               >
                 Program Type
               </label>
@@ -329,14 +329,14 @@ export default function CoordinatorNewRequisitionPage() {
                       onClick={() => setProgramType(pt)}
                       className={`p-2.5 rounded-lg border text-left transition-colors duration-150 flex flex-col justify-between cursor-pointer ${
                         isSelected
-                          ? "bg-[#0F766E] border-[#0F766E] text-white font-medium"
-                          : "bg-white border-[#E4E4E7] text-[#09090B] hover:bg-[#F9FAFB]"
+                          ? "bg-[#0F6B5D] border-[#0F6B5D] text-white font-medium"
+                          : "bg-white border-[#E4DFD3] text-[#1A1917] hover:bg-[#FBF9F5]"
                       }`}
                     >
                       <span className="text-xs leading-tight font-medium">{meta.en}</span>
                       <span
                         className={`text-[11px] mt-1 tabular-nums ${
-                          isSelected ? "text-white/80" : "text-[#71717A]"
+                          isSelected ? "text-white/80" : "text-[#78716C]"
                         }`}
                       >
                         {meta.major ? "৭ দিন অগ্রিম" : "৩ দিন অগ্রিম"}
@@ -351,7 +351,7 @@ export default function CoordinatorNewRequisitionPage() {
                 name="program_type"
                 value={programType}
                 onChange={(e) => setProgramType(e.target.value as ProgramType)}
-                className="w-full px-3 py-2 rounded-lg border border-[#E4E4E7] bg-[#FAFAFA] text-xs text-[#09090B] focus:outline-none focus:border-[#0F766E]"
+                className="w-full px-3 py-2 rounded-lg border border-[#E4DFD3] bg-[#F7F5F0] text-xs text-[#1A1917] focus:outline-none focus:border-[#0F6B5D]"
                 required
               >
                 {PROGRAM_TYPES.map((pt) => {
@@ -367,7 +367,7 @@ export default function CoordinatorNewRequisitionPage() {
 
             {/* Field 3: Format & Duration */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-[#52525B]">
+              <label className="block text-xs font-medium text-[#57534E]">
                 Format &amp; Duration
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -381,8 +381,8 @@ export default function CoordinatorNewRequisitionPage() {
                       onClick={() => setFormatDuration(fmt)}
                       className={`py-2 px-3 rounded-lg text-xs font-medium border transition-colors duration-150 text-center cursor-pointer ${
                         isSelected
-                          ? "bg-[#0F766E] border-[#0F766E] text-white"
-                          : "bg-white border-[#E4E4E7] text-[#52525B] hover:bg-[#F9FAFB]"
+                          ? "bg-[#0F6B5D] border-[#0F6B5D] text-white"
+                          : "bg-white border-[#E4DFD3] text-[#57534E] hover:bg-[#FBF9F5]"
                       }`}
                     >
                       {fmt}
@@ -394,7 +394,7 @@ export default function CoordinatorNewRequisitionPage() {
 
             {/* Field 4: Framing Toggle */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-medium text-[#52525B]">
+              <label className="block text-xs font-medium text-[#57534E]">
                 Framing Toggle
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -408,8 +408,8 @@ export default function CoordinatorNewRequisitionPage() {
                       onClick={() => setFramingType(frm)}
                       className={`py-2 px-3 rounded-lg text-xs font-medium border transition-colors duration-150 text-center cursor-pointer ${
                         isSelected
-                          ? "bg-[#0F766E] border-[#0F766E] text-white"
-                          : "bg-white border-[#E4E4E7] text-[#52525B] hover:bg-[#F9FAFB]"
+                          ? "bg-[#0F6B5D] border-[#0F6B5D] text-white"
+                          : "bg-white border-[#E4DFD3] text-[#57534E] hover:bg-[#FBF9F5]"
                       }`}
                     >
                       {FRAMING_LABELS[frm]}
@@ -423,18 +423,18 @@ export default function CoordinatorNewRequisitionPage() {
             <div className="space-y-1.5">
               <label
                 htmlFor="venue_id"
-                className="block text-xs font-medium text-[#52525B]"
+                className="block text-xs font-medium text-[#57534E]"
               >
                 Venue
               </label>
               <div className="relative">
-                <MapPin className="w-4 h-4 text-[#71717A] absolute left-3 top-1/2 -translate-y-1/2" />
+                <MapPin className="w-4 h-4 text-[#78716C] absolute left-3 top-1/2 -translate-y-1/2" />
                 <select
                   id="venue_id"
                   name="venue_id"
                   value={venueId}
                   onChange={(e) => setVenueId(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#E4E4E7] bg-white text-xs sm:text-sm text-[#09090B] focus:outline-none focus:border-[#0F766E]"
+                  className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#E4DFD3] bg-white text-xs sm:text-sm text-[#1A1917] focus:outline-none focus:border-[#0F6B5D]"
                   required
                 >
                   {venues.map((venue) => (
@@ -451,40 +451,40 @@ export default function CoordinatorNewRequisitionPage() {
               <div className="space-y-1.5">
                 <label
                   htmlFor="shoot_date"
-                  className="block text-xs font-medium text-[#52525B]"
+                  className="block text-xs font-medium text-[#57534E]"
                 >
                   Shoot Date
                 </label>
                 <div className="relative">
-                  <CalendarIcon className="w-4 h-4 text-[#71717A] absolute left-3 top-1/2 -translate-y-1/2" />
+                  <CalendarIcon className="w-4 h-4 text-[#78716C] absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="date"
                     id="shoot_date"
                     name="shoot_date"
                     value={shootDate}
                     onChange={(e) => setShootDate(e.target.value)}
-                    className={`w-full pl-9 pr-3 py-2 rounded-lg border text-xs sm:text-sm text-[#09090B] tabular-nums focus:outline-none ${
+                    className={`w-full pl-9 pr-3 py-2 rounded-lg border text-xs sm:text-sm text-[#1A1917] tabular-nums focus:outline-none ${
                       isLeadTimeViolated
                         ? "border-red-400 bg-red-50/40"
-                        : "border-[#E4E4E7] bg-white focus:border-[#0F766E]"
+                        : "border-[#E4DFD3] bg-white focus:border-[#0F6B5D]"
                     }`}
                     required
                   />
                 </div>
-                <p className="text-[11px] text-[#71717A]">
-                  Earliest available: <span className="font-medium text-[#09090B] font-mono tabular-nums">{earliestAllowedDate}</span> (Asia/Dhaka)
+                <p className="text-[11px] text-[#78716C]">
+                  Earliest available: <span className="font-medium text-[#1A1917] font-mono tabular-nums">{earliestAllowedDate}</span> (Asia/Dhaka)
                 </p>
               </div>
 
               <div className="space-y-1.5">
                 <label
                   htmlFor="call_time"
-                  className="block text-xs font-medium text-[#52525B]"
+                  className="block text-xs font-medium text-[#57534E]"
                 >
                   Call Time
                 </label>
                 <div className="relative">
-                  <Clock className="w-4 h-4 text-[#71717A] absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Clock className="w-4 h-4 text-[#78716C] absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     id="call_time"
@@ -492,7 +492,7 @@ export default function CoordinatorNewRequisitionPage() {
                     value={callTime}
                     placeholder="09:00 AM"
                     onChange={(e) => setCallTime(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#E4E4E7] bg-white text-xs sm:text-sm text-[#09090B] tabular-nums focus:outline-none focus:border-[#0F766E]"
+                    className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#E4DFD3] bg-white text-xs sm:text-sm text-[#1A1917] tabular-nums focus:outline-none focus:border-[#0F6B5D]"
                     required
                   />
                 </div>
@@ -503,12 +503,12 @@ export default function CoordinatorNewRequisitionPage() {
             <div className="space-y-1.5">
               <label
                 htmlFor="coordinator_phone"
-                className="block text-xs font-medium text-[#52525B]"
+                className="block text-xs font-medium text-[#57534E]"
               >
                 Coordinator Phone
               </label>
               <div className="relative">
-                <Phone className="w-4 h-4 text-[#71717A] absolute left-3 top-1/2 -translate-y-1/2" />
+                <Phone className="w-4 h-4 text-[#78716C] absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="tel"
                   id="coordinator_phone"
@@ -516,7 +516,7 @@ export default function CoordinatorNewRequisitionPage() {
                   value={coordinatorPhone}
                   placeholder="017XX-XXXXXX"
                   onChange={(e) => setCoordinatorPhone(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#E4E4E7] bg-white text-xs sm:text-sm text-[#09090B] tabular-nums focus:outline-none focus:border-[#0F766E]"
+                  className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#E4DFD3] bg-white text-xs sm:text-sm text-[#1A1917] tabular-nums focus:outline-none focus:border-[#0F6B5D]"
                   required
                 />
               </div>
@@ -526,7 +526,7 @@ export default function CoordinatorNewRequisitionPage() {
             <div className="space-y-1.5">
               <label
                 htmlFor="notes"
-                className="block text-xs font-medium text-[#52525B]"
+                className="block text-xs font-medium text-[#57534E]"
               >
                 Special Requirements / Notes (Optional)
               </label>
@@ -537,16 +537,16 @@ export default function CoordinatorNewRequisitionPage() {
                 value={notes}
                 placeholder="শুটিংয়ের বিশেষ কোনো দৃশ্য, বিষয়বস্তু বা প্রয়োজনীয় নির্দেশিকা লিখুন..."
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-[#E4E4E7] bg-white text-xs sm:text-sm text-[#09090B] focus:outline-none focus:border-[#0F766E]"
+                className="w-full px-3 py-2 rounded-lg border border-[#E4DFD3] bg-white text-xs sm:text-sm text-[#1A1917] focus:outline-none focus:border-[#0F6B5D]"
               />
             </div>
 
             {/* Emergency Override (Admin Only) */}
             {user?.role === "admin" && (
-              <div className="p-3.5 rounded-lg border border-[#E4E4E7] bg-[#FAFAFA] space-y-2.5">
+              <div className="p-3.5 rounded-lg border border-[#E4DFD3] bg-[#F7F5F0] space-y-2.5">
                 <div className="flex items-center gap-2">
                   <ShieldAlert className="w-4 h-4 text-red-600" />
-                  <span className="text-xs font-semibold text-[#09090B]">
+                  <span className="text-xs font-semibold text-[#1A1917]">
                     মিডিয়া হেড বিশেষ ক্ষমতা (Emergency Override)
                   </span>
                 </div>
@@ -556,9 +556,9 @@ export default function CoordinatorNewRequisitionPage() {
                     id="is_emergency_override"
                     checked={isEmergencyOverride}
                     onChange={(e) => setIsEmergencyOverride(e.target.checked)}
-                    className="w-4 h-4 rounded text-[#0F766E] focus:ring-[#0F766E]"
+                    className="w-4 h-4 rounded text-[#0F6B5D] focus:ring-[#0F6B5D]"
                   />
-                  <span className="text-xs text-[#52525B]">
+                  <span className="text-xs text-[#57534E]">
                     জরুরি শুটিং ওভাররাইড সক্ষম করুন (Bypass 3/7-day notice)
                   </span>
                 </label>
@@ -567,7 +567,7 @@ export default function CoordinatorNewRequisitionPage() {
                   <div className="space-y-1">
                     <label
                       htmlFor="override_reason"
-                      className="block text-[11px] font-medium text-[#09090B]"
+                      className="block text-[11px] font-medium text-[#1A1917]"
                     >
                       Emergency Override Reason (Mandatory)*
                     </label>
@@ -578,7 +578,7 @@ export default function CoordinatorNewRequisitionPage() {
                       value={overrideReason}
                       placeholder="জরুরি ভিত্তিতে শুটিংয়ের সুনির্দিষ্ট কারণ লিখুন..."
                       onChange={(e) => setOverrideReason(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg border border-[#E4E4E7] bg-white text-xs text-[#09090B] focus:outline-none focus:border-[#0F766E]"
+                      className="w-full px-3 py-2 rounded-lg border border-[#E4DFD3] bg-white text-xs text-[#1A1917] focus:outline-none focus:border-[#0F6B5D]"
                       required={isEmergencyOverride}
                     />
                   </div>
@@ -592,16 +592,16 @@ export default function CoordinatorNewRequisitionPage() {
               className={`p-3 rounded-lg border text-xs flex items-start gap-2.5 transition-colors duration-150 ${
                 isLeadTimeViolated
                   ? "bg-red-50 border-red-200 text-red-700"
-                  : "bg-[#FAFAFA] border-[#E4E4E7] text-[#52525B]"
+                  : "bg-[#F7F5F0] border-[#E4DFD3] text-[#57534E]"
               }`}
             >
               <AlertTriangle
                 className={`w-4 h-4 shrink-0 mt-0.5 ${
-                  isLeadTimeViolated ? "text-red-600" : "text-[#71717A]"
+                  isLeadTimeViolated ? "text-red-600" : "text-[#78716C]"
                 }`}
               />
               <div className="space-y-0.5">
-                <p className="font-semibold text-[#09090B]">
+                <p className="font-semibold text-[#1A1917]">
                   {isLeadTimeViolated
                     ? "লিড-টাইম লঙ্ঘন (Lead-Time Rule Violation):"
                     : `Minimum ${requiredDays} days lead time required`}
@@ -620,7 +620,7 @@ export default function CoordinatorNewRequisitionPage() {
                 type="submit"
                 id="submit-requisition-btn"
                 disabled={submitting}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white text-xs sm:text-sm font-medium transition-colors duration-150 disabled:opacity-60 cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#0F6B5D] hover:bg-[#0B554A] text-white text-xs sm:text-sm font-medium transition-colors duration-150 disabled:opacity-60 cursor-pointer"
               >
                 <FilePlus2 className="w-4 h-4" />
                 <span>{submitting ? "জমা হচ্ছে..." : "Submit Requisition"}</span>
@@ -631,65 +631,65 @@ export default function CoordinatorNewRequisitionPage() {
 
         {/* Right Column: Live Course Requests */}
         <div className="lg:col-span-5 space-y-4">
-          <div className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-4 sm:p-5 space-y-3.5">
-            <div className="flex items-center justify-between border-b border-[#E4E4E7] pb-3">
-              <h3 className="text-xs font-medium text-[#52525B] uppercase tracking-wider">
+          <div className="bg-white border border-[#E4DFD3] rounded-lg shadow-[0_1px_2px_rgba(26,25,23,0.04)] p-4 sm:p-5 space-y-3.5">
+            <div className="flex items-center justify-between border-b border-[#E4DFD3] pb-3">
+              <h3 className="text-xs font-medium text-[#57534E] uppercase tracking-wider">
                 Recent Course Requests
               </h3>
-              <span className="text-[11px] font-medium text-[#71717A] tabular-nums">
+              <span className="text-[11px] font-medium text-[#78716C] tabular-nums">
                 {existingRequests.length} items
               </span>
             </div>
 
             <div className="space-y-2.5" id="course-requests-list">
               {existingRequests.length === 0 ? (
-                <div className="text-center py-8 text-xs text-[#71717A]">
+                <div className="text-center py-8 text-xs text-[#78716C]">
                   No requests submitted yet.
                 </div>
               ) : (
                 existingRequests.map((req) => (
                   <div
                     key={req.id}
-                    className="p-3 rounded-lg border border-[#E4E4E7] bg-[#FAFAFA] space-y-1.5"
+                    className="p-3 rounded-lg border border-[#E4DFD3] bg-[#F7F5F0] space-y-1.5"
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-medium text-[#09090B] line-clamp-1">
+                      <span className="text-xs font-medium text-[#1A1917] line-clamp-1">
                         {req.notes || `${req.course_name || "Course"} • ${req.format_duration}`}
                       </span>
 
                       {req.status === "approved" && req.final_drive_url && (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white border border-[#E4E4E7] text-[#09090B] text-[10.5px] font-medium shrink-0">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E]" />
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white border border-[#E4DFD3] text-[#1A1917] text-[10.5px] font-medium shrink-0">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#0F6B5D]" />
                           <span>Delivered</span>
                         </span>
                       )}
                       {req.status === "approved" && !req.final_drive_url && (req.task_stage === "shoot_done" || req.task_stage === "editing" || req.task_stage === "review") && (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white border border-[#E4E4E7] text-[#27272A] text-[10.5px] font-medium shrink-0">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#52525B]" />
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white border border-[#E4DFD3] text-[#1A1917] text-[10.5px] font-medium shrink-0">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#57534E]" />
                           <span>Shoot Done</span>
                         </span>
                       )}
                       {req.status === "approved" && !req.final_drive_url && req.task_stage !== "shoot_done" && req.task_stage !== "editing" && req.task_stage !== "review" && (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white border border-[#E4E4E7] text-[#27272A] text-[10.5px] font-medium shrink-0">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E]" />
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white border border-[#E4DFD3] text-[#1A1917] text-[10.5px] font-medium shrink-0">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#0F6B5D]" />
                           <span>Approved</span>
                         </span>
                       )}
                       {req.status === "pending" && (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white border border-[#E4E4E7] text-[#27272A] text-[10.5px] font-medium shrink-0">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#71717A]" />
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white border border-[#E4DFD3] text-[#1A1917] text-[10.5px] font-medium shrink-0">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#78716C]" />
                           <span>Pending</span>
                         </span>
                       )}
                       {req.status === "rejected" && (
-                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#FEF2F2] border border-[#FECACA] text-[#DC2626] text-[10.5px] font-medium shrink-0">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#DC2626]" />
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#FEE2E2] border border-[#FECACA] text-[#B91C1C] text-[10.5px] font-medium shrink-0">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#B91C1C]" />
                           <span>Rejected</span>
                         </span>
                       )}
                     </div>
 
-                    <div className="text-[11px] text-[#71717A] flex flex-wrap items-center gap-x-2 gap-y-0.5 tabular-nums">
+                    <div className="text-[11px] text-[#78716C] flex flex-wrap items-center gap-x-2 gap-y-0.5 tabular-nums">
                       <span>{req.shoot_date}</span>
                       <span>•</span>
                       <span>{req.call_time}</span>
@@ -703,7 +703,7 @@ export default function CoordinatorNewRequisitionPage() {
                           href={req.final_drive_url}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#0F766E] hover:bg-[#0D645D] text-white text-[11px] font-medium"
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#0F6B5D] hover:bg-[#0B554A] text-white text-[11px] font-medium"
                         >
                           <ExternalLink className="w-3 h-3" />
                           <span>Google Drive Link</span>
@@ -712,7 +712,7 @@ export default function CoordinatorNewRequisitionPage() {
                     )}
 
                     {req.status === "rejected" && req.rejection_reason && (
-                      <div className="p-2 rounded-md bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-[11px]">
+                      <div className="p-2 rounded-md bg-[#FEE2E2] border border-[#FECACA] text-[#B91C1C] text-[11px]">
                         <span className="font-medium">Reason: </span>
                         <span>{req.rejection_reason}</span>
                       </div>
@@ -722,13 +722,13 @@ export default function CoordinatorNewRequisitionPage() {
               )}
             </div>
 
-            <div className="border-t border-[#E4E4E7] pt-3 flex items-center justify-between text-xs">
-              <span className="px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#27272A] text-[11px] font-medium">
+            <div className="border-t border-[#E4DFD3] pt-3 flex items-center justify-between text-xs">
+              <span className="px-2 py-0.5 rounded-md bg-[#EFECE4] border border-[#E4DFD3] text-[#1A1917] text-[11px] font-medium">
                 {assignedCourse?.name || "Assigned Course"}
               </span>
               <Link
                 href="/coordinator/requests"
-                className="text-xs font-medium text-[#0F766E] hover:underline"
+                className="text-xs font-medium text-[#0F6B5D] hover:underline"
               >
                 View all
               </Link>

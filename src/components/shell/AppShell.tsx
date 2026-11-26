@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   FilePlus2,
@@ -20,6 +20,7 @@ import {
   Home,
   User,
   Search,
+  Loader2,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -263,6 +264,7 @@ interface CurrentUserSession {
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
@@ -272,6 +274,23 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement>(null);
   const profileTriggerRef = useRef<HTMLButtonElement>(null);
+
+  // Live Role-Scoped Topbar Search
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<
+    Array<{
+      id: string;
+      title: string;
+      subtitle: string;
+      category: string;
+      url: string;
+      badge?: string;
+    }>
+  >([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const activePath = pendingPath || pathname;
   const groupedNav = getGroupedNavItemsForRole(user?.role);
@@ -344,8 +363,46 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     return () => clearTimeout(timer);
   }, [navigatingTo, pendingPath]);
 
+  // Debounced search query fetch
   useEffect(() => {
-    if (!profileMenuOpen && !mobileMenuOpen) return;
+    const trimmed = searchQuery.trim();
+    if (!trimmed) {
+      setSearchResults([]);
+      setIsSearching(false);
+      return;
+    }
+
+    setIsSearching(true);
+    const controller = new AbortController();
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(trimmed)}`, {
+          signal: controller.signal,
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && Array.isArray(data.results)) {
+            setSearchResults(data.results);
+            setSearchOpen(true);
+          }
+        }
+      } catch (err: unknown) {
+        if ((err as Error)?.name !== "AbortError") {
+          // ignore
+        }
+      } finally {
+        setIsSearching(false);
+      }
+    }, 250);
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [searchQuery]);
+
+  useEffect(() => {
+    if (!profileMenuOpen && !mobileMenuOpen && !searchOpen) return;
 
     const handlePointerDown = (event: PointerEvent) => {
       if (
@@ -355,6 +412,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       ) {
         setProfileMenuOpen(false);
       }
+      if (
+        searchOpen &&
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(event.target as Node)
+      ) {
+        setSearchOpen(false);
+      }
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -362,6 +426,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         if (profileMenuOpen) {
           setProfileMenuOpen(false);
           profileTriggerRef.current?.focus();
+        }
+        if (searchOpen) {
+          setSearchOpen(false);
+          searchInputRef.current?.blur();
         }
         if (mobileMenuOpen) {
           setMobileMenuOpen(false);
@@ -375,7 +443,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [profileMenuOpen, mobileMenuOpen]);
+  }, [profileMenuOpen, mobileMenuOpen, searchOpen]);
 
   const handleNavigateStart = (href: string) => {
     if (href && !href.startsWith("#") && href !== pathname) {
@@ -768,10 +836,30 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
               <div className="flex items-center gap-3">
                 {activePath !== "/admin/tasks" && activePath !== "/admin/gear" && (
-                  <div className="relative w-64">
+                  <div className="relative w-72" ref={searchContainerRef}>
                     <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#78716C] pointer-events-none" />
                     <input
+                      ref={searchInputRef}
+                      id="topbar-search-input"
+                      data-testid="topbar-search-input"
                       type="text"
+                      value={searchQuery}
+                      onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        setSearchOpen(true);
+                      }}
+                      onFocus={() => {
+                        if (searchResults.length > 0 || searchQuery.trim()) {
+                          setSearchOpen(true);
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && searchResults.length > 0) {
+                          const first = searchResults[0];
+                          setSearchOpen(false);
+                          router.push(first.url);
+                        }
+                      }}
                       placeholder={
                         user.role === "coordinator"
                           ? "Search requests..."
@@ -781,9 +869,79 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                           ? "Search shoots..."
                           : "Search portal..."
                       }
-                      className="w-full h-8 pl-8 pr-3 text-[12.5px] rounded-md border border-[#E4DFD3] bg-[#F7F5F0] text-[#1A1917] placeholder-[#78716C] focus:outline-none focus:bg-white focus:border-[#0F6B5D]"
-                      readOnly
+                      className="w-full h-8 pl-8 pr-7 text-[12.5px] rounded-md border border-[#E4DFD3] bg-[#F7F5F0] text-[#1A1917] placeholder-[#78716C] focus:outline-none focus:bg-white focus:border-[#0F6B5D]"
                     />
+                    {searchQuery && (
+                      <button
+                        type="button"
+                        id="topbar-search-clear-btn"
+                        onClick={() => {
+                          setSearchQuery("");
+                          setSearchResults([]);
+                          setSearchOpen(false);
+                          searchInputRef.current?.focus();
+                        }}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-[#78716C] hover:text-[#1A1917] p-0.5 rounded"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+
+                    {/* Results Dropdown */}
+                    {searchOpen && searchQuery.trim() && (
+                      <div
+                        id="topbar-search-dropdown"
+                        data-testid="topbar-search-dropdown"
+                        className="absolute left-0 right-0 top-full mt-1.5 bg-white border border-[#E4DFD3] rounded-lg shadow-lg overflow-hidden z-50 py-1 max-h-96 overflow-y-auto"
+                      >
+                        {isSearching ? (
+                          <div className="px-3 py-3 text-xs text-[#78716C] flex items-center justify-center gap-2">
+                            <Loader2 className="w-3.5 h-3.5 text-[#0F6B5D] animate-spin" />
+                            <span>Searching...</span>
+                          </div>
+                        ) : searchResults.length === 0 ? (
+                          <div className="px-3 py-4 text-center text-xs text-[#78716C]">
+                            No results found for &ldquo;{searchQuery}&rdquo;
+                          </div>
+                        ) : (
+                          <div className="divide-y divide-[#E4DFD3]">
+                            {searchResults.map((item) => (
+                              <button
+                                key={`${item.category}-${item.id}`}
+                                type="button"
+                                onClick={() => {
+                                  setSearchOpen(false);
+                                  router.push(item.url);
+                                }}
+                                className="w-full px-3 py-2 text-left hover:bg-[#F7F5F0] flex items-start justify-between gap-2 group transition-colors"
+                              >
+                                <div className="min-w-0 flex-1">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="text-[10px] font-semibold text-[#0F6B5D] uppercase tracking-wider">
+                                      {item.category}
+                                    </span>
+                                    {item.badge && (
+                                      <span className="text-[10px] px-1.5 py-0.2 rounded bg-[#EFECE4] text-[#57534E] font-medium">
+                                        {item.badge}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <p className="text-xs font-medium text-[#1A1917] truncate mt-0.5 group-hover:text-[#0F6B5D]">
+                                    {item.title}
+                                  </p>
+                                  {item.subtitle && (
+                                    <p className="text-[11px] text-[#78716C] truncate mt-0.5">
+                                      {item.subtitle}
+                                    </p>
+                                  )}
+                                </div>
+                                <ChevronRight className="w-3.5 h-3.5 text-[#A8A29E] group-hover:text-[#0F6B5D] shrink-0 mt-1" />
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
 

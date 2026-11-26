@@ -48,7 +48,7 @@ test.describe("S5-01 & S5-02: Gear Master Inventory, Task Check-Out & Double-Boo
     await page.waitForLoadState("domcontentloaded");
 
     // Verify Brand & Page Heading
-    await expect(page.getByText("Equipment & Camera-Gear Stock Management")).toBeVisible();
+    await expect(page.locator("h1")).toContainText("Gear Stock");
     await expect(page.getByText("Master Inventory")).toBeVisible();
 
     // Verify 0 horizontal overflow
@@ -64,7 +64,7 @@ test.describe("S5-01 & S5-02: Gear Master Inventory, Task Check-Out & Double-Boo
     if (!isMobile) {
       const gearNavLink = page.locator('aside a[href="/admin/gear"]');
       await expect(gearNavLink).toBeVisible();
-      await expect(gearNavLink).toHaveClass(/bg-\[#0F766E\]/);
+      await expect(gearNavLink).toHaveAttribute("data-active", "true");
     } else {
       const mobileGearLink = page.locator('#mobile-bottom-nav a[href="/admin/gear"]');
       await expect(mobileGearLink).toBeVisible();
@@ -265,7 +265,7 @@ test.describe("S5-01 & S5-02: Gear Master Inventory, Task Check-Out & Double-Boo
     await page.locator('[data-testid="filter-status-all"]').click();
 
     // Search input
-    const searchInput = page.locator('input[placeholder="Search requisitions, gear, staff..."]');
+    const searchInput = page.locator('input[placeholder="Search model or serial..."]');
     await searchInput.fill("RS 4");
     await expect(inventoryScope.getByText("DJI RS 4 Gimbal")).toBeVisible();
     await expect(inventoryScope.getByText("Sony FX3 Cinema Body")).toBeHidden();

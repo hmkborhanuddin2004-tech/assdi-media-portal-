@@ -9,10 +9,8 @@ import {
   Eye,
   EyeOff,
   AlertCircle,
-  ShieldAlert,
   Loader2,
   CheckCircle2,
-  Sparkles,
 } from "lucide-react";
 import { isSafeRedirectPath, isPathAllowedForRole } from "@/lib/types/auth";
 
@@ -103,32 +101,28 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center p-3 sm:p-6 w-full max-w-full">
-      <div className="w-full max-w-md mx-auto space-y-5">
+    <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center p-3 sm:p-6 w-full max-w-full">
+      <div className="w-full max-w-[400px] mx-auto space-y-4">
         {/* Main Login Card */}
-        <div className="glass-strong p-6 sm:p-8">
+        <div className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-6 sm:p-7">
           {/* Brand Header */}
-          <div className="flex flex-col items-center text-center space-y-2.5 pb-4 border-b border-white/60">
-            <div className="w-16 h-16 rounded-2xl bg-white p-2 border border-emerald-100 flex items-center justify-center shadow-md shadow-emerald-900/10">
+          <div className="flex flex-col items-center text-center space-y-2 pb-4 border-b border-[#E4E4E7]">
+            <div className="w-11 h-11 rounded-lg bg-[#FAFAFA] p-1.5 border border-[#E4E4E7] flex items-center justify-center">
               <Image
                 src="/images/assdi-logo.png"
                 alt="ASSDI Logo"
-                width={56}
-                height={56}
+                width={36}
+                height={36}
                 className="w-full h-full object-contain"
                 priority
               />
             </div>
 
-            <div className="space-y-1">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-[#0F766E] text-[11px] font-semibold">
-                <Sparkles className="w-3 h-3" />
-                <span>ASSDI Media Portal • Restricted Access</span>
-              </span>
-              <h1 className="text-lg sm:text-xl font-bold text-[#0F172A] tracking-tight">
+            <div className="space-y-0.5">
+              <h1 className="text-base font-semibold text-[#09090B] tracking-tight">
                 আছ-সুন্নাহ স্কিল ডেভেলপমেন্ট ইনস্টিটিউট
               </h1>
-              <p className="text-xs text-[#0F766E] font-semibold">
+              <p className="text-xs text-[#52525B]">
                 সেন্ট্রাল মিডিয়া ম্যানেজমেন্ট পোর্টাল
               </p>
             </div>
@@ -138,32 +132,32 @@ function LoginForm() {
           {errorMessage && (
             <div
               id="login-error-alert"
-              className="mt-4 p-3.5 rounded-xl bg-red-50 border border-red-200 flex items-start gap-2.5 text-xs text-red-800"
+              className="mt-4 p-3 rounded-lg bg-[#FEF2F2] border border-[#FECACA] flex items-start gap-2 text-xs text-[#991B1B]"
             >
-              <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+              <AlertCircle className="w-4 h-4 text-[#DC2626] shrink-0 mt-0.5" />
               <div className="leading-relaxed font-medium">{errorMessage}</div>
             </div>
           )}
 
           {successMessage && (
-            <div className="mt-4 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start gap-2.5 text-xs text-emerald-800">
+            <div className="mt-4 p-3 rounded-lg bg-[#F4F4F5] border border-[#E4E4E7] flex items-start gap-2 text-xs text-[#09090B]">
               <CheckCircle2 className="w-4 h-4 text-[#0F766E] shrink-0 mt-0.5" />
               <div className="leading-relaxed font-medium">{successMessage}</div>
             </div>
           )}
 
           {/* Login Form */}
-          <form onSubmit={handleSubmit} className="mt-5 space-y-4">
-            <div className="space-y-1.5">
+          <form onSubmit={handleSubmit} className="mt-4 space-y-3.5">
+            <div className="space-y-1">
               <label
                 htmlFor="login-email"
-                className="block text-xs font-semibold text-slate-700"
+                className="block text-xs font-medium text-[#09090B]"
               >
-                ইমেইল অ্যাড্রেস <span className="text-slate-400 font-normal">/ Email</span>
+                Email
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                  <Mail className="w-4 h-4" />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#71717A]">
+                  <Mail className="w-3.5 h-3.5" />
                 </div>
                 <input
                   id="login-email"
@@ -174,21 +168,21 @@ function LoginForm() {
                   required
                   autoComplete="email"
                   disabled={isPending}
-                  className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F766E] focus:border-transparent transition-all bg-white"
+                  className="w-full h-9 pl-9 pr-3 rounded-lg border border-[#E4E4E7] text-xs sm:text-[13px] text-[#09090B] placeholder:text-[#71717A] focus:outline-none focus:border-[#0F766E] bg-white"
                 />
               </div>
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-1">
               <label
                 htmlFor="login-password"
-                className="block text-xs font-semibold text-slate-700"
+                className="block text-xs font-medium text-[#09090B]"
               >
-                পাসওয়ার্ড <span className="text-slate-400 font-normal">/ Password</span>
+                Password
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                  <Lock className="w-4 h-4" />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#71717A]">
+                  <Lock className="w-3.5 h-3.5" />
                 </div>
                 <input
                   id="login-password"
@@ -199,19 +193,19 @@ function LoginForm() {
                   required
                   autoComplete="current-password"
                   disabled={isPending}
-                  className="w-full pl-9 pr-10 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0F766E] focus:border-transparent transition-all bg-white"
+                  className="w-full h-9 pl-9 pr-9 rounded-lg border border-[#E4E4E7] text-xs sm:text-[13px] text-[#09090B] placeholder:text-[#71717A] focus:outline-none focus:border-[#0F766E] bg-white"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600"
+                  className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-[#71717A] hover:text-[#09090B]"
                   tabIndex={-1}
-                  aria-label={showPassword ? "পাসওয়ার্ড লুকান" : "পাসওয়ার্ড দেখুন"}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? (
-                    <EyeOff className="w-4 h-4" />
+                    <EyeOff className="w-3.5 h-3.5" />
                   ) : (
-                    <Eye className="w-4 h-4" />
+                    <Eye className="w-3.5 h-3.5" />
                   )}
                 </button>
               </div>
@@ -221,66 +215,57 @@ function LoginForm() {
               id="login-submit-button"
               type="submit"
               disabled={isPending}
-              className="w-full py-2.5 px-4 rounded-xl bg-[#0F766E] hover:bg-[#115E59] active:bg-[#134E4A] text-white font-semibold text-xs sm:text-sm shadow-sm transition-all duration-150 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+              className="w-full h-9 px-4 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white font-medium text-xs sm:text-[13px] flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
             >
               {isPending ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>যাচাই করা হচ্ছে...</span>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Signing in...</span>
                 </>
               ) : (
-                <span>লগইন করুন (Sign In)</span>
+                <span>Sign In</span>
               )}
             </button>
           </form>
 
-          {/* Strict Security Notice: Self-Signup Disabled */}
-          <div className="mt-5 p-3 rounded-xl bg-slate-50 border border-slate-200/90 text-slate-600 text-[11px] leading-relaxed flex items-start gap-2">
-            <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-            <div>
-              <span className="font-semibold text-slate-800">
-                নিরাপত্তা নীতি (Security Policy):
-              </span>{" "}
-              পাবলিক রেজিস্ট্রেশন সম্পূর্ণ নিষ্ক্রিয়। শুধুমাত্র মিডিয়া প্রধান /
-              অ্যাডমিন দ্বারা অনুমোদিত ব্যবহারকারীরা এই পোর্টালে প্রবেশ করতে
-              পারবেন।
-            </div>
-          </div>
+          <p className="mt-4 pt-3 border-t border-[#E4E4E7] text-[11px] text-[#71717A] text-center">
+            Admin-managed accounts only. Public sign-up is disabled.
+          </p>
         </div>
 
         {/* Quick Demo Logins Helper */}
-        <div className="glass-panel p-3.5 text-center space-y-2">
-          <div className="text-[11px] font-semibold text-[#33475f]">
-            টেস্ট লগইন বিকল্প (Quick Test Accounts • Pass: assdi123):
+        <div className="bg-white border border-[#E4E4E7] rounded-lg p-3 text-center space-y-2">
+          <div className="text-[11px] font-medium text-[#71717A]">
+            Quick Demo Accounts (Pass: <span className="font-mono text-[#09090B]">assdi123</span>)
           </div>
           <div className="flex flex-wrap justify-center gap-1.5">
             <button
               type="button"
               onClick={() => handleQuickFill("admin@assdi.org")}
-              className="px-2 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-[#0F766E] border border-emerald-200/80 text-[10px] font-medium transition-colors"
+              className="px-2.5 py-1 rounded-md bg-[#F4F4F5] hover:bg-[#E4E4E7] text-[#27272A] border border-[#E4E4E7] text-[11px] font-medium"
             >
-              Admin (মিডিয়া প্রধান)
+              Admin
             </button>
             <button
               type="button"
               onClick={() => handleQuickFill("coordinator@assdi.org")}
-              className="px-2 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200/80 text-[10px] font-medium transition-colors"
+              className="px-2.5 py-1 rounded-md bg-[#F4F4F5] hover:bg-[#E4E4E7] text-[#27272A] border border-[#E4E4E7] text-[11px] font-medium"
             >
-              Coordinator (RAC)
+              Coordinator
             </button>
             <button
               type="button"
               onClick={() => handleQuickFill("staff@assdi.org")}
-              className="px-2 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200/80 text-[10px] font-medium transition-colors"
+              className="px-2.5 py-1 rounded-md bg-[#F4F4F5] hover:bg-[#E4E4E7] text-[#27272A] border border-[#E4E4E7] text-[11px] font-medium"
             >
-              Permanent Staff
+              Staff
             </button>
             <button
               type="button"
               onClick={() => handleQuickFill("intern@assdi.org")}
-              className="px-2 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200/80 text-[10px] font-medium transition-colors"
+              className="px-2.5 py-1 rounded-md bg-[#F4F4F5] hover:bg-[#E4E4E7] text-[#27272A] border border-[#E4E4E7] text-[11px] font-medium"
             >
-              Intern (ট্রেইনি)
+              Intern
             </button>
           </div>
         </div>

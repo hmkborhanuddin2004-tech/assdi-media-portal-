@@ -9,7 +9,6 @@ import {
   Clock,
   FileText,
   LogOut,
-  Sparkles,
   Loader2,
 } from "lucide-react";
 import type { UserProfile } from "@/lib/types/auth";
@@ -67,68 +66,62 @@ export default function InternProfilePage() {
   const totalHours = logs.reduce((sum, l) => sum + l.hours_spent, 0);
 
   return (
-    <div className="space-y-4 w-full max-w-xl mx-auto pb-8">
-      {/* Top Banner */}
-      <div className="glass-panel p-4 sm:p-5 space-y-1">
-        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#0f766e]/15 text-[#0b5a54] text-xs font-semibold">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>ইন্টার্ন প্রোফাইল ও অ্যাকাউন্ট</span>
-        </div>
-        <h1 className="text-lg sm:text-xl font-extrabold text-[#0b1f3a] tracking-tight">
+    <div className="space-y-5 w-full max-w-xl mx-auto pb-8">
+      {/* Flat Linear/Stripe Header */}
+      <div className="flex items-center justify-between pb-4 border-b border-[#E4E4E7]">
+        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#09090B] tracking-tight">
           Intern Member Profile
         </h1>
-        <p className="text-xs text-[#33475f] font-medium">
-          আপনার প্রোফাইল তথ্য ও মোট সম্পন্ন কাজের হিসেব।
-        </p>
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-xs text-[#33475f] font-medium glass-panel">
+        <div className="p-12 text-center text-xs text-[#71717A] bg-white border border-[#E4E4E7] rounded-lg">
           <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#0F766E]" />
           <span>প্রোফাইল লোড হচ্ছে...</span>
         </div>
       ) : (
         <div className="space-y-4">
           {/* User Card */}
-          <div className="glass-panel p-5 space-y-4">
+          <div className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-5 space-y-4">
             <div className="flex items-center gap-3.5">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#0F766E] to-teal-500 text-white flex items-center justify-center font-bold text-lg shadow-sm">
+              <div className="w-12 h-12 rounded-lg bg-[#0F766E] text-white flex items-center justify-center font-semibold text-base">
                 {currentUser?.full_name?.charAt(0) || "I"}
               </div>
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <h2 className="text-base font-bold text-slate-900">
+                  <h2 className="text-base font-semibold text-[#09090B]">
                     {currentUser?.full_name || "Intern Member"}
                   </h2>
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#27272A] text-[10px] font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E]" />
                     সক্রিয়
                   </span>
                 </div>
-                <div className="inline-flex items-center gap-1 text-xs text-slate-500">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#0F766E]" />
-                  <span>ইন্টার্ন ও ট্রেইনি (Intern / Trainee)</span>
+                <div className="inline-flex items-center gap-1 text-xs text-[#71717A]">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#71717A]" />
+                  <span>Intern / Trainee</span>
                 </div>
               </div>
             </div>
 
             {/* Profile Fields */}
-            <div className="space-y-2 pt-2 border-t border-slate-100 text-xs">
-              <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50">
-                <span className="text-slate-500 flex items-center gap-1.5">
-                  <Mail className="w-3.5 h-3.5 text-slate-400" />
+            <div className="space-y-2 pt-3 border-t border-[#E4E4E7] text-xs">
+              <div className="flex items-center justify-between p-2.5 rounded-lg bg-[#FAFAFA] border border-[#E4E4E7]">
+                <span className="text-[#71717A] flex items-center gap-1.5">
+                  <Mail className="w-3.5 h-3.5 text-[#71717A]" />
                   <span>ইমেইল এড্রেস:</span>
                 </span>
-                <span className="font-semibold text-slate-800">
+                <span className="font-medium text-[#09090B]">
                   {currentUser?.email || "intern@assdi.org"}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50">
-                <span className="text-slate-500 flex items-center gap-1.5">
-                  <Phone className="w-3.5 h-3.5 text-slate-400" />
+              <div className="flex items-center justify-between p-2.5 rounded-lg bg-[#FAFAFA] border border-[#E4E4E7]">
+                <span className="text-[#71717A] flex items-center gap-1.5">
+                  <Phone className="w-3.5 h-3.5 text-[#71717A]" />
                   <span>মোবাইল নম্বর:</span>
                 </span>
-                <span className="font-semibold text-slate-800">
+                <span className="font-medium text-[#09090B] tabular-nums">
                   {currentUser?.phone || "01711-000004"}
                 </span>
               </div>
@@ -137,28 +130,28 @@ export default function InternProfilePage() {
 
           {/* Performance Stats Cards */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="p-4 rounded-2xl border border-slate-200/80 bg-white shadow-2xs space-y-1">
-              <span className="text-slate-400 text-xs flex items-center gap-1">
-                <FileText className="w-3.5 h-3.5 text-[#0F766E]" />
-                <span>মোট কাজের লগ</span>
+            <div className="p-4 rounded-lg border border-[#E4E4E7] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)] space-y-1">
+              <span className="text-[#71717A] text-xs flex items-center gap-1">
+                <FileText className="w-3.5 h-3.5 text-[#71717A]" />
+                <span>Total Logs</span>
               </span>
-              <div className="text-2xl font-black text-slate-900">
+              <div className="text-2xl font-semibold text-[#09090B] tabular-nums">
                 {logs.length}
               </div>
-              <span className="text-[10px] text-slate-400 block">
+              <span className="text-[11px] text-[#71717A] block">
                 সাবমিট করা হয়েছে
               </span>
             </div>
 
-            <div className="p-4 rounded-2xl border border-slate-200/80 bg-white shadow-2xs space-y-1">
-              <span className="text-slate-400 text-xs flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-[#0F766E]" />
-                <span>কাজের সময়কাল</span>
+            <div className="p-4 rounded-lg border border-[#E4E4E7] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)] space-y-1">
+              <span className="text-[#71717A] text-xs flex items-center gap-1">
+                <Clock className="w-3.5 h-3.5 text-[#71717A]" />
+                <span>Total Hours</span>
               </span>
-              <div className="text-2xl font-black text-[#0F766E]">
-                {Math.round(totalHours * 10) / 10} <span className="text-xs font-normal">hrs</span>
+              <div className="text-2xl font-semibold text-[#09090B] tabular-nums">
+                {Math.round(totalHours * 10) / 10} <span className="text-xs font-normal text-[#71717A]">hrs</span>
               </div>
-              <span className="text-[10px] text-slate-400 block">
+              <span className="text-[11px] text-[#71717A] block">
                 ফিল্ড ও এডিটিং সম্পন্ন
               </span>
             </div>
@@ -170,14 +163,14 @@ export default function InternProfilePage() {
             id="intern-signout-btn"
             onClick={handleSignOut}
             disabled={loggingOut}
-            className="w-full py-3 px-4 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs sm:text-sm font-bold shadow-2xs transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            className="w-full py-2.5 px-4 rounded-lg border border-red-200 bg-red-50 hover:bg-red-100 text-red-700 text-xs sm:text-sm font-medium transition-colors duration-150 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
           >
             {loggingOut ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <LogOut className="w-4 h-4" />
             )}
-            <span>লগআউট করুন (Sign Out)</span>
+            <span>Sign Out</span>
           </button>
         </div>
       )}

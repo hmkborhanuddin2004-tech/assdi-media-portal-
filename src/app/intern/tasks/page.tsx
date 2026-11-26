@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
-  Kanban,
   ExternalLink,
   Loader2,
   FileText,
@@ -47,33 +46,24 @@ export default function InternTasksPage() {
   }, [loadData]);
 
   return (
-    <div className="space-y-4 w-full max-w-xl mx-auto pb-8">
-      {/* Top Banner */}
-      <div className="glass-panel p-4 sm:p-5 space-y-1">
-        <div className="flex items-center justify-between">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#0f766e]/15 text-[#0b5a54] text-xs font-semibold">
-            <Kanban className="w-3.5 h-3.5" />
-            <span>ইন্টার্ন টাস্ক ও অ্যাসাইনমেন্ট</span>
-          </div>
-          <span className="text-[11px] font-bold text-[#33475f]">
-            {currentUser?.full_name || "Intern"}
-          </span>
-        </div>
-        <h1 className="text-lg sm:text-xl font-extrabold text-[#0b1f3a] tracking-tight">
-          Assigned Tasks &amp; Project Status
+    <div className="space-y-5 w-full max-w-xl mx-auto pb-8">
+      {/* Flat Linear/Stripe Header */}
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-[#E4E4E7]">
+        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#09090B] tracking-tight">
+          Assigned Tasks
         </h1>
-        <p className="text-xs text-[#33475f] font-medium">
-          আপনার অংশগ্রহণে চলমান ও সম্পন্ন প্রজেক্টের তালিকা এবং স্ট্যাটাস।
-        </p>
+        <span className="text-xs font-medium text-[#71717A]">
+          {currentUser?.full_name || "Intern"}
+        </span>
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-xs text-[#33475f] font-medium glass-panel">
+        <div className="p-12 text-center text-xs text-[#71717A] bg-white border border-[#E4E4E7] rounded-lg">
           <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#0F766E]" />
           <span>টাস্ক লোড হচ্ছে...</span>
         </div>
       ) : tasks.length === 0 ? (
-        <div className="p-8 text-center text-xs text-[#33475f] font-medium glass-panel">
+        <div className="p-8 text-center text-xs text-[#71717A] bg-white border border-[#E4E4E7] rounded-lg">
           কোনো নির্ধারিত টাস্ক পাওয়া যায়নি।
         </div>
       ) : (
@@ -85,63 +75,58 @@ export default function InternTasksPage() {
             return (
               <div
                 key={task.id}
-                className="glass-panel p-4 space-y-2.5"
+                className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-4 space-y-2.5"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="space-y-0.5">
-                    <span className="text-[11px] font-bold text-[#33475f] block">
+                    <span className="text-[11px] font-medium text-[#71717A] block tabular-nums">
                       {task.course_code}
                     </span>
-                    <h2 className="text-sm font-bold text-[#0b1f3a] leading-tight">
+                    <h2 className="text-sm font-semibold text-[#09090B] leading-tight">
                       {task.course_name}
                     </h2>
                   </div>
-                  <span
-                    className={`px-2.5 py-1 rounded-full text-[11px] font-bold shrink-0 ${
-                      task.stage === "completed"
-                        ? "bg-emerald-100 text-emerald-800"
-                        : task.stage === "review"
-                        ? "bg-purple-100 text-purple-800"
-                        : task.stage === "editing"
-                        ? "bg-blue-100 text-blue-800"
-                        : "bg-amber-100 text-amber-800"
-                    }`}
-                  >
+                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#27272A] text-[11px] font-medium shrink-0">
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        task.stage === "completed" ? "bg-[#0F766E]" : "bg-[#71717A]"
+                      }`}
+                    />
                     {stageLabel}
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                <div className="grid grid-cols-2 gap-2 text-[11px] text-[#52525B] bg-[#FAFAFA] p-2.5 rounded-lg border border-[#E4E4E7]">
                   <div>
-                    <span className="text-slate-400 block">টিম লিড:</span>
-                    <span className="font-bold text-slate-800">{task.lead_name}</span>
+                    <span className="text-[#71717A] block">টিম লিড:</span>
+                    <span className="font-medium text-[#09090B]">{task.lead_name}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block">ভেন্যু:</span>
-                    <span className="font-semibold text-slate-700">
+                    <span className="text-[#71717A] block">ভেন্যু:</span>
+                    <span className="font-medium text-[#09090B]">
                       {task.venue_name}
                     </span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block">ডেডলাইন:</span>
+                    <span className="text-[#71717A] block">ডেডলাইন:</span>
                     <span
-                      className={`font-semibold ${
-                        task.is_overdue ? "text-rose-600 font-bold" : "text-slate-700"
+                      className={`font-medium tabular-nums ${
+                        task.is_overdue ? "text-red-600 font-semibold" : "text-[#09090B]"
                       }`}
                     >
                       {task.countdown_label}
                     </span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block">র-ফুটেজ:</span>
+                    <span className="text-[#71717A] block">র-ফুটেজ:</span>
                     <span
-                      className={`font-bold ${
+                      className={`font-medium ${
                         task.raw_footage_uploaded
-                          ? "text-emerald-700"
-                          : "text-amber-700"
+                          ? "text-[#0F766E]"
+                          : "text-[#71717A]"
                       }`}
                     >
-                      {task.raw_footage_uploaded ? "Uploaded ✓" : "Pending"}
+                      {task.raw_footage_uploaded ? "Uploaded" : "Pending"}
                     </span>
                   </div>
                 </div>
@@ -152,7 +137,7 @@ export default function InternTasksPage() {
                       href={task.final_drive_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0F766E] hover:underline"
+                      className="inline-flex items-center gap-1.5 text-xs font-medium text-[#0F766E] hover:underline"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                       <span>গুগল ড্রাইভ ফাইনাল ডেলিভারি লিংক</span>
@@ -160,13 +145,13 @@ export default function InternTasksPage() {
                   </div>
                 )}
 
-                <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-[11px] text-slate-500">
+                <div className="pt-2 border-t border-[#E4E4E7] flex items-center justify-between">
+                  <span className="text-[11px] text-[#71717A] tabular-nums">
                     অ্যাসাইন করা সদস্য: {task.assignees.length} জন
                   </span>
                   <Link
                     href={`/intern/daily-log`}
-                    className="inline-flex items-center gap-1 text-xs font-bold text-[#0F766E] hover:underline"
+                    className="inline-flex items-center gap-1 text-xs font-medium text-[#0F766E] hover:underline"
                   >
                     <FileText className="w-3.5 h-3.5" />
                     <span>লগ লিখুন</span>

@@ -172,7 +172,7 @@ describe("S3-02: Admin User Management & Service-Role Security", () => {
       // Must not contain a link to create an account
       expect(loginContent).not.toContain('href="/signup"');
       expect(loginContent).not.toContain('href="/register"');
-      expect(loginContent).toContain("নিরাপত্তা নীতি");
+      expect(loginContent).toContain("Public sign-up is disabled.");
     });
   });
 

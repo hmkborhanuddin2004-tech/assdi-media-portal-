@@ -57,7 +57,7 @@ test.describe("Step 7 (S7-01): Master Calendar & Live Dashboard E2E", () => {
     // Verify Top 3 live KPI Cards exist
     const kpiPending = page.locator("#kpi-pending-count");
     await expect(kpiPending).toBeVisible();
-    await expect(kpiPending).toContainText("3টি");
+    await expect(kpiPending).toContainText("3");
 
     const kpiActive = page.locator("#kpi-active-tasks-count");
     await expect(kpiActive).toBeVisible();
@@ -71,7 +71,7 @@ test.describe("Step 7 (S7-01): Master Calendar & Live Dashboard E2E", () => {
     await expect(queueSection.getByText("Professional Cooking")).toBeVisible();
 
     // Verify Emergency Override badge is displayed
-    const overrideBadge = page.locator("#dashboard-approval-queue-section").getByText("Override");
+    const overrideBadge = page.locator("#dashboard-approval-queue-section").getByText("Override", { exact: true });
     await expect(overrideBadge).toBeVisible();
 
     // Verify Bottom 2 Live Cards: Task Board Progress + Gear Stock
@@ -200,7 +200,10 @@ test.describe("Step 7 (S7-01): Master Calendar & Live Dashboard E2E", () => {
         data: {
           action: "approve",
           lead_staff_id: "00000000-0000-0000-0000-000000000007",
-          assignee_ids: ["00000000-0000-0000-0000-000000000007"],
+          assignee_ids: [
+            "00000000-0000-0000-0000-000000000007",
+            "00000000-0000-0000-0000-000000000004",
+          ],
           deadline_at: `${sameDay}T18:00:00Z`,
           gear_ids: ["g1000000-0000-0000-0000-000000000006"],
         },
@@ -269,8 +272,8 @@ test.describe("Step 7 (S7-01): Master Calendar & Live Dashboard E2E", () => {
       await expect(page.locator("#calendar-slip-course")).toContainText(expectedThirdCourse);
       await expect(page.locator("#calendar-slip-calltime")).toContainText(expectedThirdTime);
     } else {
-      // Mobile: Tap "স্লিপ দেখুন" button on second shoot
-      const viewSlipBtn = shoot2.locator("button:has-text('স্লিপ দেখুন')");
+      // Mobile: Tap "View Slip" button on second shoot
+      const viewSlipBtn = shoot2.locator("button:has-text('View Slip')");
       await viewSlipBtn.click();
 
       const mobileSlipModal = page.locator("#shoot-assignment-slip-card");

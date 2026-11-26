@@ -9,7 +9,6 @@ import {
   Users,
   FileText,
   ChevronRight,
-  Sparkles,
   Loader2,
 } from "lucide-react";
 import type { UserProfile } from "@/lib/types/auth";
@@ -57,72 +56,64 @@ export default function InternSchedulePage() {
   const upcomingShoots = assignedTasks.filter((t) => t.id !== todayShoot?.id);
 
   return (
-    <div className="space-y-4 w-full max-w-xl mx-auto pb-8">
-      {/* Top Banner */}
-      <div className="glass-panel p-4 sm:p-5 space-y-1">
-        <div className="flex items-center justify-between">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#0f766e]/15 text-[#0b5a54] text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>ইন্টার্ন শুটিং শিডিউল</span>
-          </div>
-          <span className="text-[11px] font-bold text-[#33475f]">
-            {currentUser?.full_name || "Intern"}
-          </span>
-        </div>
-        <h1 className="text-lg sm:text-xl font-extrabold text-[#0b1f3a] tracking-tight">
-          Today&apos;s &amp; Upcoming Assigned Shoots
+    <div className="space-y-5 w-full max-w-xl mx-auto pb-8">
+      {/* Flat Linear/Stripe Header */}
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-[#E4E4E7]">
+        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#09090B] tracking-tight">
+          Assigned Shoots
         </h1>
-        <p className="text-xs text-[#33475f] font-medium">
-          আপনার নির্ধারিত শুটিং টিম, কল টাইম এবং ভেন্যু বিস্তারিত দেখুন।
-        </p>
+        <span className="text-xs font-medium text-[#71717A]">
+          {currentUser?.full_name || "Intern"}
+        </span>
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-xs text-[#33475f] font-medium glass-panel">
+        <div className="p-12 text-center text-xs text-[#71717A] bg-white border border-[#E4E4E7] rounded-lg">
           <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#0F766E]" />
           <span>শিডিউল লোড হচ্ছে...</span>
         </div>
       ) : (
         <>
-          {/* Today's Shoot Card matching mockup */}
+          {/* Today's Shoot Card */}
           {todayShoot ? (
             <div
               id="intern-schedule-today-card"
-              className="glass-emerald-card rounded-[18px] p-4 sm:p-5 space-y-3"
+              className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-4 sm:p-5 space-y-3"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-black text-[#0b5a54] uppercase tracking-wider">
+                <span className="text-[11px] font-medium text-[#71717A] uppercase tracking-wider">
                   Today&apos;s Shoot
                 </span>
-                <span className="px-2.5 py-0.5 rounded-full bg-[#0F766E] text-white text-[11px] font-bold shadow-2xs">
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#27272A] text-[10px] font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E]" />
                   {todayShoot.stage.replace("_", " ").toUpperCase()}
                 </span>
               </div>
 
               <div className="space-y-1">
-                <h2 className="text-base sm:text-lg font-bold text-slate-900">
+                <h2 className="text-base font-semibold text-[#09090B]">
                   {todayShoot.course_name}
                 </h2>
-                <div className="flex flex-wrap items-center gap-3 text-xs text-slate-700">
-                  <div className="flex items-center gap-1 font-semibold text-slate-800">
-                    <Clock className="w-3.5 h-3.5 text-[#0F766E]" />
+                <div className="flex flex-wrap items-center gap-3 text-xs text-[#52525B]">
+                  <div className="flex items-center gap-1 font-medium text-[#09090B] tabular-nums">
+                    <Clock className="w-3.5 h-3.5 text-[#71717A]" />
                     <span>কল টাইম: {todayShoot.call_time || "09:00 AM"}</span>
                   </div>
-                  <div className="flex items-center gap-1 text-slate-600">
-                    <MapPin className="w-3.5 h-3.5 text-[#0F766E]" />
+                  <div className="flex items-center gap-1 text-[#52525B]">
+                    <MapPin className="w-3.5 h-3.5 text-[#71717A]" />
                     <span>{todayShoot.venue_name || "50 Katha Campus"}</span>
                   </div>
                 </div>
               </div>
 
               {/* Team Members */}
-              <div className="pt-2 border-t border-emerald-600/15 space-y-1.5">
-                <div className="text-[11px] font-bold text-slate-500 flex items-center gap-1">
+              <div className="pt-2.5 border-t border-[#E4E4E7] space-y-1.5">
+                <div className="text-[11px] font-medium text-[#71717A] flex items-center gap-1">
                   <Users className="w-3.5 h-3.5" />
                   <span>টিম মেম্বার ও লিড:</span>
                 </div>
                 <div className="flex flex-wrap gap-1.5">
-                  <span className="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-900 text-xs font-bold">
+                  <span className="px-2 py-1 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#09090B] text-xs font-medium">
                     ★ {todayShoot.lead_name} (Lead)
                   </span>
                   {todayShoot.assignees
@@ -130,7 +121,7 @@ export default function InternSchedulePage() {
                     .map((a) => (
                       <span
                         key={a.user_id}
-                        className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 text-xs font-semibold"
+                        className="px-2 py-1 rounded-md bg-white border border-[#E4E4E7] text-[#52525B] text-xs font-medium"
                       >
                         {a.full_name}
                       </span>
@@ -142,7 +133,7 @@ export default function InternSchedulePage() {
               <div className="pt-2">
                 <Link
                   href="/intern/daily-log"
-                  className="w-full py-2.5 px-4 rounded-xl bg-[#0F766E] hover:bg-[#115E59] text-white text-xs font-bold shadow-xs flex items-center justify-center gap-2 transition-all"
+                  className="w-full py-2.5 px-4 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white text-xs font-medium flex items-center justify-center gap-2 transition-colors duration-150"
                 >
                   <FileText className="w-4 h-4" />
                   <span>এই শুটিংয়ের জন্য ডেইলি লগ সাবমিট করুন</span>
@@ -151,59 +142,59 @@ export default function InternSchedulePage() {
               </div>
             </div>
           ) : (
-            <div className="p-8 text-center text-xs text-slate-400 bg-white rounded-2xl border border-slate-200/80">
+            <div className="p-8 text-center text-xs text-[#71717A] bg-white rounded-lg border border-[#E4E4E7]">
               আজকের কোনো নির্ধারিত শুটিং নেই।
             </div>
           )}
 
           {/* Upcoming Shoots List */}
-          <div className="space-y-2 pt-2">
-            <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-[#0F766E]" />
-              <span>আসন্ন শুটিং ও অ্যাসাইনমেন্ট ({upcomingShoots.length})</span>
+          <div className="space-y-2 pt-1">
+            <h3 className="text-xs font-semibold text-[#09090B] flex items-center gap-1.5">
+              <Calendar className="w-3.5 h-3.5 text-[#71717A]" />
+              <span>Upcoming Assignments ({upcomingShoots.length})</span>
             </h3>
 
             {upcomingShoots.length === 0 ? (
-              <div className="p-4 text-center text-xs text-slate-400 bg-white rounded-xl border border-slate-200/80">
+              <div className="p-4 text-center text-xs text-[#71717A] bg-white rounded-lg border border-[#E4E4E7]">
                 অন্য কোনো অ্যাসাইনমেন্ট নেই।
               </div>
             ) : (
-              <div className="space-y-2.5" id="intern-upcoming-shoots-list">
+              <div className="space-y-2" id="intern-upcoming-shoots-list">
                 {upcomingShoots.map((task) => (
                   <div
                     key={task.id}
-                    className="p-3.5 rounded-2xl border border-slate-200/80 bg-white shadow-2xs space-y-2"
+                    className="p-3.5 rounded-lg border border-[#E4E4E7] bg-white space-y-2"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-900">
+                      <span className="text-xs font-semibold text-[#09090B]">
                         {task.course_name}
                       </span>
-                      <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold">
+                      <span className="px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#52525B] text-[10px] font-medium">
                         {task.stage.replace("_", " ")}
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-3 text-[11px] text-slate-600">
+                    <div className="flex items-center gap-3 text-[11px] text-[#52525B] tabular-nums">
                       <div className="flex items-center gap-1">
-                        <Clock className="w-3 h-3 text-[#0F766E]" />
+                        <Clock className="w-3 h-3 text-[#71717A]" />
                         <span>{task.call_time || "10:00 AM"}</span>
                       </div>
                       <div className="flex items-center gap-1">
-                        <MapPin className="w-3 h-3 text-[#0F766E]" />
+                        <MapPin className="w-3 h-3 text-[#71717A]" />
                         <span>{task.venue_name || "Campus"}</span>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-100">
-                      <span>টিম লিড: {task.lead_name}</span>
+                    <div className="flex items-center justify-between text-[11px] text-[#71717A] pt-1.5 border-t border-[#E4E4E7]">
+                      <span>Lead: {task.lead_name}</span>
                       <span
                         className={
                           task.raw_footage_uploaded
-                            ? "text-emerald-700 font-bold"
-                            : "text-slate-400"
+                            ? "text-[#0F766E] font-medium"
+                            : "text-[#71717A]"
                         }
                       >
-                        {task.raw_footage_uploaded ? "Raw Uploaded ✓" : "Pending Raw"}
+                        {task.raw_footage_uploaded ? "Raw Uploaded" : "Pending Raw"}
                       </span>
                     </div>
                   </div>

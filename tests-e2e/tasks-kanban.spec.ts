@@ -120,14 +120,14 @@ test.describe("Step 6 (S6-01 to S6-04): Task Board, Kanban Pipeline, Shoot Slip,
 
     await verifyZeroHorizontalOverflow();
 
-    // Verify Header matching mockup
-    await expect(page.getByText("Central Task Board — 6-Stage Pipeline")).toBeVisible();
+    // Verify Header
+    await expect(page.locator("h1")).toContainText("Task Board");
 
     // If mobile, check that mobile stage selector tabs work
     if (isMobile) {
       await page.click("button:has-text('Shoot Assigned')");
       await expect(page.locator("#kanban-column-shoot_assigned")).toBeVisible();
-      await page.click("button:has-text('All Stages')");
+      await page.click("button:has-text('All (')");
     }
 
     // Verify all 6 columns present
@@ -202,13 +202,13 @@ test.describe("Step 6 (S6-01 to S6-04): Task Board, Kanban Pipeline, Shoot Slip,
     await page.click("#staff-save-drive-btn");
 
     // Verify Drive link now appears on card
-    await expect(page.getByText("গুগল ড্রাইভ ডেলিভারি লিংক সংযুক্ত রয়েছে")).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText("Google Drive delivery link attached")).toBeVisible({ timeout: 5000 });
 
     // Check /staff/intern-status route
     await page.goto("/staff/intern-status");
     await page.waitForLoadState("domcontentloaded");
     await verifyZeroHorizontalOverflow();
-    await expect(page.getByText("ইন্টার্ন অ্যাক্টিভিটি ও র ফুটেজ ট্র্যাকিং")).toBeVisible();
+    await expect(page.locator("h1")).toContainText("Intern Status");
 
     // Verify toggle footage button works strictly (zero skipping)
     const toggleBtn = page.locator('[id^="toggle-footage-btn-"]').first();
@@ -269,7 +269,7 @@ test.describe("Step 6 (S6-01 to S6-04): Task Board, Kanban Pipeline, Shoot Slip,
 
     // Verify Delivered status badge and clickable Google Drive link
     await expect(page.getByText("Delivered (সম্পন্ন)").first()).toBeVisible({ timeout: 10000 });
-    const coordDriveLink = page.locator('a:has-text("গুগল ড্রাইভ লিংক")').first();
+    const coordDriveLink = page.locator('a:has-text("Google Drive Link")').first();
     await expect(coordDriveLink).toBeVisible();
     const coordHref = await coordDriveLink.getAttribute("href");
     expect(coordHref).toMatch(/^https:\/\/(drive|docs)\.google\.com\//);

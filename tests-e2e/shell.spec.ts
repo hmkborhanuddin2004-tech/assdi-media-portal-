@@ -93,11 +93,11 @@ test.describe("S1-01 Responsive Application Shell & Design Tokens", () => {
     if (isMobile) {
       // Mobile: verify drawer opens, backdrop click closes, and signout redirects cleanly to /login
       await page.click('#mobile-header button[aria-label="Toggle menu"]');
-      await expect(page.getByText("সকল মেনু (All Sections)")).toBeVisible();
+      await expect(page.getByText("All Sections")).toBeVisible();
       await page.keyboard.press("Escape");
-      await expect(page.getByText("সকল মেনু (All Sections)")).toHaveCount(0);
+      await expect(page.getByText("All Sections")).toHaveCount(0);
 
-      await page.click('#mobile-header button[aria-label="লগআউট"]');
+      await page.click('#mobile-header button[aria-label="Sign out"]');
       await page.waitForURL("**/login", { timeout: 10000 });
       expect(page.url()).toContain("/login");
     } else {

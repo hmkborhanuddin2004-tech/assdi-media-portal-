@@ -12,10 +12,8 @@ import {
   FileText,
   Printer,
   Share2,
-  CheckCircle2,
   ChevronRight,
   Loader2,
-  CalendarDays,
   Search,
 } from "lucide-react";
 import type { CalendarWindow } from "@/lib/validations/calendar";
@@ -109,30 +107,30 @@ export default function AdminMasterCalendarPage() {
   };
 
   return (
-    <div className="space-y-6 w-full max-w-full">
-      {/* Top Emerald Glassmorphic Banner */}
-      <div className="print:hidden glass-emerald-card rounded-2xl p-5 md:p-8 border border-emerald-600/20 shadow-xs relative overflow-hidden bg-gradient-to-br from-emerald-50/80 via-white to-teal-50/50">
-        <div className="relative z-10 max-w-3xl space-y-2.5">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-[#0F766E] text-xs font-semibold">
-            <CalendarDays className="w-4 h-4" />
-            <span>ASSDI Media Department • Master Schedule</span>
-          </div>
+    <div className="space-y-5 w-full max-w-full">
+      {/* Flat Linear/Stripe Header */}
+      <div className="print:hidden flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4E4E7]">
+        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#09090B] tracking-tight">
+          Calendar
+        </h1>
 
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#0F172A] tracking-tight leading-snug">
-            মাস্টার শুটিং ক্যালেন্ডার • Master Calendar
-          </h1>
-
-          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-            আসন্ন শুটিং শিডিউল, ক্রু টিম, ভেন্যু ও স্বয়ংক্রিয় অ্যাসাইনমেন্ট স্লিপ
-            (Automated Shoot Slip) এক নজরে।
-          </p>
-        </div>
+        {bounds && (
+          <span className="text-xs text-[#71717A] font-mono tabular-nums">
+            {activeWindow === "tomorrow"
+              ? bounds.tomorrowStr
+              : `${bounds.todayStr} – ${
+                  activeWindow === "next_3_days"
+                    ? bounds.next3DaysEndStr
+                    : bounds.next7DaysEndStr
+                }`}
+          </span>
+        )}
       </div>
 
       {/* Filter Tabs & Search Bar */}
-      <div className="print:hidden glass-panel flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-2.5">
+      <div className="print:hidden bg-white border border-[#E4E4E7] rounded-lg flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-2.5">
         {/* Tabs: Tomorrow, Next 3 Days, Next 7 Days */}
-        <div className="inline-flex p-1 bg-white/35 border border-white/60 rounded-xl gap-1 shrink-0">
+        <div className="inline-flex p-1 bg-[#F4F4F5] border border-[#E4E4E7] rounded-md gap-1 shrink-0">
           <LayoutGroup id="calendar-tabs">
             {(["tomorrow", "next_3_days", "next_7_days"] as CalendarWindow[]).map((win) => {
               const isActive = activeWindow === win;
@@ -142,22 +140,29 @@ export default function AdminMasterCalendarPage() {
                   key={win}
                   id={`calendar-tab-${win}`}
                   onClick={() => handleTabChange(win)}
-                  className="relative flex items-center gap-1.5 px-3.5 py-2 rounded-[10px] text-xs font-semibold select-none transition-colors duration-150 cursor-pointer"
+                  className="relative flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium select-none cursor-pointer"
                 >
                   {isActive && (
                     <motion.div
                       layoutId="calendar-tab-active-pill"
                       transition={PILL_TRANSITION}
-                      className="absolute inset-0 rounded-[10px] bg-[#0F766E] shadow-[0_5px_12px_rgba(15,118,110,0.3)]"
+                      className="absolute inset-0 rounded bg-white border border-[#E4E4E7] shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
                     />
                   )}
-                  <Calendar className={`relative z-10 w-3.5 h-3.5 shrink-0 transition-colors ${isActive ? "text-white" : "text-[#33475f]"}`} />
-                  <span className={`relative z-10 transition-colors ${isActive ? "text-white" : "text-[#33475f]"}`}>{meta.en}</span>
-                  <span className={`relative z-10 hidden sm:inline text-[11px] transition-colors ${isActive ? "text-emerald-100 opacity-90" : "text-[#33475f] opacity-85"}`}>
-                    ({meta.bn})
+                  <Calendar
+                    className={`relative z-10 w-3.5 h-3.5 shrink-0 ${
+                      isActive ? "text-[#0F766E]" : "text-[#71717A]"
+                    }`}
+                  />
+                  <span
+                    className={`relative z-10 ${
+                      isActive ? "text-[#09090B]" : "text-[#52525B]"
+                    }`}
+                  >
+                    {meta.en}
                   </span>
                   {isActive && (
-                    <span className="relative z-10 ml-1 px-1.5 py-0.2 rounded-full text-[10px] bg-white/25 text-white font-bold">
+                    <span className="relative z-10 ml-0.5 px-1.5 py-0.2 rounded bg-[#F4F4F5] text-[#52525B] text-[10px] font-medium tabular-nums">
                       {shoots.length}
                     </span>
                   )}
@@ -169,61 +174,47 @@ export default function AdminMasterCalendarPage() {
 
         {/* Search Input */}
         <div className="relative flex-1 sm:max-w-xs">
-          <Search className="w-4 h-4 text-[#33475f] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-[#71717A] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             id="calendar-search-input"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="কোর্স, ভেন্যু বা টিম দিয়ে খুঁজুন..."
-            className="w-full pl-9 pr-3 py-2 text-xs rounded-[11px] bg-white/55 border border-white/80 text-[#0b1f3a] placeholder-[#475569] focus:outline-hidden focus:bg-white/75 focus:ring-2 focus:ring-[#0F766E]/25 focus:border-[#0F766E] transition-all"
+            placeholder="Search courses, venues, crew..."
+            className="w-full h-8 pl-8 pr-3 text-xs rounded-md bg-[#FAFAFA] border border-[#E4E4E7] text-[#09090B] placeholder-[#71717A] focus:outline-none focus:bg-white focus:border-[#0F766E]"
           />
         </div>
       </div>
 
       {/* Main 2-Column Responsive Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start print:block print:w-full print:m-0 print:p-0">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start print:block print:w-full print:m-0 print:p-0">
         {/* Left Column: Chronological Shoot Schedule Cards (7 cols) */}
-        <div className="print:hidden lg:col-span-7 space-y-3.5">
-          <div className="flex items-center justify-between px-1">
-            <h2 className="text-sm font-bold text-slate-800 flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-[#0F766E]" />
-              <span>নির্ধারিত শুটিং তালিকা ({filteredShoots.length}টি)</span>
+        <div className="print:hidden lg:col-span-7 space-y-3">
+          <div className="flex items-center justify-between px-0.5">
+            <h2 className="text-xs font-medium text-[#52525B] uppercase tracking-wider tabular-nums">
+              Scheduled Shoots ({filteredShoots.length})
             </h2>
-            {bounds && (
-              <span className="text-[11px] text-slate-500 font-mono">
-                {activeWindow === "tomorrow"
-                  ? `তারিখ: ${bounds.tomorrowStr}`
-                  : `উইন্ডো: ${bounds.todayStr} হতে ${
-                      activeWindow === "next_3_days"
-                        ? bounds.next3DaysEndStr
-                        : bounds.next7DaysEndStr
-                    }`}
-              </span>
-            )}
           </div>
 
           {loading ? (
-            <div className="glass-panel p-12 text-center rounded-2xl border border-slate-200 text-slate-400 flex flex-col items-center justify-center gap-3">
-              <Loader2 className="w-6 h-6 animate-spin text-[#0F766E]" />
-              <span className="text-xs font-medium">ক্যালেন্ডার ডাটা লোড হচ্ছে...</span>
+            <div className="bg-white border border-[#E4E4E7] rounded-lg p-12 text-center text-[#71717A] flex flex-col items-center justify-center gap-2">
+              <Loader2 className="w-5 h-5 animate-spin text-[#0F766E]" />
+              <span className="text-xs">Loading schedule...</span>
             </div>
           ) : filteredShoots.length === 0 ? (
-            <div className="glass-panel p-12 text-center rounded-2xl border border-dashed border-slate-300 text-slate-500 space-y-3">
-              <Calendar className="w-10 h-10 text-slate-300 mx-auto" />
+            <div className="bg-white border border-[#E4E4E7] rounded-lg p-12 text-center text-[#71717A] space-y-2">
+              <Calendar className="w-8 h-8 text-[#D4D4D8] mx-auto" />
               <div className="space-y-1">
-                <p className="text-sm font-bold text-slate-700">
+                <p className="text-sm font-medium text-[#09090B]">
                   কোনো শুটিং শিডিউল পাওয়া যায়নি
                 </p>
-                <p className="text-xs text-slate-400">
-                  {activeWindow === "tomorrow"
-                    ? "আগামীকালের জন্য কোনো শুটিং নির্ধারিত নেই।"
-                    : "নির্বাচিত সময়সীমার মধ্যে কোনো শুটিং নির্ধারিত নেই।"}
+                <p className="text-xs text-[#71717A]">
+                  No shoots scheduled for the selected window.
                 </p>
               </div>
             </div>
           ) : (
-            <div className="space-y-3" id="calendar-shoots-list">
+            <div className="space-y-2.5" id="calendar-shoots-list">
               {filteredShoots.map((shoot) => {
                 const isSelected = selectedShoot?.id === shoot.id;
                 return (
@@ -231,74 +222,63 @@ export default function AdminMasterCalendarPage() {
                     key={shoot.id}
                     id={`shoot-card-${shoot.id}`}
                     onClick={() => handleSelectShoot(shoot)}
-                    className={`glass-panel p-4 sm:p-5 rounded-2xl border transition-all duration-200 cursor-pointer relative overflow-hidden group ${
+                    className={`bg-white p-4 rounded-lg border cursor-pointer relative transition-colors group ${
                       isSelected
-                        ? "border-[#0F766E] bg-emerald-50/40 shadow-md ring-2 ring-[#0F766E]/20"
-                        : "border-slate-200/90 hover:border-emerald-500/50 hover:bg-slate-50/60 shadow-xs"
+                        ? "border-[#0F766E] shadow-[0_1px_2px_rgba(0,0,0,0.06)]"
+                        : "border-[#E4E4E7] hover:border-[#D4D4D8] hover:bg-[#F9FAFB]"
                     }`}
                   >
-                    {/* Top Row: Date & Call Time Badge + Status */}
-                    <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-slate-100">
-                      <div className="flex items-center gap-2">
-                        <span className="px-2.5 py-1 rounded-lg bg-emerald-100 text-[#0F766E] text-xs font-bold font-mono">
+                    <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-[#E4E4E7]">
+                      <div className="flex items-center gap-2 tabular-nums">
+                        <span className="px-2 py-0.5 rounded bg-[#F4F4F5] border border-[#E4E4E7] text-[#09090B] text-xs font-mono font-medium">
                           {shoot.shoot_date}
                         </span>
-                        <span className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold">
-                          <Clock className="w-3.5 h-3.5 text-[#0F766E]" />
+                        <span className="flex items-center gap-1 text-xs font-mono text-[#52525B]">
+                          <Clock className="w-3 h-3 text-[#71717A]" />
                           <span>{shoot.call_time}</span>
                         </span>
                       </div>
 
                       <div className="flex items-center gap-1.5">
                         {shoot.is_emergency_override && (
-                          <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 text-[10px] font-bold">
+                          <span className="px-1.5 py-0.5 rounded bg-[#FEF2F2] border border-[#FECACA] text-[#DC2626] text-[10.5px] font-medium">
                             Override
                           </span>
                         )}
-                        <span
-                          className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${
-                            shoot.stage === "completed"
-                              ? "bg-emerald-100 text-emerald-800"
-                              : shoot.stage === "review"
-                              ? "bg-purple-100 text-purple-800"
-                              : shoot.stage === "editing"
-                              ? "bg-teal-100 text-teal-800"
-                              : shoot.stage === "shoot_done"
-                              ? "bg-sky-100 text-sky-800"
-                              : "bg-blue-100 text-blue-800"
-                          }`}
-                        >
-                          {shoot.stage_label}
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#27272A] text-[11px] font-medium">
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              shoot.stage === "completed" ? "bg-[#0F766E]" : "bg-[#52525B]"
+                            }`}
+                          />
+                          <span>{shoot.stage_label}</span>
                         </span>
                       </div>
                     </div>
 
-                    {/* Middle: Course, Program Type & Venue */}
-                    <div className="pt-3 space-y-2">
+                    <div className="pt-3 space-y-1.5">
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <h3 className="text-sm sm:text-base font-bold text-slate-900 group-hover:text-[#0F766E] transition-colors">
+                          <h3 className="text-sm font-semibold text-[#09090B]">
                             {shoot.course_name}
                           </h3>
-                          <p className="text-xs text-slate-500 font-medium">
+                          <p className="text-xs text-[#52525B]">
                             {shoot.program_type_label} • {shoot.format_duration}
                           </p>
                         </div>
 
-                        <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-mono shrink-0">
+                        <span className="px-1.5 py-0.5 rounded bg-[#F4F4F5] border border-[#E4E4E7] text-[#52525B] text-[11px] font-mono tabular-nums shrink-0">
                           {shoot.course_code}
                         </span>
                       </div>
 
-                      {/* Venue */}
-                      <div className="flex items-center gap-1.5 text-xs text-slate-600">
-                        <MapPin className="w-3.5 h-3.5 text-[#0F766E] shrink-0" />
-                        <span className="font-medium">{shoot.venue_name}</span>
+                      <div className="flex items-center gap-1.5 text-xs text-[#52525B]">
+                        <MapPin className="w-3.5 h-3.5 text-[#71717A] shrink-0" />
+                        <span>{shoot.venue_name}</span>
                       </div>
 
-                      {/* Assigned Team */}
-                      <div className="flex items-center gap-2 text-xs pt-1">
-                        <Users className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                      <div className="flex items-center gap-2 text-xs pt-0.5">
+                        <Users className="w-3.5 h-3.5 text-[#71717A] shrink-0" />
                         <div className="flex flex-wrap items-center gap-1.5">
                           {shoot.assignees.length > 0 ? (
                             shoot.assignees.map((member, idx) => {
@@ -306,66 +286,57 @@ export default function AdminMasterCalendarPage() {
                               return (
                                 <span
                                   key={idx}
-                                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] ${
-                                    isLead
-                                      ? "bg-emerald-100 text-[#0F766E] font-bold"
-                                      : "bg-slate-100 text-slate-700 font-medium"
-                                  }`}
+                                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#F4F4F5] border border-[#E4E4E7] text-[#09090B] text-[11px] font-medium"
                                 >
                                   {member.full_name}
                                   {isLead && (
-                                    <span className="text-[9px] uppercase tracking-wide">
-                                      (Lead)
-                                    </span>
+                                    <span className="text-[10px] text-[#0F766E]">Lead</span>
                                   )}
                                 </span>
                               );
                             })
                           ) : (
-                            <span className="text-slate-400 italic text-xs">
+                            <span className="text-[#71717A] text-xs">
                               {shoot.lead_name !== "Unassigned"
                                 ? `${shoot.lead_name} (Lead)`
-                                : "টিম নির্ধারিত হয়নি"}
+                                : "Unassigned"}
                             </span>
                           )}
                         </div>
                       </div>
 
-                      {/* Checked-Out Gear */}
                       <div className="flex items-center gap-2 text-xs pt-0.5">
-                        <Camera className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                        <span className="text-slate-600 text-[11px] truncate font-mono">
+                        <Camera className="w-3.5 h-3.5 text-[#71717A] shrink-0" />
+                        <span className="text-[#52525B] text-[11px] truncate font-mono tabular-nums">
                           {shoot.gear_summary}
                         </span>
                       </div>
                     </div>
 
-                    {/* Card Footer / Action */}
-                    <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs">
-                      <span className="text-[11px] text-slate-400">
-                        স্লিপ: {shoot.slip.slip_number}
+                    <div className="mt-3 pt-2.5 border-t border-[#E4E4E7] flex items-center justify-between text-xs">
+                      <span className="text-[11px] text-[#71717A] font-mono tabular-nums">
+                        {shoot.slip.slip_number}
                       </span>
 
                       <div className="flex items-center gap-2">
-                        {/* Mobile preview button */}
                         <button
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleOpenMobileSlip(shoot);
                           }}
-                          className="lg:hidden inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0F766E] text-white text-xs font-medium"
+                          className="lg:hidden inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#0F766E] text-white text-xs font-medium"
                         >
                           <FileText className="w-3 h-3" />
-                          <span>স্লিপ দেখুন</span>
+                          <span>View Slip</span>
                         </button>
 
                         <span
-                          className={`hidden lg:inline-flex items-center gap-1 text-xs font-semibold ${
-                            isSelected ? "text-[#0F766E]" : "text-slate-400 group-hover:text-slate-700"
+                          className={`hidden lg:inline-flex items-center gap-1 text-xs font-medium ${
+                            isSelected ? "text-[#0F766E]" : "text-[#71717A] group-hover:text-[#09090B]"
                           }`}
                         >
-                          <span>{isSelected ? "নির্বাচিত" : "বিস্তারিত দেখুন"}</span>
+                          <span>{isSelected ? "Selected" : "Inspect slip"}</span>
                           <ChevronRight className="w-3.5 h-3.5" />
                         </span>
                       </div>
@@ -377,16 +348,15 @@ export default function AdminMasterCalendarPage() {
           )}
         </div>
 
-        {/* Right Column: Automated Shoot Assignment Slip (5 cols) */}
-        <div className="hidden lg:block lg:col-span-5 sticky top-6 print:block print:w-full print:static print:m-0 print:p-0">
-          <div className="space-y-3">
-            <div className="print:hidden flex items-center justify-between px-1">
-              <h2 className="text-sm font-bold text-slate-800 flex items-center gap-2">
-                <FileText className="w-4 h-4 text-[#0F766E]" />
-                <span>লাইভ শুট অ্যাসাইনমেন্ট স্লিপ</span>
+        {/* Right Column: Formal Shoot Assignment Slip (5 cols) */}
+        <div className="hidden lg:block lg:col-span-5 sticky top-20 print:block print:w-full print:static print:m-0 print:p-0">
+          <div className="space-y-2.5">
+            <div className="print:hidden flex items-center justify-between px-0.5">
+              <h2 className="text-xs font-medium text-[#52525B] uppercase tracking-wider">
+                Assignment Slip
               </h2>
               {selectedShoot && (
-                <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-[#0F766E] text-[11px] font-bold">
+                <span className="text-xs font-mono text-[#71717A] tabular-nums">
                   {selectedShoot.slip.slip_number}
                 </span>
               )}
@@ -395,196 +365,175 @@ export default function AdminMasterCalendarPage() {
             {selectedShoot ? (
               <div
                 id="calendar-shoot-slip-panel"
-                className="bg-white/60 backdrop-blur-2xl border border-white/85 rounded-2xl shadow-[0_16px_40px_rgba(11,50,60,0.10)] overflow-hidden relative print:p-8 print:m-0 print:border-none print:shadow-none print:w-full print:bg-white"
+                className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] overflow-hidden relative print:p-8 print:m-0 print:border-[#E4E4E7] print:shadow-none print:w-full"
               >
-                {/* Premium Executive Header Band */}
-                <div className="bg-gradient-to-r from-[#0f766e] to-[#0b5a54] text-white px-5 py-4 flex items-center justify-between print:text-black print:bg-none print:border-b print:border-slate-300">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-9 h-9 rounded-xl bg-white/95 p-1.5 shadow-sm shrink-0 flex items-center justify-center">
+                {/* Clean Institutional Header */}
+                <div className="bg-white border-b border-[#E4E4E7] px-4 py-3.5 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-8 h-8 rounded-md bg-[#FAFAFA] border border-[#E4E4E7] p-1 shrink-0 flex items-center justify-center">
                       <Image
                         src="/images/assdi-logo.png"
                         alt="ASSDI Logo"
-                        width={28}
-                        height={28}
+                        width={24}
+                        height={24}
                         className="w-full h-full object-contain"
                       />
                     </div>
                     <div className="flex flex-col leading-tight min-w-0">
-                      <span className="font-extrabold text-[15px] tracking-tight text-white print:text-black">
-                        ASSDI <span className="text-emerald-200 print:text-slate-800">Media</span>
+                      <span className="font-semibold text-[13px] text-[#09090B]">
+                        ASSDI Media Department
                       </span>
-                      <span className="text-[10.5px] text-white/85 print:text-slate-600 font-medium truncate">
-                        As-Sunnah Skill Development Institute • Media Dept.
+                      <span className="text-[10.5px] text-[#71717A] truncate">
+                        As-Sunnah Skill Development Institute
                       </span>
                     </div>
                   </div>
                   <span
                     id="calendar-slip-number-badge"
-                    className="font-mono text-xs font-bold tracking-wider px-3 py-1 rounded-full bg-white/15 border border-white/25 backdrop-blur-md text-white shadow-xs shrink-0 print:text-black print:border-black print:bg-white"
+                    className="font-mono text-[11px] font-medium px-2 py-0.5 rounded bg-[#F4F4F5] border border-[#E4E4E7] text-[#09090B] tabular-nums shrink-0"
                   >
                     <span className="sr-only">ASSDI MEDIA • SHOOT </span>SLIP {selectedShoot.slip.slip_number}
                   </span>
                 </div>
 
-                {/* Structured Luxury Body */}
-                <div className="p-4 sm:p-5 space-y-3.5 print:p-6 print:m-0">
-                  {/* Highlighted Top Summary Strip */}
-                  <div className="bg-white/55 border border-white/75 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs print:bg-slate-50 print:border-slate-200">
-                    <div className="min-w-0">
-                      <div className="text-[10px] font-bold text-[#33475f] uppercase tracking-wider mb-0.5">
-                        Course & Program Format
-                      </div>
-                      <div
-                        id="calendar-slip-course"
-                        className="font-extrabold text-xs sm:text-sm text-[#0b1f3a] leading-tight"
-                      >
-                        {selectedShoot.slip.course_title}
-                      </div>
-                    </div>
-                    <div className="sm:text-right shrink-0">
-                      <div className="text-[10px] font-bold text-[#33475f] uppercase tracking-wider mb-0.5">
-                        Call Time + Date
-                      </div>
-                      <div
-                        id="calendar-slip-calltime"
-                        className="font-extrabold text-xs sm:text-sm text-[#0f766e] leading-tight font-mono"
-                      >
-                        {selectedShoot.slip.call_time_formatted}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Clean 2-Column Metadata Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {/* Venue */}
-                    <div className="p-3 rounded-xl bg-white/50 border border-white/75 shadow-xs flex flex-col justify-between print:bg-white print:border-slate-200">
-                      <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#33475f] uppercase tracking-wider mb-1">
-                        <span className="p-1 rounded-md bg-[#0f766e]/12 text-[#0f766e]">
-                          <MapPin className="w-3.5 h-3.5" />
-                        </span>
-                        <span>Venue / ভেন্যু</span>
-                      </div>
-                      <div
-                        id="calendar-slip-venue"
-                        className="font-bold text-xs text-[#0b1f3a] leading-snug"
-                      >
-                        {selectedShoot.slip.venue_name}
-                      </div>
-                    </div>
-
-                    {/* Assigned Gear */}
-                    <div className="p-3 rounded-xl bg-white/50 border border-white/75 shadow-xs flex flex-col justify-between print:bg-white print:border-slate-200">
-                      <div className="flex items-center justify-between gap-1.5 mb-1">
-                        <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#33475f] uppercase tracking-wider">
-                          <span className="p-1 rounded-md bg-[#0f766e]/12 text-[#0f766e]">
-                            <Camera className="w-3.5 h-3.5" />
-                          </span>
-                          <span>Assigned Gear / গিয়ার</span>
+                {/* Hairline Document Grid */}
+                <div className="p-4 space-y-3.5 print:p-6 print:m-0">
+                  <div className="border border-[#E4E4E7] rounded-lg divide-y divide-[#E4E4E7] overflow-hidden">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[#E4E4E7] bg-[#FAFAFA]">
+                      <div className="p-3 min-w-0">
+                        <div className="text-[10.5px] font-medium text-[#71717A] uppercase tracking-wider mb-0.5">
+                          Course &amp; Format
                         </div>
-                        <Link
-                          href="/admin/gear"
-                          className="print:hidden text-[10.5px] font-semibold text-[#0f766e] hover:underline"
+                        <div
+                          id="calendar-slip-course"
+                          className="font-semibold text-xs sm:text-[13px] text-[#09090B] leading-snug"
                         >
-                          Edit Gear
-                        </Link>
+                          {selectedShoot.slip.course_title}
+                        </div>
                       </div>
-                      <div id="calendar-slip-gear-list" className="space-y-1">
-                        {selectedShoot.slip.assigned_gear.length > 0 ? (
-                          <div className="flex flex-wrap gap-1">
-                            {selectedShoot.slip.assigned_gear.map((g, idx) => (
-                              <span
-                                key={idx}
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-900/[0.05] border border-slate-900/10 text-[11px] font-semibold text-[#0b1f3a]"
-                              >
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#0f766e]" />
-                                <span>{g.name}</span>
-                                <span className="font-mono text-[10px] text-[#33475f]">({g.serial_number})</span>
-                              </span>
-                            ))}
-                          </div>
-                        ) : (
-                          <span className="text-slate-400 text-xs italic">কোনো গিয়ার বরাদ্দ নেই</span>
-                        )}
+                      <div className="p-3">
+                        <div className="text-[10.5px] font-medium text-[#71717A] uppercase tracking-wider mb-0.5">
+                          Call Time &amp; Date
+                        </div>
+                        <div
+                          id="calendar-slip-calltime"
+                          className="font-semibold text-xs sm:text-[13px] text-[#0F766E] font-mono tabular-nums"
+                        >
+                          {selectedShoot.slip.call_time_formatted}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Assigned Team & Phones */}
-                  <div className="p-3 rounded-xl bg-white/50 border border-white/75 shadow-xs space-y-2 print:bg-white print:border-slate-200">
-                    <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#33475f] uppercase tracking-wider">
-                      <span className="p-1 rounded-md bg-[#0f766e]/12 text-[#0f766e]">
-                        <Users className="w-3.5 h-3.5" />
-                      </span>
-                      <span>Assigned Team & Phones / শুট টিম</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-[#E4E4E7] bg-white">
+                      <div className="p-3">
+                        <div className="text-[10.5px] font-medium text-[#71717A] uppercase tracking-wider mb-0.5">
+                          Venue
+                        </div>
+                        <div
+                          id="calendar-slip-venue"
+                          className="font-medium text-xs text-[#09090B]"
+                        >
+                          {selectedShoot.slip.venue_name}
+                        </div>
+                      </div>
+
+                      <div className="p-3">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-[10.5px] font-medium text-[#71717A] uppercase tracking-wider">
+                            Assigned Gear
+                          </span>
+                          <Link
+                            href="/admin/gear"
+                            className="print:hidden text-[10.5px] font-medium text-[#0F766E] hover:underline"
+                          >
+                            Edit Gear
+                          </Link>
+                        </div>
+                        <div id="calendar-slip-gear-list">
+                          {selectedShoot.slip.assigned_gear.length > 0 ? (
+                            <div className="flex flex-wrap gap-1">
+                              {selectedShoot.slip.assigned_gear.map((g, idx) => (
+                                <span
+                                  key={idx}
+                                  className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-[#F4F4F5] border border-[#E4E4E7] text-[11px] font-medium text-[#09090B]"
+                                >
+                                  <span>{g.name}</span>
+                                  <span className="font-mono text-[10px] text-[#71717A] tabular-nums">
+                                    {g.serial_number}
+                                  </span>
+                                </span>
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="text-[#71717A] text-xs">No gear assigned</span>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                    <div id="calendar-slip-team-list" className="space-y-1.5">
-                      {selectedShoot.slip.team_members.length > 0 ? (
-                        selectedShoot.slip.team_members.map((m, idx) => {
-                          const initials = m.name
-                            .split(" ")
-                            .map((w) => w[0])
-                            .join("")
-                            .slice(0, 2)
-                            .toUpperCase();
-                          return (
+
+                    <div className="p-3 bg-white">
+                      <div className="text-[10.5px] font-medium text-[#71717A] uppercase tracking-wider mb-1.5">
+                        Assigned Team &amp; Contacts
+                      </div>
+                      <div
+                        id="calendar-slip-team-list"
+                        className="divide-y divide-[#E4E4E7] border border-[#E4E4E7] rounded-md"
+                      >
+                        {selectedShoot.slip.team_members.length > 0 ? (
+                          selectedShoot.slip.team_members.map((m, idx) => (
                             <div
                               key={idx}
-                              className="flex items-center justify-between gap-2 p-1.5 rounded-lg bg-white/70 border border-white/85 text-xs text-[#0b1f3a] font-medium"
+                              className="flex items-center justify-between gap-2 px-2.5 py-1.5 text-xs bg-white"
                             >
                               <div className="flex items-center gap-1.5 min-w-0">
-                                <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#14b8a6] to-[#0f766e] text-white flex items-center justify-center font-bold text-[9px] shrink-0">
-                                  {initials}
-                                </div>
-                                <span className="truncate">{m.name}</span>
+                                <span className="font-medium text-[#09090B] truncate">
+                                  {m.name}
+                                </span>
                                 {m.is_lead && (
-                                  <span className="px-1.5 py-0.2 rounded text-[9.5px] font-bold bg-[#0f766e]/15 text-[#0b5a54] border border-[#0f766e]/25">
+                                  <span className="px-1.5 py-0.2 rounded bg-[#F4F4F5] text-[#27272A] border border-[#E4E4E7] text-[10px] font-medium">
                                     Lead
                                   </span>
                                 )}
                               </div>
                               <a
                                 href={`tel:${m.phone.replace(/[^0-9+]/g, "")}`}
-                                className="font-mono text-[11px] font-semibold text-[#0f766e] hover:underline shrink-0"
+                                className="font-mono text-[11px] text-[#52525B] hover:text-[#0F766E] tabular-nums shrink-0"
                               >
                                 {m.phone}
                               </a>
                             </div>
-                          );
-                        })
-                      ) : (
-                        <span className="text-slate-400 italic text-xs">
-                          {selectedShoot.lead_name !== "Unassigned"
-                            ? `${selectedShoot.lead_name} (${selectedShoot.lead_phone})`
-                            : "টিম বরাদ্দ হয়নি"}
-                        </span>
-                      )}
+                          ))
+                        ) : (
+                          <div className="px-2.5 py-1.5 text-xs text-[#71717A]">
+                            {selectedShoot.lead_name !== "Unassigned"
+                              ? `${selectedShoot.lead_name} (${selectedShoot.lead_phone})`
+                              : "No crew assigned"}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
 
-                  {/* Important Notice */}
-                  <div className="p-3 rounded-xl bg-[#0f766e]/10 border border-[#0f766e]/20 text-xs text-[#0b5a54] flex items-center gap-2 font-medium">
-                    <CheckCircle2 className="w-4 h-4 text-[#0f766e] shrink-0" />
-                    <span>
-                      শুটিং শুরুর অন্তত ১৫ মিনিট আগে ভেন্যুতে উপস্থিত হয়ে গিয়ার চেক-আউট ও ব্যাটারি/কার্ড যাচাই নিশ্চিত করুন।
-                    </span>
+                  <div className="px-3 py-2 rounded-md bg-[#FAFAFA] border border-[#E4E4E7] text-[11.5px] text-[#52525B]">
+                    শুটিং শুরুর অন্তত ১৫ মিনিট আগে ভেন্যুতে উপস্থিত হয়ে গিয়ার চেক-আউট ও ব্যাটারি/কার্ড যাচাই নিশ্চিত করুন।
                   </div>
 
-                  {/* 1-Click Action Buttons */}
-                  <div className="print:hidden pt-2 flex flex-col sm:flex-row gap-2.5">
+                  {/* Actions */}
+                  <div className="print:hidden pt-1 flex flex-col sm:flex-row gap-2">
                     <Link
                       href="/admin/gear"
                       id="calendar-edit-gear-btn"
-                      className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white/70 hover:bg-white text-[#33475f] hover:text-[#0b1f3a] text-xs font-semibold border border-white/80 transition-all shadow-xs"
+                      className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-white hover:bg-[#F4F4F5] text-[#09090B] text-xs font-medium border border-[#E4E4E7]"
                     >
-                      <Camera className="w-3.5 h-3.5 text-[#0f766e]" />
+                      <Camera className="w-3.5 h-3.5 text-[#52525B]" />
                       <span>Edit Gear</span>
                     </Link>
                     <button
                       onClick={handlePrintSlip}
                       id="calendar-download-pdf-btn"
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl bg-[#0b1f3a] hover:bg-[#152a4a] text-white text-xs font-semibold shadow-xs transition-all active:scale-[0.98]"
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-white hover:bg-[#F4F4F5] text-[#09090B] text-xs font-medium border border-[#E4E4E7]"
                     >
-                      <Printer className="w-4 h-4" />
+                      <Printer className="w-3.5 h-3.5 text-[#52525B]" />
                       <span>Download PDF</span>
                     </button>
 
@@ -593,20 +542,18 @@ export default function AdminMasterCalendarPage() {
                       target="_blank"
                       rel="noopener noreferrer"
                       id="calendar-share-whatsapp-btn"
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl bg-[#0f766e] hover:bg-[#0b5a54] text-white text-xs font-semibold shadow-xs transition-all active:scale-[0.98]"
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white text-xs font-medium"
                     >
-                      <Share2 className="w-4 h-4" />
+                      <Share2 className="w-3.5 h-3.5" />
                       <span>Share on WhatsApp</span>
                     </a>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="glass-panel p-12 text-center rounded-2xl border border-dashed border-slate-300 text-slate-400">
-                <FileText className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-                <p className="text-xs">
-                  শুটিং স্লিপ দেখতে বাম পাশের তালিকা থেকে যেকোনো শুট নির্বাচন করুন।
-                </p>
+              <div className="bg-white border border-[#E4E4E7] rounded-lg p-12 text-center text-[#71717A]">
+                <FileText className="w-7 h-7 text-[#D4D4D8] mx-auto mb-2" />
+                <p className="text-xs">Select a shoot from the list to inspect its slip.</p>
               </div>
             )}
           </div>

@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   FileText,
   Clock,
-  Sparkles,
   CheckCircle2,
   AlertCircle,
   Film,
@@ -165,37 +164,28 @@ export default function StaffDailyLogPage() {
   };
 
   return (
-    <div className="space-y-4 w-full max-w-full">
-      {/* Top Banner (Desktop Staff View matching mockup) */}
-      <div className="glass-panel p-5 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#0f766e]/15 text-[#0b5a54] text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>পার্মানেন্ট স্টাফ পোর্টাল • ডেইলি কাজের লগ</span>
-          </div>
-          <h1 className="text-xl sm:text-2xl font-extrabold text-[#0b1f3a] tracking-tight">
-            Permanent Staff Daily Worklog
-          </h1>
-          <p className="text-xs sm:text-[13px] text-[#33475f] font-medium">
-            আজকের সম্পাদিত কাজের ক্যাটাগরি, সময়কাল ও সারসংক্ষেপ ডাটাবেজে সাবমিট করুন।
-          </p>
-        </div>
+    <div className="space-y-5 w-full max-w-full">
+      {/* Flat Linear/Stripe Header */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4E4E7]">
+        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#09090B] tracking-tight">
+          Daily Logs
+        </h1>
 
         <div className="flex items-center gap-2 shrink-0">
           <Link
             href="/staff/tasks"
             id="staff-my-tasks-link"
-            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-[11px] border border-white/80 bg-white/55 hover:bg-white/80 text-[#0b1f3a] text-xs font-semibold shadow-xs transition-all"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-[#E4E4E7] bg-white hover:bg-[#F4F4F5] text-[#09090B] text-xs font-medium"
           >
-            <Layers className="w-4 h-4 text-[#0F766E]" />
+            <Layers className="w-3.5 h-3.5 text-[#71717A]" />
             <span>My Tasks</span>
           </Link>
           <Link
             href="/staff/intern-status"
             id="staff-intern-status-link"
-            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-[11px] border border-white/80 bg-white/55 hover:bg-white/80 text-[#0b1f3a] text-xs font-semibold shadow-xs transition-all"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-[#E4E4E7] bg-white hover:bg-[#F4F4F5] text-[#09090B] text-xs font-medium"
           >
-            <UserCheck className="w-4 h-4 text-[#0F766E]" />
+            <UserCheck className="w-3.5 h-3.5 text-[#71717A]" />
             <span>Intern Status</span>
           </Link>
         </div>
@@ -205,45 +195,45 @@ export default function StaffDailyLogPage() {
       {statusMessage && (
         <div
           id="staff-log-status-banner"
-          className={`p-4 rounded-[14px] text-xs sm:text-sm font-semibold flex items-center gap-2.5 backdrop-blur-md animate-in fade-in ${
+          className={`p-3 rounded-lg text-xs font-medium flex items-center gap-2 ${
             statusMessage.type === "success"
-              ? "bg-emerald-500/15 border border-emerald-400/35 text-[#0b1f3a]"
-              : "bg-red-500/15 border border-red-400/35 text-[#0b1f3a]"
+              ? "bg-[#F4F4F5] border border-[#E4E4E7] text-[#09090B]"
+              : "bg-red-50 border border-red-200 text-red-700"
           }`}
         >
           {statusMessage.type === "success" ? (
-            <CheckCircle2 className="w-5 h-5 text-[#15803d] shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-[#0F766E] shrink-0" />
           ) : (
-            <AlertCircle className="w-5 h-5 text-[#dc2626] shrink-0" />
+            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
           )}
           <span>{statusMessage.text}</span>
         </div>
       )}
 
-      {/* Main Worklog Submission Card matching mockup */}
-      <div className="glass-panel p-5 md:p-6 space-y-6">
-        <div className="flex items-center justify-between border-b border-white/60 pb-4">
+      {/* Main Worklog Submission Card */}
+      <div className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-5 space-y-5">
+        <div className="flex items-center justify-between border-b border-[#E4E4E7] pb-3.5">
           <div className="space-y-0.5">
-            <h2 className="text-base sm:text-lg font-bold text-[#0b1f3a]">
-              Daily Logs — Submit Daily Worklog
+            <h2 className="text-sm font-semibold text-[#09090B]">
+              Submit Daily Worklog
             </h2>
-            <p className="text-xs text-[#33475f] font-medium">
-              Selectable Category • Hours Worked • Short Work Summary
+            <p className="text-xs text-[#71717A]">
+              Category, hours worked, and work summary
             </p>
           </div>
           <div className="text-right">
-            <span className="text-[11px] text-[#33475f] font-medium block">Current User</span>
-            <span className="text-xs font-bold text-[#0b1f3a] block">
+            <span className="text-[11px] text-[#71717A] block">Logged in as</span>
+            <span className="text-xs font-medium text-[#09090B] block">
               {currentUser?.full_name || "Permanent Staff"}
             </span>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* 1. Selectable Category (5 Pills from mockup) */}
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* 1. Selectable Category */}
           <div className="space-y-2">
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-              Selectable Category
+            <label className="block text-xs font-medium text-[#52525B]">
+              Category
             </label>
             <div className="flex flex-wrap gap-2" id="staff-category-pills">
               {STAFF_WORK_CATEGORIES.map((cat) => {
@@ -254,10 +244,10 @@ export default function StaffDailyLogPage() {
                     type="button"
                     onClick={() => setSelectedCategory(cat.value)}
                     data-category={cat.value}
-                    className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-150 cursor-pointer ${
+                    className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium border transition-colors duration-150 cursor-pointer ${
                       isSelected
-                        ? "bg-[#0F766E] text-white shadow-sm ring-2 ring-[#0F766E]/20"
-                        : "bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200/60"
+                        ? "bg-[#0F766E] border-[#0F766E] text-white"
+                        : "bg-white hover:bg-[#F4F4F5] text-[#52525B] border-[#E4E4E7]"
                     }`}
                   >
                     {getCategoryIcon(cat.value)}
@@ -273,12 +263,12 @@ export default function StaffDailyLogPage() {
             <div className="space-y-1.5">
               <label
                 htmlFor="staff-hours-input"
-                className="block text-xs font-bold text-slate-700 uppercase tracking-wider"
+                className="block text-xs font-medium text-[#52525B]"
               >
                 Hours Worked
               </label>
               <div className="relative">
-                <Clock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3 pointer-events-none" />
+                <Clock className="w-4 h-4 text-[#71717A] absolute left-3 top-2.5 pointer-events-none" />
                 <input
                   id="staff-hours-input"
                   type="number"
@@ -289,9 +279,9 @@ export default function StaffDailyLogPage() {
                   onChange={(e) => setHoursSpent(e.target.value)}
                   placeholder="e.g. 6.5"
                   required
-                  className="w-full pl-10 pr-12 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-[#0F766E] focus:outline-none"
+                  className="w-full pl-9 pr-12 py-2 rounded-lg border border-[#E4E4E7] text-xs sm:text-sm font-medium text-[#09090B] tabular-nums focus:border-[#0F766E] focus:outline-none"
                 />
-                <span className="absolute right-3.5 top-2.5 text-xs font-bold text-slate-400 pointer-events-none">
+                <span className="absolute right-3 top-2.5 text-xs font-medium text-[#71717A] pointer-events-none">
                   hrs
                 </span>
               </div>
@@ -300,7 +290,7 @@ export default function StaffDailyLogPage() {
             <div className="space-y-1.5">
               <label
                 htmlFor="staff-task-select"
-                className="block text-xs font-bold text-slate-700 uppercase tracking-wider"
+                className="block text-xs font-medium text-[#52525B]"
               >
                 Associated Task (Optional)
               </label>
@@ -308,7 +298,7 @@ export default function StaffDailyLogPage() {
                 id="staff-task-select"
                 value={selectedTaskId}
                 onChange={(e) => setSelectedTaskId(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-700 focus:ring-2 focus:ring-[#0F766E] focus:outline-none bg-white cursor-pointer"
+                className="w-full px-3 py-2 rounded-lg border border-[#E4E4E7] text-xs sm:text-sm text-[#09090B] focus:border-[#0F766E] focus:outline-none bg-white cursor-pointer"
               >
                 <option value="">— কোনো নির্দিষ্ট টাস্ক নেই (General Work) —</option>
                 {tasks.map((task) => (
@@ -320,11 +310,11 @@ export default function StaffDailyLogPage() {
             </div>
           </div>
 
-          {/* 3. Short Work Summary (Textarea matching mockup placeholder) */}
+          {/* 3. Short Work Summary */}
           <div className="space-y-1.5">
             <label
               htmlFor="staff-notes-input"
-              className="block text-xs font-bold text-slate-700 uppercase tracking-wider"
+              className="block text-xs font-medium text-[#52525B]"
             >
               Short Work Summary
             </label>
@@ -335,16 +325,16 @@ export default function StaffDailyLogPage() {
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Captured B-roll of the main courtyard, interviewed 3 senior staff..."
               required
-              className="w-full p-3.5 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-800 focus:ring-2 focus:ring-[#0F766E] focus:outline-none leading-relaxed placeholder:text-slate-400"
+              className="w-full p-3 rounded-lg border border-[#E4E4E7] text-xs sm:text-sm text-[#09090B] focus:border-[#0F766E] focus:outline-none leading-relaxed placeholder:text-[#71717A]"
             />
           </div>
 
-          {/* 4. Submit Button matching mockup */}
+          {/* 4. Submit Button */}
           <button
             type="submit"
             id="staff-submit-log-btn"
             disabled={submitting}
-            className="w-full py-3 px-6 rounded-xl bg-[#0F766E] hover:bg-[#115E59] text-white text-xs sm:text-sm font-bold shadow-sm transition-all duration-150 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            className="w-full sm:w-auto py-2.5 px-5 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white text-xs sm:text-sm font-medium transition-colors duration-150 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
           >
             {submitting ? (
               <>
@@ -361,69 +351,66 @@ export default function StaffDailyLogPage() {
         </form>
       </div>
 
-      {/* Project Lead Update Intern Task Status Banner (Mockup reference) */}
-      <div className="glass-panel p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      {/* Project Lead Quick Link */}
+      <div className="bg-white border border-[#E4E4E7] rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="space-y-0.5">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <h3 className="text-xs sm:text-sm font-bold text-[#0b1f3a]">
-              Project Lead • Update Intern Task Status
-            </h3>
-          </div>
-          <p className="text-[11px] text-[#33475f] font-medium">
-            Hasan Ali (Intern) • Art of Creation Shoot • Raw Uploaded
+          <h3 className="text-xs font-semibold text-[#09090B]">
+            Intern Raw Footage Status
+          </h3>
+          <p className="text-[11px] text-[#71717A]">
+            Project Leads can verify and update intern raw footage uploads.
           </p>
         </div>
         <Link
           href="/staff/intern-status"
-          className="inline-flex items-center gap-1 text-xs font-bold text-[#0F766E] hover:underline"
+          className="inline-flex items-center gap-1 text-xs font-medium text-[#0F766E] hover:underline"
         >
-          <span>স্টাফ লিড কন্ট্রোল প্যানেলে যান</span>
+          <span>Open Intern Status</span>
           <ChevronRight className="w-3.5 h-3.5" />
         </Link>
       </div>
 
-      {/* Recent Submitted Logs List (Live PostgreSQL store) */}
+      {/* Recent Submitted Logs List */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-[#0b1f3a] flex items-center gap-2">
-            <FileText className="w-4 h-4 text-[#0F766E]" />
-            <span>আপনার সাম্প্রতিক সাবমিট করা কাজের লগ (Recent Daily Logs)</span>
-            <span className="px-2 py-0.5 rounded-full bg-white/60 border border-white/80 text-[#0b1f3a] text-xs font-bold">
+          <h2 className="text-sm font-semibold text-[#09090B] flex items-center gap-2">
+            <FileText className="w-4 h-4 text-[#71717A]" />
+            <span>Recent Daily Logs</span>
+            <span className="px-2 py-0.5 rounded bg-[#F4F4F5] border border-[#E4E4E7] text-[#52525B] text-xs font-medium tabular-nums">
               {recentLogs.length}
             </span>
           </h2>
         </div>
 
         {loading ? (
-          <div className="p-8 text-center text-xs text-[#33475f] font-medium glass-panel">
+          <div className="p-8 text-center text-xs text-[#71717A] bg-white border border-[#E4E4E7] rounded-lg">
             <Loader2 className="w-5 h-5 animate-spin mx-auto mb-2 text-[#0F766E]" />
             <span>লগ ডাটা লোড হচ্ছে...</span>
           </div>
         ) : recentLogs.length === 0 ? (
-          <div className="p-8 text-center text-xs text-[#33475f] font-medium glass-panel">
+          <div className="p-8 text-center text-xs text-[#71717A] bg-white border border-[#E4E4E7] rounded-lg">
             এখনও কোনো কাজের লগ সাবমিট করা হয়নি।
           </div>
         ) : (
-          <div className="overflow-x-auto glass-panel">
-            <table className="w-full text-left text-[12.5px]" id="staff-recent-logs-table">
-              <thead className="bg-white/30 text-[#33475f] text-[10px] font-bold uppercase tracking-[0.13em] border-b border-white/70">
+          <div className="overflow-x-auto bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+            <table className="w-full text-left text-[13px]" id="staff-recent-logs-table">
+              <thead className="bg-[#FAFAFA] text-[#71717A] text-xs font-medium border-b border-[#E4E4E7]">
                 <tr>
-                  <th className="py-3 px-4">Date</th>
-                  <th className="py-3 px-4">Category</th>
-                  <th className="py-3 px-4">Hours</th>
-                  <th className="py-3 px-4">Task / Course</th>
-                  <th className="py-3 px-4">Summary Notes</th>
+                  <th className="py-2.5 px-4 font-medium">Date</th>
+                  <th className="py-2.5 px-4 font-medium">Category</th>
+                  <th className="py-2.5 px-4 font-medium">Hours</th>
+                  <th className="py-2.5 px-4 font-medium">Task / Course</th>
+                  <th className="py-2.5 px-4 font-medium">Summary Notes</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-[#E4E4E7]">
                 {recentLogs.map((log) => (
-                  <tr key={log.id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="py-3 px-4 font-semibold text-slate-700 whitespace-nowrap">
+                  <tr key={log.id} className="h-12 hover:bg-[#F9FAFB] transition-colors duration-150">
+                    <td className="py-2.5 px-4 font-medium text-[#09090B] whitespace-nowrap tabular-nums">
                       {log.log_date}
                     </td>
-                    <td className="py-3 px-4">
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-800 font-medium text-[11px]">
+                    <td className="py-2.5 px-4">
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#27272A] font-medium text-[11px]">
                         {log.work_category ? (
                           <>
                             {getCategoryIcon(log.work_category)}
@@ -438,13 +425,13 @@ export default function StaffDailyLogPage() {
                         )}
                       </span>
                     </td>
-                    <td className="py-3 px-4 font-bold text-slate-900 whitespace-nowrap">
+                    <td className="py-2.5 px-4 font-semibold text-[#09090B] whitespace-nowrap tabular-nums">
                       {log.hours_spent} hrs
                     </td>
-                    <td className="py-3 px-4 text-slate-600 whitespace-nowrap">
+                    <td className="py-2.5 px-4 text-[#52525B] whitespace-nowrap">
                       {log.course_name || log.task_title || "—"}
                     </td>
-                    <td className="py-3 px-4 text-slate-600 max-w-md line-clamp-2">
+                    <td className="py-2.5 px-4 text-[#52525B] max-w-md line-clamp-2">
                       {log.notes}
                     </td>
                   </tr>

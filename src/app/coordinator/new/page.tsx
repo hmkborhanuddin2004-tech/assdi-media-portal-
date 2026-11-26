@@ -15,7 +15,6 @@ import {
   ExternalLink,
   ChevronRight,
   ShieldAlert,
-  Film,
 } from "lucide-react";
 import type { UserProfile } from "@/lib/types/auth";
 import type { ProgramType, FramingType } from "@/lib/types/database";
@@ -212,66 +211,48 @@ export default function CoordinatorNewRequisitionPage() {
     (user?.course_name ? { name: user.course_name, code: user.course_code || "" } : null);
 
   return (
-    <div className="space-y-4 w-full max-w-full pb-10">
-      {/* Top Banner Matching Institutional Theme */}
-      <div className="glass-panel p-5 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#0f766e]/15 text-[#0b5a54] text-xs font-semibold">
-            <Film className="w-3.5 h-3.5" />
-            <span>
-              {user?.role === "admin"
-                ? "মিডিয়া হেড প্রশাসন প্যানেল"
-                : `কোর্স কোঅর্ডিনেটর পোর্টাল • ${assignedCourse?.name || "কোর্স"}`}
-            </span>
-          </div>
-          <h1 className="text-xl sm:text-2xl font-extrabold text-[#0b1f3a] tracking-tight">
-            Course Requisition Portal
+    <div className="space-y-5 w-full max-w-full pb-10">
+      {/* Flat Linear/Stripe Header */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4E4E7]">
+        <div>
+          <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#09090B] tracking-tight">
+            New Requisition
           </h1>
-          <p className="text-xs sm:text-[13px] text-[#33475f] font-medium">
-            নতুন ভিডিও শুটিং ও মিডিয়া কাভারেজের জন্য রিকুইজিশন ফর্ম পূরণ করুন।
-          </p>
+          {assignedCourse?.name && (
+            <p className="text-xs text-[#71717A] mt-0.5">{assignedCourse.name}</p>
+          )}
         </div>
 
         <Link
           href="/coordinator/requests"
           id="view-my-requests-link"
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-[11px] border border-white/80 bg-white/55 hover:bg-white/80 text-[#0b1f3a] text-xs sm:text-sm font-semibold shadow-xs transition-all duration-150 shrink-0"
+          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-[#E4E4E7] bg-white hover:bg-[#F4F4F5] text-[#09090B] text-xs font-medium shrink-0"
         >
           <span>My Requests</span>
-          <ChevronRight className="w-4 h-4 text-[#33475f]" />
+          <ChevronRight className="w-3.5 h-3.5 text-[#71717A]" />
         </Link>
       </div>
 
       {/* Main 2-Column Responsive Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-        {/* Left Column: Requisition Form (Mockup matching) */}
-        <div className="lg:col-span-7 glass-panel p-5 sm:p-7 space-y-6">
-          <div className="border-b border-white/60 pb-4 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-[#0f766e]/15 text-[#0F766E] flex items-center justify-center font-bold">
-                <FilePlus2 className="w-5 h-5" />
-              </div>
-              <div>
-                <h2 className="text-base sm:text-lg font-bold text-[#0b1f3a]">
-                  New Shoot Requisition Form
-                </h2>
-                <p className="text-[11.5px] text-[#33475f] font-medium">
-                  সঠিক তথ্য প্রদান করে শুটিংয়ের জন্য অগ্রিম শিডিউল নিশ্চিত করুন।
-                </p>
-              </div>
-            </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+        {/* Left Column: Requisition Form */}
+        <div className="lg:col-span-7 bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-5 sm:p-6 space-y-5">
+          <div className="border-b border-[#E4E4E7] pb-3.5">
+            <h2 className="text-sm font-semibold text-[#09090B]">
+              Shoot Request Details
+            </h2>
           </div>
 
           {/* Form Error Banner */}
           {formError && (
             <div
               id="form-error"
-              className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2.5 animate-fadeIn"
+              className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2"
             >
-              <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+              <AlertTriangle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
               <div className="space-y-0.5">
                 <p className="font-semibold">ত্রুটি (Validation Error):</p>
-                <p className="text-rose-700">{formError}</p>
+                <p>{formError}</p>
               </div>
             </div>
           )}
@@ -280,31 +261,30 @@ export default function CoordinatorNewRequisitionPage() {
           {formSuccess && (
             <div
               id="form-success"
-              className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2.5 animate-fadeIn"
+              className="p-3 rounded-lg bg-[#F4F4F5] border border-[#E4E4E7] text-[#09090B] text-xs flex items-center gap-2"
             >
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-[#0F766E] shrink-0" />
               <span className="font-medium">{formSuccess}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5" id="requisition-form">
+          <form onSubmit={handleSubmit} className="space-y-4" id="requisition-form">
             {/* Field 1: Course Name */}
             <div className="space-y-1.5">
               <label
                 htmlFor="course_id"
-                className="block text-xs font-semibold text-slate-700"
+                className="block text-xs font-medium text-[#52525B]"
               >
                 Course Name
               </label>
 
               {user?.role === "admin" ? (
-                // Admin sees all courses in a live dropdown
                 <select
                   id="course_id"
                   name="course_id"
                   value={courseId}
                   onChange={(e) => setCourseId(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs sm:text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/20 focus:border-[#0F766E]"
+                  className="w-full px-3 py-2 rounded-lg border border-[#E4E4E7] bg-white text-xs sm:text-sm font-medium text-[#09090B] focus:outline-none focus:border-[#0F766E]"
                   required
                 >
                   {courses.map((course) => (
@@ -314,16 +294,15 @@ export default function CoordinatorNewRequisitionPage() {
                   ))}
                 </select>
               ) : (
-                // Coordinator: Course strictly locked to assigned course_id
                 <div className="relative">
                   <input
                     type="text"
                     id="course_name_locked"
                     readOnly
                     value={assignedCourse?.name || "কোর্স লোড হচ্ছে..."}
-                    className="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm font-semibold text-slate-700 cursor-not-allowed"
+                    className="w-full px-3 py-2 pr-9 rounded-lg border border-[#E4E4E7] bg-[#F4F4F5] text-xs sm:text-sm font-medium text-[#52525B] cursor-not-allowed"
                   />
-                  <Lock className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2" />
+                  <Lock className="w-3.5 h-3.5 text-[#71717A] absolute right-3 top-1/2 -translate-y-1/2" />
                   <input type="hidden" id="course_id" name="course_id" value={courseId} />
                 </div>
               )}
@@ -333,12 +312,11 @@ export default function CoordinatorNewRequisitionPage() {
             <div className="space-y-2">
               <label
                 htmlFor="program_type"
-                className="block text-xs font-semibold text-slate-700"
+                className="block text-xs font-medium text-[#52525B]"
               >
                 Program Type
               </label>
 
-              {/* Selectable Chip Buttons */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {PROGRAM_TYPES.map((pt) => {
                   const meta = PROGRAM_TYPE_LABELS[pt];
@@ -349,16 +327,16 @@ export default function CoordinatorNewRequisitionPage() {
                       key={pt}
                       id={`chip-program-${pt}`}
                       onClick={() => setProgramType(pt)}
-                      className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between ${
+                      className={`p-2.5 rounded-lg border text-left transition-colors duration-150 flex flex-col justify-between cursor-pointer ${
                         isSelected
-                          ? "bg-[#0F766E] border-[#0F766E] text-white shadow-xs font-bold"
-                          : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium"
+                          ? "bg-[#0F766E] border-[#0F766E] text-white font-medium"
+                          : "bg-white border-[#E4E4E7] text-[#09090B] hover:bg-[#F9FAFB]"
                       }`}
                     >
-                      <span className="text-xs leading-tight">{meta.en}</span>
+                      <span className="text-xs leading-tight font-medium">{meta.en}</span>
                       <span
-                        className={`text-[10px] mt-1 ${
-                          isSelected ? "text-emerald-100" : "text-slate-400"
+                        className={`text-[11px] mt-1 tabular-nums ${
+                          isSelected ? "text-white/80" : "text-[#71717A]"
                         }`}
                       >
                         {meta.major ? "৭ দিন অগ্রিম" : "৩ দিন অগ্রিম"}
@@ -368,13 +346,12 @@ export default function CoordinatorNewRequisitionPage() {
                 })}
               </div>
 
-              {/* Accessible Synchronized Dropdown */}
               <select
                 id="program_type"
                 name="program_type"
                 value={programType}
                 onChange={(e) => setProgramType(e.target.value as ProgramType)}
-                className="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-slate-50/70 text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/20"
+                className="w-full px-3 py-2 rounded-lg border border-[#E4E4E7] bg-[#FAFAFA] text-xs text-[#09090B] focus:outline-none focus:border-[#0F766E]"
                 required
               >
                 {PROGRAM_TYPES.map((pt) => {
@@ -388,12 +365,12 @@ export default function CoordinatorNewRequisitionPage() {
               </select>
             </div>
 
-            {/* Field 3: Format & Duration (Pill Toggles matching Mockup) */}
+            {/* Field 3: Format & Duration */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-700">
+              <label className="block text-xs font-medium text-[#52525B]">
                 Format &amp; Duration
               </label>
-              <div className="grid grid-cols-2 gap-2 sm:gap-3">
+              <div className="grid grid-cols-2 gap-2">
                 {FORMAT_DURATIONS.map((fmt) => {
                   const isSelected = formatDuration === fmt;
                   return (
@@ -402,10 +379,10 @@ export default function CoordinatorNewRequisitionPage() {
                       key={fmt}
                       id={`format-${fmt.replace(/\s+/g, "-")}`}
                       onClick={() => setFormatDuration(fmt)}
-                      className={`py-2 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold border transition-all duration-150 text-center ${
+                      className={`py-2 px-3 rounded-lg text-xs font-medium border transition-colors duration-150 text-center cursor-pointer ${
                         isSelected
-                          ? "bg-[#0F766E] border-[#0F766E] text-white shadow-xs"
-                          : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                          ? "bg-[#0F766E] border-[#0F766E] text-white"
+                          : "bg-white border-[#E4E4E7] text-[#52525B] hover:bg-[#F9FAFB]"
                       }`}
                     >
                       {fmt}
@@ -415,12 +392,12 @@ export default function CoordinatorNewRequisitionPage() {
               </div>
             </div>
 
-            {/* Field 4: Framing Toggle (Pill Toggles matching Mockup) */}
+            {/* Field 4: Framing Toggle */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-700">
+              <label className="block text-xs font-medium text-[#52525B]">
                 Framing Toggle
               </label>
-              <div className="grid grid-cols-2 gap-2 sm:gap-3">
+              <div className="grid grid-cols-2 gap-2">
                 {FRAMING_TYPES.map((frm) => {
                   const isSelected = framingType === frm;
                   return (
@@ -429,10 +406,10 @@ export default function CoordinatorNewRequisitionPage() {
                       key={frm}
                       id={`framing-${frm}`}
                       onClick={() => setFramingType(frm)}
-                      className={`py-2 px-3 sm:px-4 rounded-xl text-xs sm:text-sm font-semibold border transition-all duration-150 text-center ${
+                      className={`py-2 px-3 rounded-lg text-xs font-medium border transition-colors duration-150 text-center cursor-pointer ${
                         isSelected
-                          ? "bg-[#0F766E] border-[#0F766E] text-white shadow-xs"
-                          : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                          ? "bg-[#0F766E] border-[#0F766E] text-white"
+                          : "bg-white border-[#E4E4E7] text-[#52525B] hover:bg-[#F9FAFB]"
                       }`}
                     >
                       {FRAMING_LABELS[frm]}
@@ -446,18 +423,18 @@ export default function CoordinatorNewRequisitionPage() {
             <div className="space-y-1.5">
               <label
                 htmlFor="venue_id"
-                className="block text-xs font-semibold text-slate-700"
+                className="block text-xs font-medium text-[#52525B]"
               >
                 Venue
               </label>
               <div className="relative">
-                <MapPin className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <MapPin className="w-4 h-4 text-[#71717A] absolute left-3 top-1/2 -translate-y-1/2" />
                 <select
                   id="venue_id"
                   name="venue_id"
                   value={venueId}
                   onChange={(e) => setVenueId(e.target.value)}
-                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs sm:text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/20 focus:border-[#0F766E]"
+                  className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#E4E4E7] bg-white text-xs sm:text-sm text-[#09090B] focus:outline-none focus:border-[#0F766E]"
                   required
                 >
                   {venues.map((venue) => (
@@ -470,44 +447,44 @@ export default function CoordinatorNewRequisitionPage() {
             </div>
 
             {/* Field 6: Shoot Date & Call Time */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <label
                   htmlFor="shoot_date"
-                  className="block text-xs font-semibold text-slate-700"
+                  className="block text-xs font-medium text-[#52525B]"
                 >
                   Shoot Date
                 </label>
                 <div className="relative">
-                  <CalendarIcon className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <CalendarIcon className="w-4 h-4 text-[#71717A] absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="date"
                     id="shoot_date"
                     name="shoot_date"
                     value={shootDate}
                     onChange={(e) => setShootDate(e.target.value)}
-                    className={`w-full pl-10 pr-3.5 py-2.5 rounded-xl border text-xs sm:text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 ${
+                    className={`w-full pl-9 pr-3 py-2 rounded-lg border text-xs sm:text-sm text-[#09090B] tabular-nums focus:outline-none ${
                       isLeadTimeViolated
-                        ? "border-rose-400 ring-2 ring-rose-200 bg-rose-50/30"
-                        : "border-slate-200 bg-white focus:ring-[#0F766E]/20 focus:border-[#0F766E]"
+                        ? "border-red-400 bg-red-50/40"
+                        : "border-[#E4E4E7] bg-white focus:border-[#0F766E]"
                     }`}
                     required
                   />
                 </div>
-                <p className="text-[11px] text-slate-500 font-medium">
-                  Earliest available: <span className="font-semibold text-[#0F766E] font-mono">{earliestAllowedDate}</span> (Asia/Dhaka)
+                <p className="text-[11px] text-[#71717A]">
+                  Earliest available: <span className="font-medium text-[#09090B] font-mono tabular-nums">{earliestAllowedDate}</span> (Asia/Dhaka)
                 </p>
               </div>
 
               <div className="space-y-1.5">
                 <label
                   htmlFor="call_time"
-                  className="block text-xs font-semibold text-slate-700"
+                  className="block text-xs font-medium text-[#52525B]"
                 >
                   Call Time
                 </label>
                 <div className="relative">
-                  <Clock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <Clock className="w-4 h-4 text-[#71717A] absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     id="call_time"
@@ -515,7 +492,7 @@ export default function CoordinatorNewRequisitionPage() {
                     value={callTime}
                     placeholder="09:00 AM"
                     onChange={(e) => setCallTime(e.target.value)}
-                    className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs sm:text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/20 focus:border-[#0F766E]"
+                    className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#E4E4E7] bg-white text-xs sm:text-sm text-[#09090B] tabular-nums focus:outline-none focus:border-[#0F766E]"
                     required
                   />
                 </div>
@@ -526,12 +503,12 @@ export default function CoordinatorNewRequisitionPage() {
             <div className="space-y-1.5">
               <label
                 htmlFor="coordinator_phone"
-                className="block text-xs font-semibold text-slate-700"
+                className="block text-xs font-medium text-[#52525B]"
               >
                 Coordinator Phone
               </label>
               <div className="relative">
-                <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Phone className="w-4 h-4 text-[#71717A] absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="tel"
                   id="coordinator_phone"
@@ -539,10 +516,9 @@ export default function CoordinatorNewRequisitionPage() {
                   value={coordinatorPhone}
                   placeholder="017XX-XXXXXX"
                   onChange={(e) => setCoordinatorPhone(e.target.value)}
-                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs sm:text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/20 focus:border-[#0F766E]"
+                  className="w-full pl-9 pr-3 py-2 rounded-lg border border-[#E4E4E7] bg-white text-xs sm:text-sm text-[#09090B] tabular-nums focus:outline-none focus:border-[#0F766E]"
                   required
-                >
-                </input>
+                />
               </div>
             </div>
 
@@ -550,7 +526,7 @@ export default function CoordinatorNewRequisitionPage() {
             <div className="space-y-1.5">
               <label
                 htmlFor="notes"
-                className="block text-xs font-semibold text-slate-700"
+                className="block text-xs font-medium text-[#52525B]"
               >
                 Special Requirements / Notes (Optional)
               </label>
@@ -561,16 +537,16 @@ export default function CoordinatorNewRequisitionPage() {
                 value={notes}
                 placeholder="শুটিংয়ের বিশেষ কোনো দৃশ্য, বিষয়বস্তু বা প্রয়োজনীয় নির্দেশিকা লিখুন..."
                 onChange={(e) => setNotes(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs sm:text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0F766E]/20 focus:border-[#0F766E]"
+                className="w-full px-3 py-2 rounded-lg border border-[#E4E4E7] bg-white text-xs sm:text-sm text-[#09090B] focus:outline-none focus:border-[#0F766E]"
               />
             </div>
 
             {/* Emergency Override (Admin Only) */}
             {user?.role === "admin" && (
-              <div className="p-4 rounded-xl border border-amber-200 bg-amber-50/60 space-y-3">
+              <div className="p-3.5 rounded-lg border border-[#E4E4E7] bg-[#FAFAFA] space-y-2.5">
                 <div className="flex items-center gap-2">
-                  <ShieldAlert className="w-4 h-4 text-amber-700" />
-                  <span className="text-xs font-bold text-amber-900">
+                  <ShieldAlert className="w-4 h-4 text-red-600" />
+                  <span className="text-xs font-semibold text-[#09090B]">
                     মিডিয়া হেড বিশেষ ক্ষমতা (Emergency Override)
                   </span>
                 </div>
@@ -582,16 +558,16 @@ export default function CoordinatorNewRequisitionPage() {
                     onChange={(e) => setIsEmergencyOverride(e.target.checked)}
                     className="w-4 h-4 rounded text-[#0F766E] focus:ring-[#0F766E]"
                   />
-                  <span className="text-xs text-slate-700 font-medium">
+                  <span className="text-xs text-[#52525B]">
                     জরুরি শুটিং ওভাররাইড সক্ষম করুন (Bypass 3/7-day notice)
                   </span>
                 </label>
 
                 {isEmergencyOverride && (
-                  <div className="space-y-1 animate-fadeIn">
+                  <div className="space-y-1">
                     <label
                       htmlFor="override_reason"
-                      className="block text-[11px] font-semibold text-amber-900"
+                      className="block text-[11px] font-medium text-[#09090B]"
                     >
                       Emergency Override Reason (Mandatory)*
                     </label>
@@ -602,7 +578,7 @@ export default function CoordinatorNewRequisitionPage() {
                       value={overrideReason}
                       placeholder="জরুরি ভিত্তিতে শুটিংয়ের সুনির্দিষ্ট কারণ লিখুন..."
                       onChange={(e) => setOverrideReason(e.target.value)}
-                      className="w-full px-3 py-2 rounded-lg border border-amber-300 bg-white text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                      className="w-full px-3 py-2 rounded-lg border border-[#E4E4E7] bg-white text-xs text-[#09090B] focus:outline-none focus:border-[#0F766E]"
                       required={isEmergencyOverride}
                     />
                   </div>
@@ -610,25 +586,25 @@ export default function CoordinatorNewRequisitionPage() {
               </div>
             )}
 
-            {/* Dynamic Lead-Time Rule Banner (Mockup Matching) */}
+            {/* Dynamic Lead-Time Rule Banner */}
             <div
               id="lead-time-notice"
-              className={`p-3.5 rounded-xl border text-xs flex items-start gap-2.5 transition-all duration-150 ${
+              className={`p-3 rounded-lg border text-xs flex items-start gap-2.5 transition-colors duration-150 ${
                 isLeadTimeViolated
-                  ? "bg-rose-50 border-rose-200 text-rose-800"
-                  : "bg-amber-50/80 border-amber-200 text-amber-800"
+                  ? "bg-red-50 border-red-200 text-red-700"
+                  : "bg-[#FAFAFA] border-[#E4E4E7] text-[#52525B]"
               }`}
             >
               <AlertTriangle
                 className={`w-4 h-4 shrink-0 mt-0.5 ${
-                  isLeadTimeViolated ? "text-rose-600" : "text-amber-600"
+                  isLeadTimeViolated ? "text-red-600" : "text-[#71717A]"
                 }`}
               />
               <div className="space-y-0.5">
-                <p className="font-semibold">
+                <p className="font-semibold text-[#09090B]">
                   {isLeadTimeViolated
                     ? "লিড-টাইম লঙ্ঘন (Lead-Time Rule Violation):"
-                    : `⚠️ Minimum ${requiredDays} days lead time required`}
+                    : `Minimum ${requiredDays} days lead time required`}
                 </p>
                 <p className="text-[11px] leading-relaxed">
                   {isLeadTimeViolated
@@ -639,12 +615,12 @@ export default function CoordinatorNewRequisitionPage() {
             </div>
 
             {/* Submit Button */}
-            <div className="pt-2">
+            <div className="pt-1">
               <button
                 type="submit"
                 id="submit-requisition-btn"
                 disabled={submitting}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#0F766E] hover:bg-[#115E59] active:scale-[0.99] text-white text-xs sm:text-sm font-semibold shadow-sm transition-all duration-150 disabled:opacity-60 cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white text-xs sm:text-sm font-medium transition-colors duration-150 disabled:opacity-60 cursor-pointer"
               >
                 <FilePlus2 className="w-4 h-4" />
                 <span>{submitting ? "জমা হচ্ছে..." : "Submit Requisition"}</span>
@@ -653,110 +629,108 @@ export default function CoordinatorNewRequisitionPage() {
           </form>
         </div>
 
-        {/* Right Column: Live Course Requests (Mockup matching) */}
+        {/* Right Column: Live Course Requests */}
         <div className="lg:col-span-5 space-y-4">
-          <div className="glass-panel p-5 space-y-4">
-            <div className="flex items-center justify-between border-b border-white/60 pb-3">
-              <h3 className="text-[15.5px] font-bold text-[#0b1f3a]">
-                My Course Requests
+          <div className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-4 sm:p-5 space-y-3.5">
+            <div className="flex items-center justify-between border-b border-[#E4E4E7] pb-3">
+              <h3 className="text-xs font-medium text-[#52525B] uppercase tracking-wider">
+                Recent Course Requests
               </h3>
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#0f766e]/15 text-[#0b5a54] text-[11px] font-bold">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E] animate-pulse"></span>
-                <span>Live Status</span>
+              <span className="text-[11px] font-medium text-[#71717A] tabular-nums">
+                {existingRequests.length} items
               </span>
             </div>
 
-            {/* List of Requisition Cards */}
-            <div className="space-y-3" id="course-requests-list">
+            <div className="space-y-2.5" id="course-requests-list">
               {existingRequests.length === 0 ? (
-                <div className="text-center py-8 text-xs text-[#33475f] font-medium">
-                  এখনো কোনো রিকুইজিশন জমা দেওয়া হয়নি।
+                <div className="text-center py-8 text-xs text-[#71717A]">
+                  No requests submitted yet.
                 </div>
               ) : (
-                existingRequests.map((req) => {
-                  return (
-                    <div
-                      key={req.id}
-                      className="p-3.5 rounded-[13px] border border-white/70 bg-white/40 space-y-2 hover:bg-white/60 transition-all"
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs font-bold text-slate-800 line-clamp-1">
-                          {req.notes || `${req.course_name || "কোর্স"} • ${req.format_duration}`}
+                existingRequests.map((req) => (
+                  <div
+                    key={req.id}
+                    className="p-3 rounded-lg border border-[#E4E4E7] bg-[#FAFAFA] space-y-1.5"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-medium text-[#09090B] line-clamp-1">
+                        {req.notes || `${req.course_name || "Course"} • ${req.format_duration}`}
+                      </span>
+
+                      {req.status === "approved" && req.final_drive_url && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white border border-[#E4E4E7] text-[#09090B] text-[10.5px] font-medium shrink-0">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E]" />
+                          <span>Delivered</span>
                         </span>
-
-                        {/* Status Badge */}
-                        {req.status === "approved" && req.final_drive_url && (
-                          <span className="px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-800 text-[10px] font-bold shrink-0">
-                            Delivered
-                          </span>
-                        )}
-                        {req.status === "approved" && !req.final_drive_url && (req.task_stage === "shoot_done" || req.task_stage === "editing" || req.task_stage === "review") && (
-                          <span className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[10px] font-bold shrink-0">
-                            Shoot Done
-                          </span>
-                        )}
-                        {req.status === "approved" && !req.final_drive_url && req.task_stage !== "shoot_done" && req.task_stage !== "editing" && req.task_stage !== "review" && (
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold shrink-0">
-                            Approved
-                          </span>
-                        )}
-                        {req.status === "pending" && (
-                          <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold shrink-0">
-                            Pending
-                          </span>
-                        )}
-                        {req.status === "rejected" && (
-                          <span className="px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 text-[10px] font-bold shrink-0">
-                            Rejected
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="text-[11px] text-slate-500 flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                        <span>{req.shoot_date}</span>
-                        <span>•</span>
-                        <span>{req.call_time}</span>
-                        <span>|</span>
-                        <span>{req.framing_type === "vertical_9_16" ? "Vertical 9:16" : "Horizontal 16:9"}</span>
-                      </div>
-
-                      {/* Google Drive Link for Delivered */}
-                      {req.final_drive_url && (
-                        <div className="pt-1">
-                          <a
-                            href={req.final_drive_url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0F766E] hover:bg-[#115E59] text-white text-[11px] font-semibold shadow-xs transition-colors"
-                          >
-                            <ExternalLink className="w-3 h-3" />
-                            <span>Google Drive Link</span>
-                          </a>
-                        </div>
                       )}
-
-                      {/* Exact Rejection Reason for Rejected */}
-                      {req.status === "rejected" && req.rejection_reason && (
-                        <div className="p-2 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-[11px]">
-                          <span className="font-semibold">Reason: </span>
-                          <span>{req.rejection_reason}</span>
-                        </div>
+                      {req.status === "approved" && !req.final_drive_url && (req.task_stage === "shoot_done" || req.task_stage === "editing" || req.task_stage === "review") && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white border border-[#E4E4E7] text-[#27272A] text-[10.5px] font-medium shrink-0">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#52525B]" />
+                          <span>Shoot Done</span>
+                        </span>
+                      )}
+                      {req.status === "approved" && !req.final_drive_url && req.task_stage !== "shoot_done" && req.task_stage !== "editing" && req.task_stage !== "review" && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white border border-[#E4E4E7] text-[#27272A] text-[10.5px] font-medium shrink-0">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E]" />
+                          <span>Approved</span>
+                        </span>
+                      )}
+                      {req.status === "pending" && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-white border border-[#E4E4E7] text-[#27272A] text-[10.5px] font-medium shrink-0">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#71717A]" />
+                          <span>Pending</span>
+                        </span>
+                      )}
+                      {req.status === "rejected" && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#FEF2F2] border border-[#FECACA] text-[#DC2626] text-[10.5px] font-medium shrink-0">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#DC2626]" />
+                          <span>Rejected</span>
+                        </span>
                       )}
                     </div>
-                  );
-                })
+
+                    <div className="text-[11px] text-[#71717A] flex flex-wrap items-center gap-x-2 gap-y-0.5 tabular-nums">
+                      <span>{req.shoot_date}</span>
+                      <span>•</span>
+                      <span>{req.call_time}</span>
+                      <span>•</span>
+                      <span>{req.framing_type === "vertical_9_16" ? "Vertical 9:16" : "Horizontal 16:9"}</span>
+                    </div>
+
+                    {req.final_drive_url && (
+                      <div className="pt-1">
+                        <a
+                          href={req.final_drive_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#0F766E] hover:bg-[#0D645D] text-white text-[11px] font-medium"
+                        >
+                          <ExternalLink className="w-3 h-3" />
+                          <span>Google Drive Link</span>
+                        </a>
+                      </div>
+                    )}
+
+                    {req.status === "rejected" && req.rejection_reason && (
+                      <div className="p-2 rounded-md bg-[#FEF2F2] border border-[#FECACA] text-[#991B1B] text-[11px]">
+                        <span className="font-medium">Reason: </span>
+                        <span>{req.rejection_reason}</span>
+                      </div>
+                    )}
+                  </div>
+                ))
               )}
             </div>
 
-            <div className="border-t border-slate-100 pt-3 flex items-center justify-between">
-              <span className="text-[11px] font-semibold text-[#0F766E] bg-emerald-50 px-2.5 py-0.5 rounded-full">
+            <div className="border-t border-[#E4E4E7] pt-3 flex items-center justify-between text-xs">
+              <span className="px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#27272A] text-[11px] font-medium">
                 {assignedCourse?.name || "Assigned Course"}
               </span>
               <Link
                 href="/coordinator/requests"
-                className="text-xs font-semibold text-[#0F766E] hover:underline"
+                className="text-xs font-medium text-[#0F766E] hover:underline"
               >
-                সবগুলো দেখুন
+                View all
               </Link>
             </div>
           </div>

@@ -69,8 +69,7 @@ test.describe("S9-01: Final Full 4-Role Lifecycle E2E & Security Audit", () => {
     await verifyZeroHorizontalOverflow();
 
     // Verify user management table / cards render all 4 roles
-    await expect(page.getByText("ব্যবহারকারী ও ভূমিকা ব্যবস্থাপনা")).toBeVisible();
-    await expect(page.getByText("জিরো পাবলিক সেলফ-সাইনআপ নীতি")).toBeVisible();
+    await expect(page.locator("h1")).toContainText("Users");
     await expect(page.locator("#admin-add-user-btn")).toBeVisible();
     await expect(page.getByText("Engr. Mahmudul Hasan").filter({ visible: true }).first()).toBeVisible();
     await expect(page.getByText("Arif Rahman").filter({ visible: true }).first()).toBeVisible();
@@ -144,7 +143,7 @@ test.describe("S9-01: Final Full 4-Role Lifecycle E2E & Security Audit", () => {
     await verifyZeroHorizontalOverflow();
 
     // Locate the newly created pending requisition card
-    const reqCard = page.locator(".glass-panel").filter({ hasText: uniqueRequisitionNote }).first();
+    const reqCard = page.locator('div[id^="admin-req-"]').filter({ hasText: uniqueRequisitionNote }).first();
     await expect(reqCard).toBeVisible({ timeout: 10000 });
 
     // Click Approve & Assign button
@@ -338,7 +337,7 @@ test.describe("S9-01: Final Full 4-Role Lifecycle E2E & Security Audit", () => {
     await page.click("#filter-delivered");
     await page.waitForTimeout(500);
 
-    const deliveredCard = page.locator(".glass-panel").filter({ hasText: "Delivered", visible: true }).first();
+    const deliveredCard = page.locator('div[id^="req-card-"]').filter({ hasText: "Delivered", visible: true }).first();
     await expect(deliveredCard).toBeVisible({ timeout: 10000 });
     const coordinatorDriveLink = deliveredCard.locator('a[href*="drive.google.com"]').first();
     await expect(coordinatorDriveLink).toBeVisible();
@@ -360,7 +359,7 @@ test.describe("S9-01: Final Full 4-Role Lifecycle E2E & Security Audit", () => {
     await page.goto("/admin/calendar");
     await page.waitForLoadState("domcontentloaded");
     await verifyZeroHorizontalOverflow();
-    await expect(page.getByText("মাস্টার শুটিং ক্যালেন্ডার • Master Calendar")).toBeVisible();
+    await expect(page.locator("h1")).toContainText("Calendar");
     await expect(page.locator("#calendar-tab-tomorrow")).toBeVisible();
     await expect(page.locator("#calendar-tab-next_3_days")).toBeVisible();
     await expect(page.locator("#calendar-tab-next_7_days")).toBeVisible();

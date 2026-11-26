@@ -239,7 +239,7 @@ export function ApproveAndAssignModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#09090B]/40"
       id="approve-modal-backdrop"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
@@ -249,20 +249,18 @@ export function ApproveAndAssignModal({
         initial={{ opacity: 0, scale: 0.985 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={MODAL_TRANSITION}
-        className="w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh]"
+        className="w-full max-w-2xl bg-white rounded-lg shadow-[0_8px_24px_rgba(0,0,0,0.08)] border border-[#E4E4E7] overflow-hidden flex flex-col max-h-[92vh]"
         id="approve-assign-modal-card"
       >
         {/* Modal Header */}
-        <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/80">
-          <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-xl bg-emerald-100 text-[#0F766E]">
-              <Users className="w-5 h-5" />
-            </span>
+        <div className="px-5 py-3.5 border-b border-[#E4E4E7] flex items-center justify-between bg-[#FAFAFA]">
+          <div className="flex items-center gap-2.5">
+            <Users className="w-4 h-4 text-[#0F766E]" />
             <div>
-              <h3 className="text-sm sm:text-base font-bold text-slate-900">
+              <h3 className="text-sm font-semibold text-[#09090B]">
                 রিকুইজিশন অনুমোদন ও টিম অ্যাসাইনমেন্ট
               </h3>
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] text-[#71717A]">
                 {requisition.course_name} • {requisition.format_duration} • {requisition.shoot_date}
               </p>
             </div>

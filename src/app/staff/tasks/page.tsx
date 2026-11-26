@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
-  Kanban,
   Clock,
   CheckCircle2,
   FileText,
@@ -120,38 +119,29 @@ export default function StaffTasksPage() {
   };
 
   return (
-    <div className="space-y-4 w-full max-w-full">
-      {/* Top Banner */}
-      <div className="glass-panel p-5 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#0f766e]/15 text-[#0b5a54] text-xs font-semibold">
-            <Kanban className="w-3.5 h-3.5" />
-            <span>পার্মানেন্ট স্টাফ পোর্টাল • টাস্ক এক্সিকিউশন</span>
-          </div>
-          <h1 className="text-lg sm:text-2xl font-extrabold text-[#0b1f3a] tracking-tight">
-            নির্ধারিত শুটিং ও পোস্ট-প্রোডাকশন টাস্ক
-          </h1>
-          <p className="text-xs sm:text-[13px] text-[#33475f] font-medium">
-            প্রজেক্ট লিড হিসেবে আপনার দায়িত্বে থাকা প্রজেক্টের স্টেজ (Shoot Done, Editing, Review) আপডেট করুন।
-          </p>
-        </div>
+    <div className="space-y-5 w-full max-w-full">
+      {/* Flat Linear/Stripe Header */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4E4E7]">
+        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#09090B] tracking-tight">
+          My Tasks
+        </h1>
 
         <div className="flex flex-wrap items-center gap-2 shrink-0">
           <Link
             href="/staff/intern-status"
             id="staff-intern-status-btn"
-            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-[11px] border border-white/80 bg-white/55 hover:bg-white/80 text-[#0b1f3a] text-xs font-semibold shadow-xs transition-all"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-[#E4E4E7] bg-white hover:bg-[#F4F4F5] text-[#09090B] text-xs font-medium"
           >
-            <Users className="w-4 h-4 text-[#0F766E]" />
-            <span>ইন্টার্ন ট্র্যাকিং</span>
+            <Users className="w-3.5 h-3.5 text-[#71717A]" />
+            <span>Intern Status</span>
           </Link>
           <Link
             href="/staff/daily-log"
             id="staff-daily-log-btn"
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-[11px] bg-[#0F766E] hover:bg-[#0b5a54] text-white text-xs font-semibold shadow-[0_6px_14px_rgba(15,118,110,0.3)] transition-all"
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white text-xs font-medium"
           >
-            <FileText className="w-4 h-4" />
-            <span>দৈনিক লগ লিখুন</span>
+            <FileText className="w-3.5 h-3.5" />
+            <span>Daily Log</span>
           </Link>
         </div>
       </div>
@@ -160,16 +150,16 @@ export default function StaffTasksPage() {
       {statusMessage && (
         <div
           id="staff-tasks-status-banner"
-          className={`p-3.5 rounded-[14px] text-xs font-semibold flex items-center gap-2 backdrop-blur-md animate-in fade-in ${
+          className={`p-3 rounded-lg text-xs font-medium flex items-center gap-2 ${
             statusMessage.type === "success"
-              ? "bg-emerald-500/15 border border-emerald-400/35 text-[#0b1f3a]"
-              : "bg-red-500/15 border border-red-400/35 text-[#0b1f3a]"
+              ? "bg-[#F4F4F5] border border-[#E4E4E7] text-[#09090B]"
+              : "bg-red-50 border border-red-200 text-red-700"
           }`}
         >
           {statusMessage.type === "success" ? (
-            <CheckCircle2 className="w-4 h-4 text-[#15803d] shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-[#0F766E] shrink-0" />
           ) : (
-            <AlertCircle className="w-4 h-4 text-[#dc2626] shrink-0" />
+            <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
           )}
           <span>{statusMessage.text}</span>
         </div>
@@ -178,25 +168,25 @@ export default function StaffTasksPage() {
       {/* Active Assigned Tasks List */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-bold text-[#0b1f3a] flex items-center gap-2">
-            <span>আপনার অ্যাসাইন করা টাস্ক সমূহ</span>
-            <span className="px-2 py-0.5 rounded-full bg-white/60 border border-white/80 text-[#0b1f3a] text-xs font-bold">
+          <h2 className="text-sm font-semibold text-[#09090B] flex items-center gap-2">
+            <span>Assigned Projects</span>
+            <span className="px-2 py-0.5 rounded bg-[#F4F4F5] border border-[#E4E4E7] text-[#52525B] text-xs font-medium tabular-nums">
               {tasks.length}
             </span>
           </h2>
         </div>
 
         {loading ? (
-          <div className="p-12 text-center text-xs text-[#33475f] font-medium glass-panel">
+          <div className="p-12 text-center text-xs text-[#71717A] bg-white border border-[#E4E4E7] rounded-lg">
             <Loader2 className="w-5 h-5 animate-spin mx-auto text-[#0F766E] mb-2" />
             <span>টাস্ক লোড হচ্ছে...</span>
           </div>
         ) : tasks.length === 0 ? (
-          <div className="p-8 text-center text-xs text-[#33475f] font-medium glass-panel">
+          <div className="p-8 text-center text-xs text-[#71717A] bg-white border border-[#E4E4E7] rounded-lg">
             বর্তমানে আপনার কোনো নির্ধারিত শুটিং বা এডিটিং টাস্ক নেই।
           </div>
         ) : (
-          <div className="space-y-4" id="staff-tasks-list">
+          <div className="space-y-3" id="staff-tasks-list">
             {tasks.map((task) => {
               const isProjectLead = currentUser?.id === task.lead_staff_id;
               const isCompleted = task.stage === "completed";
@@ -205,29 +195,34 @@ export default function StaffTasksPage() {
                 <div
                   key={task.id}
                   id={`staff-task-card-${task.id}`}
-                  className="glass-panel p-4 sm:p-5 hover:border-[#0F766E]/40 transition-all space-y-4"
+                  className="bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] p-4 sm:p-5 space-y-4"
                 >
                   {/* Top Bar: Course, Status Badge, Countdown */}
-                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/60 pb-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#E4E4E7] pb-3">
                     <div className="flex flex-wrap items-center gap-2">
-                      {/* Stage Badge */}
-                      <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-800 text-[11px] font-bold">
+                      {/* Monochrome Stage Badge */}
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#27272A] text-[11px] font-medium">
+                        <span
+                          className={`w-1.5 h-1.5 rounded-full ${
+                            task.stage === "completed" ? "bg-[#0F766E]" : "bg-[#71717A]"
+                          }`}
+                        />
                         {TASK_STAGE_LABELS[task.stage]?.en} ({TASK_STAGE_LABELS[task.stage]?.bn})
                       </span>
 
                       {/* Lead Badge */}
                       {isProjectLead ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#0F766E] text-[11px] font-bold" id={`lead-badge-${task.id}`}>
-                          <Crown className="w-3 h-3" />
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#09090B] text-[11px] font-medium" id={`lead-badge-${task.id}`}>
+                          <Crown className="w-3 h-3 text-[#0F766E]" />
                           <span>Project Lead</span>
                         </span>
                       ) : (
-                        <span className="text-[11px] text-slate-500 font-medium">
-                          টিম মেম্বার (লিড: {task.lead_name})
+                        <span className="text-[11px] text-[#71717A]">
+                          Team Member (Lead: {task.lead_name})
                         </span>
                       )}
 
-                      <h3 className="text-sm sm:text-base font-bold text-slate-900">
+                      <h3 className="text-sm font-semibold text-[#09090B]">
                         {task.course_name}
                       </h3>
                     </div>
@@ -235,8 +230,8 @@ export default function StaffTasksPage() {
                     {/* Deadline Countdown */}
                     {!isCompleted && task.deadline_at && (
                       <span
-                        className={`text-xs font-semibold flex items-center gap-1 ${
-                          task.is_overdue ? "text-rose-600 font-bold" : "text-slate-600"
+                        className={`text-xs font-medium flex items-center gap-1 tabular-nums ${
+                          task.is_overdue ? "text-red-600 font-semibold" : "text-[#52525B]"
                         }`}
                       >
                         <Clock className="w-3.5 h-3.5" />
@@ -248,39 +243,39 @@ export default function StaffTasksPage() {
                   {/* Details Grid */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                     <div>
-                      <span className="text-slate-400 block text-[10px]">ফরম্যাট ও অনুপাত</span>
-                      <span className="font-semibold text-slate-800">
+                      <span className="text-[#71717A] block text-[11px]">Format &amp; Ratio</span>
+                      <span className="font-medium text-[#09090B]">
                         {task.format_duration} ({task.framing_type})
                       </span>
                     </div>
 
                     <div>
-                      <span className="text-slate-400 block text-[10px]">ভেন্যু ও কল টাইম</span>
-                      <span className="font-semibold text-slate-800 flex items-center gap-1">
-                        <MapPin className="w-3 h-3 text-slate-400" />
+                      <span className="text-[#71717A] block text-[11px]">Venue &amp; Call Time</span>
+                      <span className="font-medium text-[#09090B] flex items-center gap-1 tabular-nums">
+                        <MapPin className="w-3 h-3 text-[#71717A]" />
                         <span>{task.venue_name} • {task.call_time}</span>
                       </span>
                     </div>
 
                     <div>
-                      <span className="text-slate-400 block text-[10px]">র ফুটেজ আপলোড</span>
+                      <span className="text-[#71717A] block text-[11px]">Raw Footage</span>
                       {task.raw_footage_uploaded ? (
-                        <span className="font-semibold text-emerald-600 flex items-center gap-1" id={`footage-status-${task.id}`}>
+                        <span className="font-medium text-[#0F766E] flex items-center gap-1" id={`footage-status-${task.id}`}>
                           <CheckCircle2 className="w-3.5 h-3.5" />
-                          <span>আপলোডেড ✓</span>
+                          <span>Uploaded</span>
                         </span>
                       ) : (
-                        <span className="font-medium text-amber-600 flex items-center gap-1" id={`footage-status-${task.id}`}>
+                        <span className="font-medium text-[#71717A] flex items-center gap-1" id={`footage-status-${task.id}`}>
                           <Clock className="w-3 h-3" />
-                          <span>পেন্ডিং (ইন্টার্ন ড্রাইভ লিংক)</span>
+                          <span>Pending</span>
                         </span>
                       )}
                     </div>
 
                     <div>
-                      <span className="text-slate-400 block text-[10px]">অ্যাসাইন করা গিয়ার</span>
-                      <span className="font-semibold text-slate-800 flex items-center gap-1 truncate" title={task.gear_summary}>
-                        <Camera className="w-3 h-3 text-slate-400 shrink-0" />
+                      <span className="text-[#71717A] block text-[11px]">Assigned Gear</span>
+                      <span className="font-medium text-[#09090B] flex items-center gap-1 truncate" title={task.gear_summary}>
+                        <Camera className="w-3 h-3 text-[#71717A] shrink-0" />
                         <span className="truncate">{task.gear_summary}</span>
                       </span>
                     </div>
@@ -288,64 +283,58 @@ export default function StaffTasksPage() {
 
                   {/* Team Members Chips */}
                   <div className="flex flex-wrap items-center gap-1.5 text-xs pt-1">
-                    <span className="text-slate-400 text-[11px] mr-1">টিম:</span>
+                    <span className="text-[#71717A] text-[11px] mr-1">Team:</span>
                     {task.assignees.map((m) => (
                       <span
                         key={m.user_id}
-                        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-[11px] font-medium ${
-                          m.assignment_role === "lead"
-                            ? "bg-emerald-50 text-[#0F766E] border border-emerald-200"
-                            : "bg-slate-100 text-slate-700"
-                        }`}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#F4F4F5] border border-[#E4E4E7] text-[#09090B] text-[11px] font-medium"
                       >
                         <span>{m.full_name}</span>
-                        {m.assignment_role === "lead" && <Crown className="w-2.5 h-2.5" />}
-                        <span className="text-slate-400">({m.phone})</span>
+                        {m.assignment_role === "lead" && <Crown className="w-2.5 h-2.5 text-[#0F766E]" />}
+                        <span className="text-[#71717A] tabular-nums">({m.phone})</span>
                       </span>
                     ))}
                   </div>
 
                   {/* Google Drive Link if Attached */}
                   {task.final_drive_url && (
-                    <div className="p-2.5 rounded-xl bg-teal-50 border border-teal-200 flex items-center justify-between text-xs">
-                      <span className="text-teal-900 font-semibold flex items-center gap-1.5">
-                        <Video className="w-4 h-4 text-[#0F766E]" />
-                        <span>গুগল ড্রাইভ ডেলিভারি লিংক সংযুক্ত রয়েছে</span>
+                    <div className="p-2.5 rounded-lg bg-[#FAFAFA] border border-[#E4E4E7] flex items-center justify-between text-xs">
+                      <span className="text-[#09090B] font-medium flex items-center gap-1.5">
+                        <Video className="w-3.5 h-3.5 text-[#0F766E]" />
+                        <span>Google Drive delivery link attached</span>
                       </span>
                       <a
                         href={task.final_drive_url}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-[#0F766E] hover:underline font-bold inline-flex items-center gap-1"
+                        className="text-[#0F766E] hover:underline font-medium inline-flex items-center gap-1"
                       >
-                        <span>লিংক খুলুন</span>
+                        <span>Open Link</span>
                         <ExternalLink className="w-3 h-3" />
                       </a>
                     </div>
                   )}
 
                   {/* Action Bar */}
-                  <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2.5">
-                    {/* View Shoot Slip Button */}
+                  <div className="pt-3 border-t border-[#E4E4E7] flex flex-wrap items-center justify-between gap-2.5">
                     <button
                       onClick={() => handleOpenSlip(task.id)}
                       id={`staff-view-slip-btn-${task.id}`}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs transition-colors"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#E4E4E7] bg-white hover:bg-[#F4F4F5] text-[#09090B] text-xs font-medium cursor-pointer"
                     >
-                      <FileText className="w-3.5 h-3.5 text-[#0F766E]" />
-                      <span>শুটিং স্লিপ ও WhatsApp শেয়ার</span>
+                      <FileText className="w-3.5 h-3.5 text-[#71717A]" />
+                      <span>Shoot Slip &amp; WhatsApp</span>
                     </button>
 
                     {/* Staff Project Lead Controls (Enforced by RLS tasks_lead_staff_update) */}
                     {isProjectLead ? (
                       <div className="flex flex-wrap items-center gap-2 ml-auto" id={`lead-controls-${task.id}`}>
-                        {/* Transition buttons depending on current stage */}
                         {task.stage === "shoot_assigned" && (
                           <button
                             onClick={() => handleStageChange(task.id, "shoot_done")}
                             disabled={updatingTaskId === task.id}
                             id={`mark-shoot-done-btn-${task.id}`}
-                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold shadow-2xs transition-all disabled:opacity-50"
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white text-xs font-medium disabled:opacity-50 cursor-pointer"
                           >
                             <span>Mark Shoot Done</span>
                             <ChevronRight className="w-3 h-3" />
@@ -357,7 +346,7 @@ export default function StaffTasksPage() {
                             onClick={() => handleStageChange(task.id, "editing")}
                             disabled={updatingTaskId === task.id}
                             id={`start-editing-btn-${task.id}`}
-                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-2xs transition-all disabled:opacity-50"
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white text-xs font-medium disabled:opacity-50 cursor-pointer"
                           >
                             <span>Start Editing</span>
                             <ChevronRight className="w-3 h-3" />
@@ -369,7 +358,7 @@ export default function StaffTasksPage() {
                             onClick={() => handleStageChange(task.id, "review")}
                             disabled={updatingTaskId === task.id}
                             id={`submit-review-btn-${task.id}`}
-                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-semibold shadow-2xs transition-all disabled:opacity-50"
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white text-xs font-medium disabled:opacity-50 cursor-pointer"
                           >
                             <span>Submit for Review</span>
                             <ChevronRight className="w-3 h-3" />
@@ -384,14 +373,14 @@ export default function StaffTasksPage() {
                             setDriveUrlError(null);
                           }}
                           id={`attach-drive-btn-${task.id}`}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl border border-teal-600/30 bg-teal-50 hover:bg-teal-100 text-[#0F766E] text-xs font-semibold shadow-2xs transition-all"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-[#E4E4E7] bg-white hover:bg-[#F4F4F5] text-[#09090B] text-xs font-medium cursor-pointer"
                         >
-                          <Video className="w-3.5 h-3.5" />
+                          <Video className="w-3.5 h-3.5 text-[#71717A]" />
                           <span>{task.final_drive_url ? "ড্রাইভ লিংক এডিট" : "ড্রাইভ লিংক সংযুক্ত করুন"}</span>
                         </button>
                       </div>
                     ) : (
-                      <span className="text-[11px] text-slate-400 italic ml-auto">
+                      <span className="text-[11px] text-[#71717A] ml-auto">
                         শুধুমাত্র প্রজেক্ট লিড ({task.lead_name}) স্টেজ পরিবর্তন করতে পারেন।
                       </span>
                     )}
@@ -406,20 +395,20 @@ export default function StaffTasksPage() {
       {/* Staff Lead Attach Drive URL Modal */}
       {editingDriveTaskId && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#09090B]/40"
           onClick={(e) => {
             if (e.target === e.currentTarget) setEditingDriveTaskId(null);
           }}
         >
-          <div className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-200 p-5 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+          <div className="w-full max-w-md bg-white rounded-lg shadow-[0_4px_24px_rgba(0,0,0,0.08)] border border-[#E4E4E7] p-5 space-y-4">
+            <div className="flex items-center justify-between border-b border-[#E4E4E7] pb-3">
+              <h3 className="text-sm font-semibold text-[#09090B] flex items-center gap-2">
                 <Video className="w-4 h-4 text-[#0F766E]" />
                 <span>ফাইনাল গুগল ড্রাইভ ডেলিভারি URL সংযুক্ত করুন</span>
               </h3>
               <button
                 onClick={() => setEditingDriveTaskId(null)}
-                className="text-slate-400 hover:text-slate-600"
+                className="text-[#71717A] hover:text-[#09090B] cursor-pointer"
               >
                 ✕
               </button>
@@ -428,15 +417,15 @@ export default function StaffTasksPage() {
             {driveUrlError && (
               <div
                 id="staff-drive-error-banner"
-                className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2"
+                className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2"
               >
-                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
                 <span>{driveUrlError}</span>
               </div>
             )}
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-800">
+              <label className="text-xs font-medium text-[#52525B]">
                 গুগল ড্রাইভ ফোল্ডার / ফাইল লিংক*
               </label>
               <input
@@ -448,10 +437,10 @@ export default function StaffTasksPage() {
                   setDriveUrlError(null);
                 }}
                 placeholder="https://drive.google.com/drive/folders/..."
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0F766E]/20 focus:border-[#0F766E]"
+                className="w-full px-3 py-2 rounded-lg border border-[#E4E4E7] text-xs sm:text-sm focus:outline-none focus:border-[#0F766E]"
                 required
               />
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] text-[#71717A]">
                 (PostgreSQL CHECK: final_drive_url ~* &apos;^https://(drive|docs)\.google\.com/&apos;)
               </p>
             </div>
@@ -460,7 +449,7 @@ export default function StaffTasksPage() {
               <button
                 type="button"
                 onClick={() => setEditingDriveTaskId(null)}
-                className="px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50"
+                className="px-3.5 py-2 rounded-lg border border-[#E4E4E7] text-xs font-medium text-[#52525B] hover:bg-[#F4F4F5] cursor-pointer"
               >
                 বাতিল
               </button>
@@ -479,7 +468,7 @@ export default function StaffTasksPage() {
                     handleStageChange(editingDriveTaskId, currentTask.stage, driveUrlInput);
                   }
                 }}
-                className="px-5 py-2 rounded-xl bg-[#0F766E] hover:bg-[#115E59] text-white text-xs font-semibold shadow-xs"
+                className="px-4 py-2 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white text-xs font-medium cursor-pointer"
               >
                 সংরক্ষণ করুন
               </button>

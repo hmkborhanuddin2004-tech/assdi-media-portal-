@@ -3,7 +3,19 @@
 ## Current Status
 - **Active Step:** All Steps (Step 1 through Step 9) Completed & 100% Verified
 - **Completed Features:** 19 / 19 (S1-01, S2-01, S2-02, S3-01, S3-02, S4-01, S4-02, S4-03, S5-01, S5-02, S6-01, S6-02, S6-03, S6-04, S7-01, S8-01, S8-02, S8-03, S9-01)
-- **UX & Motion Upgrade:** Silky Zero-Bounce "Glassy Dashboard V31" Transitions, Optimistic Active Pill & Zero Layout Shift (100% Verified)
+- **Visual System:** Linear / Stripe / Notion Institutional UI Overhaul (100% Verified)
+
+## Linear / Stripe / Notion Institutional UI Overhaul
+- **Solid Institutional Palette & Zero AI-Slop:**
+  - Removed all glassmorphism (`.bg`, `.shape`, `.orb`, `.glass*`, `backdrop-filter: blur`), giant `rounded-2xl`/`rounded-3xl` radii, decorative top hero banners, eyebrow pills, and policy warning callout boxes across `src/app/globals.css`, `src/app/layout.tsx`, `src/components/shell/AppShell.tsx`, `src/components/shell/FrostedSkeleton.tsx`, and all route pages.
+  - Applied solid `#FAFAFA` app canvas, grounded `#F4F4F5` sticky sidebar (`border-r border-[#E4E4E7]`), crisp `#FFFFFF` surface cards (`border-[#E4E4E7]`, `rounded-lg`, `shadow-[0_1px_2px_rgba(0,0,0,0.04)]`), high-contrast `#09090B` / `#52525B` / `#71717A` typography with `tabular-nums`, and `#0F766E` (`hover #0D645D`) reserved for primary CTAs and active tab indicators.
+  - Replaced rainbow pill-soup with neutral monochrome status badges (`#F4F4F5` + `#E4E4E7` + 6px dot, reserving red strictly for destructive actions, rejections, errors, maintenance, and overdue alerts) and single-line English navigation labels.
+  - Redesigned `ShootAssignmentSlipModal.tsx` and `/admin/calendar` Shoot Slip panel as formal solid-white operational documents with hairline grids; converted animations in `src/lib/motion.ts` to subtle `150ms ease-out` transitions.
+- **Verification Gates (100% Green):**
+  - Gate 1: `pnpm typecheck && pnpm lint && pnpm build` exited 0 with `✔ No ESLint warnings or errors`.
+  - Gate 2: `pnpm test` passed all 182 unit/DB/security tests across 9 test files in 1.56s.
+  - Gate 3: `pnpm test:e2e` passed all 50 Playwright E2E tests across Desktop (`1280x800`) and Mobile (`390x844`) with 0 console errors, 0 failed requests, and 0 horizontal overflow; refreshed all 30 screenshots in `docs/screenshots/`.
+  - Gate 4: Verified zero remaining `glass-*`, `backdrop-blur*`, `rounded-2xl`, `rounded-3xl`, `TODO`, `FIXME`, `.skip(`, or `.only(` occurrences in `src/` and `tests-e2e/`.
 
 ## Zero-Bounce "Glassy Dashboard V31" Motion & Zero Layout Shift Upgrade
 - **Persistent Shell & Optimistic `pendingPath`:**

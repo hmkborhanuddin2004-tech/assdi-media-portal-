@@ -3,13 +3,10 @@
 import React, { useState, useEffect, useCallback, useTransition } from "react";
 import {
   UserPlus,
-  ShieldCheck,
-  ShieldAlert,
   CheckCircle2,
   AlertCircle,
   Loader2,
   Search,
-  Filter,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { MODAL_TRANSITION } from "@/lib/motion";
@@ -191,21 +188,11 @@ export default function AdminUsersPage() {
 
   return (
     <div className="space-y-4 w-full max-w-full">
-      {/* Top Header */}
-      <div className="glass-panel p-5 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#0f766e]/15 text-[#0b5a54] text-xs font-semibold">
-            <ShieldCheck className="w-4 h-4" />
-            <span>অ্যাডমিন আরবাক কন্ট্রোল • RBAC Security</span>
-          </div>
-          <h1 className="text-lg sm:text-2xl font-extrabold text-[#0b1f3a] tracking-tight">
-            ব্যবহারকারী ও ভূমিকা ব্যবস্থাপনা
-          </h1>
-          <p className="text-xs sm:text-[13px] text-[#33475f] font-medium">
-            পোর্টালের সকল মিডিয়া হেড, কোঅর্ডিনেটর, স্টাফ ও ইন্টার্নদের অ্যাকাউন্ট ও
-            অনুমতি নিয়ন্ত্রণ করুন।
-          </p>
-        </div>
+      {/* Flat Header */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-[#E4E4E7]">
+        <h1 className="text-[20px] sm:text-[22px] font-semibold text-[#09090B] tracking-tight">
+          Users
+        </h1>
 
         <button
           onClick={() => {
@@ -214,49 +201,38 @@ export default function AdminUsersPage() {
             setFormSuccess(null);
           }}
           id="admin-add-user-btn"
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#0F766E] hover:bg-[#0b5a54] text-white text-xs sm:text-sm font-semibold shadow-[0_6px_14px_rgba(15,118,110,0.3)] transition-all duration-150 shrink-0 cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#0F766E] hover:bg-[#0D645D] text-white text-xs font-medium shrink-0 cursor-pointer"
         >
-          <UserPlus className="w-4 h-4" />
-          <span>নতুন ব্যবহারকারী যোগ করুন</span>
+          <UserPlus className="w-3.5 h-3.5" />
+          <span>Add User</span>
         </button>
       </div>
 
-      {/* Security Banner: Self-Signup Disabled */}
-      <div className="p-3.5 rounded-[14px] bg-amber-500/15 backdrop-blur-md border border-amber-400/35 text-[#0b1f3a] text-xs flex items-start gap-2.5 leading-relaxed font-medium">
-        <ShieldAlert className="w-4 h-4 text-[#b45309] shrink-0 mt-0.5" />
-        <div>
-          <span className="font-bold text-[#b45309]">জিরো পাবলিক সেলফ-সাইনআপ নীতি:</span> সাধারণ
-          জনগণের রেজিস্ট্রেশন সম্পূর্ণ বন্ধ রাখা হয়েছে। কেবলমাত্র এই অ্যাডমিন প্যানেল
-          হতে তৈরি করা ক্রেডেনশিয়াল দিয়েই পোর্টালে লগইন করা সম্ভব।
-        </div>
-      </div>
-
       {/* Search & Role Filters */}
-      <div className="glass-panel p-3.5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-xs">
+      <div className="bg-white border border-[#E4E4E7] rounded-lg p-3 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 text-xs">
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-[#33475f] absolute left-3 top-2.5 pointer-events-none" />
+          <Search className="w-3.5 h-3.5 text-[#71717A] absolute left-3 top-2.5 pointer-events-none" />
           <input
             type="text"
-            placeholder="নাম, ইমেইল বা ফোন নম্বর দিয়ে খুঁজুন..."
+            placeholder="Search by name, email, or phone..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 rounded-[11px] border border-white/80 bg-white/55 text-[#0b1f3a] placeholder-[#475569] text-xs focus:ring-2 focus:ring-[#0F766E]/25 focus:bg-white/75 focus:outline-none"
+            className="w-full h-8 pl-8 pr-3 rounded-md border border-[#E4E4E7] bg-[#FAFAFA] text-[#09090B] placeholder-[#71717A] text-xs focus:border-[#0F766E] focus:bg-white focus:outline-none"
           />
         </div>
 
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-          <Filter className="w-3.5 h-3.5 text-[#33475f] shrink-0" />
+        <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
           {["all", "admin", "coordinator", "staff", "intern"].map((r) => (
             <button
               key={r}
               onClick={() => setRoleFilter(r)}
-              className={`px-3 py-1.5 rounded-[10px] font-semibold transition-all cursor-pointer whitespace-nowrap ${
+              className={`px-2.5 py-1.5 rounded-md text-xs font-medium cursor-pointer whitespace-nowrap ${
                 roleFilter === r
-                  ? "bg-[#0F766E] text-white shadow-[0_5px_12px_rgba(15,118,110,0.3)]"
-                  : "bg-white/55 border border-white/80 text-[#33475f] hover:bg-white/80 hover:text-[#0b1f3a]"
+                  ? "bg-[#09090B] text-white"
+                  : "bg-[#FAFAFA] border border-[#E4E4E7] text-[#52525B] hover:text-[#09090B]"
               }`}
             >
-              {r === "all" ? "সকল রোল" : ROLE_LABELS[r as UserRole]?.en || r}
+              {r === "all" ? "All Roles" : ROLE_LABELS[r as UserRole]?.en || r}
             </button>
           ))}
         </div>
@@ -266,14 +242,14 @@ export default function AdminUsersPage() {
       {actionFeedback && (
         <div
           id="admin-action-feedback"
-          className={`p-3 rounded-xl border flex items-start gap-2.5 text-xs ${
+          className={`p-3 rounded-lg border flex items-start gap-2 text-xs ${
             actionFeedback.type === "error"
-              ? "bg-red-50 border-red-200 text-red-800"
-              : "bg-emerald-50 border-emerald-200 text-emerald-800"
+              ? "bg-[#FEF2F2] border-[#FECACA] text-[#991B1B]"
+              : "bg-white border-[#E4E4E7] text-[#09090B]"
           }`}
         >
           {actionFeedback.type === "error" ? (
-            <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+            <AlertCircle className="w-4 h-4 text-[#DC2626] shrink-0 mt-0.5" />
           ) : (
             <CheckCircle2 className="w-4 h-4 text-[#0F766E] shrink-0 mt-0.5" />
           )}
@@ -283,219 +259,181 @@ export default function AdminUsersPage() {
 
       {/* Users List (Table on Desktop, Cards on Mobile) */}
       {loading ? (
-        <div className="glass-panel p-12 flex flex-col items-center justify-center gap-3 text-[#33475f] text-xs font-medium">
-          <Loader2 className="w-6 h-6 animate-spin text-[#0F766E]" />
-          <span>ইউজার তালিকা লোড হচ্ছে...</span>
+        <div className="bg-white border border-[#E4E4E7] rounded-lg p-12 flex flex-col items-center justify-center gap-2 text-[#71717A] text-xs">
+          <Loader2 className="w-5 h-5 animate-spin text-[#0F766E]" />
+          <span>Loading directory...</span>
         </div>
       ) : filteredUsers.length === 0 ? (
-        <div className="glass-panel p-8 text-center text-[#33475f] text-xs font-medium">
-          কোনো ব্যবহারকারী পাওয়া যায়নি।
+        <div className="bg-white border border-[#E4E4E7] rounded-lg p-8 text-center text-[#71717A] text-xs">
+          No users match your filters.
         </div>
       ) : (
         <>
           {/* Desktop Table View */}
-          <div className="hidden md:block glass-panel overflow-hidden">
+          <div className="hidden md:block bg-white border border-[#E4E4E7] rounded-lg shadow-[0_1px_2px_rgba(0,0,0,0.04)] overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-[12.5px]">
-                <thead className="bg-white/30 border-b border-white/70 text-[#33475f] text-[10px] font-bold uppercase tracking-[0.13em]">
+              <table className="w-full text-left text-[13px]">
+                <thead className="bg-[#FAFAFA] border-b border-[#E4E4E7] text-[#71717A] text-[12px] font-medium">
                   <tr>
-                    <th className="py-3 px-4">নাম ও ইমেইল</th>
-                    <th className="py-3 px-4">মোবাইল নম্বর</th>
-                    <th className="py-3 px-4">ভূমিকা (Role)</th>
-                    <th className="py-3 px-4">বরাদ্দকৃত কোর্স</th>
-                    <th className="py-3 px-4">স্ট্যাটাস</th>
-                    <th className="py-3 px-4 text-right">অ্যাকশন</th>
+                    <th className="py-2.5 px-4 font-medium">Name &amp; Email</th>
+                    <th className="py-2.5 px-4 font-medium">Phone</th>
+                    <th className="py-2.5 px-4 font-medium">Role</th>
+                    <th className="py-2.5 px-4 font-medium">Course</th>
+                    <th className="py-2.5 px-4 font-medium">Status</th>
+                    <th className="py-2.5 px-4 font-medium text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/45">
-                  {filteredUsers.map((u) => {
-                    const roleStyle = {
-                      admin: "bg-[#0f766e]/15 text-[#0b5a54] border-[#0f766e]/30",
-                      coordinator: "bg-teal-500/12 text-[#0f766e] border-teal-500/25",
-                      staff: "bg-slate-700/10 text-[#0b1f3a] border-slate-500/25",
-                      intern: "bg-slate-500/10 text-[#33475f] border-slate-400/30",
-                    }[u.role];
-
-                    return (
-                      <tr key={u.id} className="hover:bg-white/30 transition-colors">
-                        <td className="py-3 px-4">
-                          <div className="font-bold text-[#0b1f3a] flex items-center gap-1.5">
-                            <span>{u.full_name}</span>
-                            {u.id === currentUserId && (
-                              <span className="px-1.5 py-0.5 rounded bg-[#0f766e]/15 text-[#0b5a54] text-[10px] font-bold">
-                                আপনি
-                              </span>
-                            )}
-                          </div>
-                          <div className="text-[11px] text-[#33475f] font-medium">{u.email}</div>
-                        </td>
-                        <td className="py-3 px-4 font-mono text-[#0b1f3a] font-medium">{u.phone}</td>
-                        <td className="py-3 px-4">
-                          <span
-                            className={`inline-block px-2.5 py-0.5 rounded-full text-[10.5px] font-bold border ${roleStyle}`}
-                          >
-                            {ROLE_LABELS[u.role]?.bn} ({u.role})
-                          </span>
-                        </td>
-                        <td className="py-3 px-4">
-                          {u.role === "coordinator" ? (
-                            u.courses?.name ? (
-                              <span className="font-semibold text-[#0b1f3a]">
-                                {u.courses.name} ({u.courses.code})
-                              </span>
-                            ) : (
-                              <span className="text-[#dc2626] text-[11px] font-semibold">
-                                কোর্স বরাদ্দ নেই
-                              </span>
-                            )
-                          ) : (
-                            <span className="text-[#33475f] font-medium">সকল ডিপার্টমেন্ট</span>
+                <tbody className="divide-y divide-[#E4E4E7]">
+                  {filteredUsers.map((u) => (
+                    <tr key={u.id} className="h-12 hover:bg-[#F9FAFB]">
+                      <td className="py-2.5 px-4">
+                        <div className="font-medium text-[#09090B] flex items-center gap-1.5">
+                          <span>{u.full_name}</span>
+                          {u.id === currentUserId && (
+                            <span className="px-1.5 py-0.5 rounded bg-[#F4F4F5] border border-[#E4E4E7] text-[#52525B] text-[10px] font-medium">
+                              You
+                            </span>
                           )}
-                        </td>
-                        <td className="py-3 px-4">
-                          <span
-                            className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10.5px] font-bold ${
-                              u.is_active
-                                ? "bg-[#22c55e]/15 text-[#15803d]"
-                                : "bg-slate-500/15 text-[#33475f]"
-                            }`}
-                          >
-                            <span
-                              className={`w-1.5 h-1.5 rounded-full ${
-                                u.is_active ? "bg-[#15803d]" : "bg-[#33475f]"
-                              }`}
-                            />
-                            <span>{u.is_active ? "সক্রিয় (Active)" : "নিষ্ক্রিয় (Inactive)"}</span>
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 text-right">
-                          {u.id === currentUserId ? (
-                            <span className="text-[11px] text-[#33475f] italic font-medium px-2 py-1">
-                              বর্তমান ইউজার
+                        </div>
+                        <div className="text-[11.5px] text-[#71717A]">{u.email}</div>
+                      </td>
+                      <td className="py-2.5 px-4 font-mono text-xs text-[#52525B] tabular-nums">
+                        {u.phone}
+                      </td>
+                      <td className="py-2.5 px-4">
+                        <span className="inline-block px-2 py-0.5 rounded-md text-[11px] font-medium bg-[#F4F4F5] text-[#27272A] border border-[#E4E4E7]">
+                          {ROLE_LABELS[u.role]?.en || u.role}
+                        </span>
+                      </td>
+                      <td className="py-2.5 px-4 text-xs">
+                        {u.role === "coordinator" ? (
+                          u.courses?.name ? (
+                            <span className="text-[#09090B]">
+                              {u.courses.name} ({u.courses.code})
                             </span>
                           ) : (
-                            <button
-                              onClick={() => handleToggleStatus(u.id, u.is_active)}
-                              className={`px-2.5 py-1 rounded-[9px] text-[11px] font-semibold border transition-all cursor-pointer ${
-                                u.is_active
-                                  ? "bg-white/55 text-[#33475f] border-white/85 hover:bg-red-500/10 hover:text-[#dc2626]"
-                                  : "bg-[#0f766e]/15 text-[#0b5a54] border-[#0f766e]/30 hover:bg-[#0f766e]/25"
-                              }`}
-                            >
-                              {u.is_active ? "নিষ্ক্রিয় করুন" : "সক্রিয় করুন"}
-                            </button>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
+                            <span className="text-[#DC2626] font-medium">Unassigned</span>
+                          )
+                        ) : (
+                          <span className="text-[#71717A]">All departments</span>
+                        )}
+                      </td>
+                      <td className="py-2.5 px-4">
+                        <span className="inline-flex items-center gap-1.5 text-xs text-[#27272A]">
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              u.is_active ? "bg-[#0F766E]" : "bg-[#A1A1AA]"
+                            }`}
+                          />
+                          <span>{u.is_active ? "Active" : "Inactive"}</span>
+                        </span>
+                      </td>
+                      <td className="py-2.5 px-4 text-right">
+                        {u.id === currentUserId ? (
+                          <span className="text-[11px] text-[#71717A]">Current user</span>
+                        ) : (
+                          <button
+                            onClick={() => handleToggleStatus(u.id, u.is_active)}
+                            className={`px-2.5 py-1 rounded-md text-[11px] font-medium border cursor-pointer ${
+                              u.is_active
+                                ? "bg-white text-[#52525B] border-[#E4E4E7] hover:bg-[#FEF2F2] hover:text-[#DC2626] hover:border-[#FECACA]"
+                                : "bg-white text-[#0F766E] border-[#E4E4E7] hover:bg-[#F4F4F5]"
+                            }`}
+                          >
+                            {u.is_active ? "Deactivate" : "Activate"}
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
           </div>
 
           {/* Mobile 1-Column Cards View */}
-          <div className="block md:hidden space-y-3">
-            {filteredUsers.map((u) => {
-              const roleStyle = {
-                admin: "bg-[#0f766e]/15 text-[#0b5a54] border-[#0f766e]/30",
-                coordinator: "bg-teal-500/12 text-[#0f766e] border-teal-500/25",
-                staff: "bg-slate-700/10 text-[#0b1f3a] border-slate-500/25",
-                intern: "bg-slate-500/10 text-[#33475f] border-slate-400/30",
-              }[u.role];
-
-              return (
-                <div
-                  key={`mobile-${u.id}`}
-                  className="glass-panel p-4 space-y-2.5"
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="space-y-0.5">
-                      <div className="font-bold text-[#0b1f3a] text-sm flex items-center gap-1.5">
-                        <span>{u.full_name}</span>
-                        {u.id === currentUserId && (
-                          <span className="px-1.5 py-0.5 rounded bg-[#0f766e]/15 text-[#0b5a54] text-[10px] font-bold">
-                            আপনি
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-xs text-[#33475f] font-medium">{u.email}</div>
-                      <div className="text-xs font-mono text-[#0b1f3a]">{u.phone}</div>
-                    </div>
-                    <span
-                      className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${roleStyle} shrink-0`}
-                    >
-                      {ROLE_LABELS[u.role]?.bn}
-                    </span>
-                  </div>
-
-                  <div className="pt-2 border-t border-white/55 flex items-center justify-between text-xs">
-                    <div>
-                      {u.role === "coordinator" ? (
-                        <span className="text-[11px] font-semibold text-[#0b1f3a]">
-                          {u.courses?.name ? `${u.courses.name} (${u.courses.code})` : "কোর্স নেই"}
+          <div className="block md:hidden space-y-2.5">
+            {filteredUsers.map((u) => (
+              <div
+                key={`mobile-${u.id}`}
+                className="bg-white border border-[#E4E4E7] rounded-lg p-3.5 space-y-2.5"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="space-y-0.5 min-w-0">
+                    <div className="font-medium text-[#09090B] text-[13px] flex items-center gap-1.5">
+                      <span className="truncate">{u.full_name}</span>
+                      {u.id === currentUserId && (
+                        <span className="px-1.5 py-0.5 rounded bg-[#F4F4F5] border border-[#E4E4E7] text-[#52525B] text-[10px]">
+                          You
                         </span>
-                      ) : (
-                        <span className="text-[11px] text-[#33475f] font-medium">সকল ডিপার্টমেন্ট</span>
                       )}
                     </div>
+                    <div className="text-xs text-[#71717A] truncate">{u.email}</div>
+                    <div className="text-xs font-mono text-[#52525B] tabular-nums">{u.phone}</div>
+                  </div>
+                  <span className="px-2 py-0.5 rounded-md text-[11px] font-medium bg-[#F4F4F5] text-[#27272A] border border-[#E4E4E7] shrink-0">
+                    {ROLE_LABELS[u.role]?.en || u.role}
+                  </span>
+                </div>
 
-                    <div className="flex items-center gap-2">
+                <div className="pt-2 border-t border-[#E4E4E7] flex items-center justify-between text-xs">
+                  <span className="text-[11px] text-[#52525B] truncate pr-2">
+                    {u.role === "coordinator"
+                      ? u.courses?.name
+                        ? `${u.courses.name} (${u.courses.code})`
+                        : "Unassigned"
+                      : "All departments"}
+                  </span>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="inline-flex items-center gap-1.5 text-[11px] text-[#27272A]">
                       <span
-                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                          u.is_active ? "bg-[#22c55e]/15 text-[#15803d]" : "bg-slate-500/15 text-[#33475f]"
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          u.is_active ? "bg-[#0F766E]" : "bg-[#A1A1AA]"
+                        }`}
+                      />
+                      <span>{u.is_active ? "Active" : "Inactive"}</span>
+                    </span>
+
+                    {u.id !== currentUserId && (
+                      <button
+                        onClick={() => handleToggleStatus(u.id, u.is_active)}
+                        className={`px-2 py-1 rounded-md text-[11px] font-medium border ${
+                          u.is_active
+                            ? "bg-white text-[#DC2626] border-[#E4E4E7]"
+                            : "bg-white text-[#0F766E] border-[#E4E4E7]"
                         }`}
                       >
-                        <span
-                          className={`w-1.5 h-1.5 rounded-full ${
-                            u.is_active ? "bg-[#15803d]" : "bg-[#33475f]"
-                          }`}
-                        />
-                        <span>{u.is_active ? "সক্রিয়" : "নিষ্ক্রিয়"}</span>
-                      </span>
-
-                      {u.id === currentUserId ? (
-                        <span className="text-[11px] text-[#33475f] italic">Self</span>
-                      ) : (
-                        <button
-                          onClick={() => handleToggleStatus(u.id, u.is_active)}
-                          className={`px-2 py-1 rounded-[9px] text-[11px] font-semibold border ${
-                            u.is_active
-                              ? "bg-red-50 text-red-700 border-red-200"
-                              : "bg-emerald-50 text-emerald-700 border-emerald-200"
-                          }`}
-                        >
-                          {u.is_active ? "নিষ্ক্রিয়" : "সক্রিয়"}
-                        </button>
-                      )}
-                    </div>
+                        {u.is_active ? "Deactivate" : "Activate"}
+                      </button>
+                    )}
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         </>
       )}
 
       {/* Add User Modal Dialog */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-slate-900/50 backdrop-blur-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-[#09090B]/40">
           <motion.div
             initial={{ opacity: 0, scale: 0.985 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={MODAL_TRANSITION}
-            className="bg-white rounded-2xl p-5 sm:p-6 w-full max-w-lg border border-slate-200 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto"
+            className="bg-white rounded-lg p-5 w-full max-w-lg border border-[#E4E4E7] shadow-[0_8px_24px_rgba(0,0,0,0.08)] space-y-4 max-h-[90vh] overflow-y-auto"
           >
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div className="flex items-center justify-between border-b border-[#E4E4E7] pb-3">
               <div className="flex items-center gap-2">
-                <UserPlus className="w-5 h-5 text-[#0F766E]" />
-                <h3 className="font-bold text-slate-900 text-sm sm:text-base">
+                <UserPlus className="w-4 h-4 text-[#0F766E]" />
+                <h3 className="font-semibold text-[#09090B] text-sm">
                   নতুন ব্যবহারকারী তৈরি করুন
                 </h3>
               </div>
               <button
                 onClick={() => setShowAddModal(false)}
-                className="text-slate-400 hover:text-slate-600 font-bold p-1"
+                className="text-[#71717A] hover:text-[#09090B] p-1"
               >
                 ✕
               </button>

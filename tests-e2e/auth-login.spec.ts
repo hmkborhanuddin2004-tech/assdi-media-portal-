@@ -63,8 +63,7 @@ test.describe("S3-01 & S3-02: Auth, Role-Guard Middleware & User Management E2E"
     await expect(page.getByText("সেন্ট্রাল মিডিয়া ম্যানেজমেন্ট পোর্টাল")).toBeVisible();
 
     // Verify public self-signup is disabled notice
-    await expect(page.getByText("নিরাপত্তা নীতি (Security Policy)")).toBeVisible();
-    await expect(page.getByText("পাবলিক রেজিস্ট্রেশন সম্পূর্ণ নিষ্ক্রিয়")).toBeVisible();
+    await expect(page.getByText("Admin-managed accounts only. Public sign-up is disabled.")).toBeVisible();
   });
 
   test("login flow: admin logs in and redirects to /admin/dashboard", async ({ page }) => {
@@ -79,7 +78,7 @@ test.describe("S3-01 & S3-02: Auth, Role-Guard Middleware & User Management E2E"
     // Expect navigation to /admin/dashboard
     await page.waitForURL("**/admin/dashboard", { timeout: 10000 });
     expect(page.url()).toContain("/admin/dashboard");
-    await expect(page.getByText("সেন্ট্রাল মিডিয়া অ্যাডমিনিস্ট্রেশন হাব")).toBeVisible();
+    await expect(page.locator("h1")).toContainText("Dashboard");
   });
 
   test("login flow: coordinator logs in and redirects to /coordinator/requests", async ({ page }) => {
@@ -92,7 +91,7 @@ test.describe("S3-01 & S3-02: Auth, Role-Guard Middleware & User Management E2E"
 
     await page.waitForURL("**/coordinator/requests", { timeout: 10000 });
     expect(page.url()).toContain("/coordinator/requests");
-    await expect(page.getByText("কোর্স মিডিয়া রিকুইজিশন ট্র্যাকার")).toBeVisible();
+    await expect(page.locator("h1")).toContainText("My Requests");
   });
 
   test("login flow: staff logs in and redirects to /staff/tasks", async ({ page }) => {
@@ -105,7 +104,7 @@ test.describe("S3-01 & S3-02: Auth, Role-Guard Middleware & User Management E2E"
 
     await page.waitForURL("**/staff/tasks", { timeout: 10000 });
     expect(page.url()).toContain("/staff/tasks");
-    await expect(page.getByText("নির্ধারিত শুটিং ও পোস্ট-প্রোডাকশন টাস্ক")).toBeVisible();
+    await expect(page.locator("h1")).toContainText("My Tasks");
   });
 
   test("login flow: intern logs in and redirects to /intern/daily-log", async ({ page }) => {
@@ -118,7 +117,7 @@ test.describe("S3-01 & S3-02: Auth, Role-Guard Middleware & User Management E2E"
 
     await page.waitForURL("**/intern/daily-log", { timeout: 10000 });
     expect(page.url()).toContain("/intern/daily-log");
-    await expect(page.getByText("দৈনিক কাজের লগ ও ফুটেজ স্ট্যাটাস")).toBeVisible();
+    await expect(page.locator("h1")).toContainText("Daily Log");
   });
 
   test("admin user management: admin accesses /admin/users, creates coordinator, and newly created user logs in", async ({
@@ -135,10 +134,7 @@ test.describe("S3-01 & S3-02: Auth, Role-Guard Middleware & User Management E2E"
     // 2. Navigate to /admin/users
     await page.goto("/admin/users");
     await page.waitForLoadState("domcontentloaded");
-    await expect(page.getByText("ব্যবহারকারী ও ভূমিকা ব্যবস্থাপনা")).toBeVisible();
-
-    // Verify zero public self-signup banner
-    await expect(page.getByText("জিরো পাবলিক সেলফ-সাইনআপ নীতি")).toBeVisible();
+    await expect(page.locator("h1")).toContainText("Users");
 
     // 3. Open Add User Modal
     await page.click("#admin-add-user-btn");
@@ -175,7 +171,7 @@ test.describe("S3-01 & S3-02: Auth, Role-Guard Middleware & User Management E2E"
     // 6. Must successfully redirect to /coordinator/requests
     await page.waitForURL("**/coordinator/requests", { timeout: 10000 });
     expect(page.url()).toContain("/coordinator/requests");
-    await expect(page.getByText("কোর্স মিডিয়া রিকুইজিশন ট্র্যাকার")).toBeVisible();
+    await expect(page.locator("h1")).toContainText("My Requests");
   });
 
   test("open redirect vulnerability check: protocol-relative //evil.com is blocked", async ({ page }) => {
@@ -208,7 +204,7 @@ test.describe("S3-01 & S3-02: Auth, Role-Guard Middleware & User Management E2E"
 
     await page.goto("/admin/users");
     await page.waitForLoadState("domcontentloaded");
-    await expect(page.getByText("ব্যবহারকারী ও ভূমিকা ব্যবস্থাপনা")).toBeVisible();
+    await expect(page.locator("h1")).toContainText("Users");
 
     // Check 0 horizontal overflow
     const hasHorizontalOverflow = await page.evaluate(() => {

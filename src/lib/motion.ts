@@ -1,27 +1,26 @@
 /**
- * Shared silky zero-bounce motion primitives ("Glassy Dashboard V31" easing).
- * Only animates GPU-composited properties (transform / opacity) with critically-damped cubic-bezier curves.
+ * Subtle institutional UI transitions (150ms ease-out, zero spring overshoot or flashy effects).
  */
-export const SILKY_EASE = [0.22, 1, 0.36, 1] as const;
+export const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 
 export const PILL_TRANSITION = {
-  duration: 0.22,
-  ease: SILKY_EASE,
+  duration: 0.15,
+  ease: "easeOut",
 } as const;
 
 export const HOVER_PILL_TRANSITION = {
-  duration: 0.16,
-  ease: SILKY_EASE,
+  duration: 0.12,
+  ease: "easeOut",
 } as const;
 
 export const PAGE_TRANSITION = {
-  duration: 0.2,
-  ease: SILKY_EASE,
+  duration: 0.15,
+  ease: "easeOut",
 } as const;
 
 export const MODAL_TRANSITION = {
-  duration: 0.2,
-  ease: SILKY_EASE,
+  duration: 0.15,
+  ease: "easeOut",
 } as const;
 
-export const CARD_STAGGER_DELAY = 0.03;
+export const CARD_STAGGER_DELAY = 0;
